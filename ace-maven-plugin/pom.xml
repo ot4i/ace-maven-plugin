@@ -406,8 +406,9 @@
 
 	</distributionManagement>
 	<scm>
-                <url>git@github.ibm.com:anand-awasthi/ace-maven-plugin</url>
-		<connection>scm:git:git@github.ibm.com:anand-awasthi/ace-maven-plugin</connection>
+               
+		<url>git@github.com:ot4i/ace-maven-plugin</url>
+		<connection>scm:git:git@github.com:ot4i/ace-maven-plugin</connection>
             <tag>HEAD</tag>
 	</scm>
 	<version>11.39-SNAPSHOT</version>
