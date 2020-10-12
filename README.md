@@ -8,6 +8,7 @@ Below are the steps to build the plugin. The provided instructions have been tes
 
 ### 1) Install maven on build server
 Ensure that you have JDK8 installed
+
 `sudo apt-get install openjdk-8-jdk`
 
 
