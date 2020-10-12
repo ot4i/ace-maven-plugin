@@ -25,3 +25,6 @@ Edit the settings.xml located in 'conf' folder under maven home directory. You c
  </server>`
 * Update the profile properties and repository locations
 
+### 3) Update the pom.xml
+* Update the repository urls
+* Update the 'connection' string in 'scm' section
