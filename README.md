@@ -15,7 +15,7 @@ Install Maven by typing the following command:
 
 `sudo apt install maven`
 ### 2) Update the maven settings.xml
-Edit the settings.xml located in 'conf' folder under maven home directory. You can copy the setting.xml included here and make necessary changes.
+Edit the settings.xml located in 'conf' folder under maven home directory. You can copy the sample 'setting.xml' included here and make necessary changes.
 * Update the 'localRepository' if not using the default location
 * Enter the credentials for nexus repository that has access to deploy artifacts to the repository
 `<server>
@@ -26,5 +26,6 @@ Edit the settings.xml located in 'conf' folder under maven home directory. You c
 * Update the profile properties and repository locations
 
 ### 3) Update the pom.xml
+Clone this repository.
 * Update the repository urls
 * Update the 'connection' string in 'scm' section
