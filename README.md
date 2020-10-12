@@ -11,4 +11,8 @@ Ensure that you have JDK8 installed
 
 `sudo apt-get install openjdk-8-jdk`
 
+Install Maven by typing the following command:
+
+`sudo apt install maven`
+
 
