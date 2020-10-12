@@ -32,5 +32,7 @@ Clone this repository.
 
 ### 4) Build the plugin
 If you are not doing maven release steps to release a version of the plugin, you can directly deploy the plugin locally on the build server or on to the repsotory. If doing so, make sure the remove '-SNAPSHOT' from 'version' in the pom.xml. 
+Navigate to the ace-maven-plugin directory under which pom.xml is present.
+
 * To deploy the plugin to repository: `mvn clean deploy`
 * To install the plugin locally: `mvn clean install`
