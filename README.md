@@ -6,4 +6,8 @@ The plugin also contains a 'pom.xml'. Ensure to update the repository server url
 ## Steps to build the plugin
 Below are the steps to build the plugin. The provided instructions have been tested in Linux (Ubuntu 18.04).
 
+### 1) Install maven on build server
+Ensure that you have JDK8 installed
+`sudo apt-get install openjdk-8-jdk`
+
 
