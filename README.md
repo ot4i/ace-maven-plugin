@@ -29,3 +29,8 @@ Edit the settings.xml located in 'conf' folder under maven home directory. You c
 Clone this repository.
 * Update the repository urls
 * Update the 'connection' string in 'scm' section
+
+### 4) Build the plugin
+If you are not doing maven release steps to release a version of the plugin, you can directly deploy the plugin locally on the build server or on to the repsotory. If doing so, make sure the remove '-SNAPSHOT' from 'version' in the pom.xml. 
+* To deploy the plugin to repository: `mvn clean deploy`
+* To install the plugin locally: `mvn clean install`
