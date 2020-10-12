@@ -134,8 +134,8 @@ under the License.
     -->
 	<server>
       <id>releases</id>
-      <username>jenkins</username>
-      <password>P@ssw0rd!</password>
+      <username>nexus-deployer</username>
+      <password>Passw0rd</password>
     </server>
   </servers>
 
@@ -195,8 +195,8 @@ under the License.
       </activation>
 	  
 	  <properties>
-		<ace.dir>/opt/IBM/ace-11.0.0.8/tools</ace.dir>
-		<ace.rundir>/opt/IBM/ace-11.0.0.8/server/bin</ace.rundir>
+		<ace.dir>/opt/IBM/ace-11.0.0.10/tools</ace.dir>
+		<ace.rundir>/opt/IBM/ace-11.0.0.10/server/bin</ace.rundir>
 		<eclipse.workspace>/var/lib/jenkins/jobs/${project.artifactId}/workspace</eclipse.workspace>
 		<perform.workspace>/var/lib/jenkins/jobs/${project.artifactId}/perform-workspace</perform.workspace>
 		<nexus.url>http://127.0.0.1:8044/nexus/repository/releases</nexus.url>
