@@ -20,3 +20,15 @@ Define the values respective to your environment. In this case, we have consider
 Replace the scm configuration values respective to your environment
 
 ## Building the project
+Before running the maven build, make sure that xvfb has started on a specific display port
+
+`Xvfb :99 &
+export DISPLAY=:99`
+
+Run the below command after navigating to project directory. It will compile the ACE project and create BAR file.
+
+`mvn clean compile`
+
+To create overridden BAR files correspoding to each properties file and upload to repository, run below command:
+
+`mvn clean deploy`
