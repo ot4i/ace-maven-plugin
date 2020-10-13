@@ -20,7 +20,7 @@ Define the values respective to your environment. In this case, we have consider
 Replace the scm configuration values respective to your environment
 
 ## Building the project
-Before running the maven build, make sure that xvfb has started on a specific display port
+Make sure that ACE has been installed on the build server and 'settings.xml' is updated with the deployment path. Before running the maven build, make sure that xvfb has started on a specific display port
 
 `Xvfb :99 &
 export DISPLAY=:99`
