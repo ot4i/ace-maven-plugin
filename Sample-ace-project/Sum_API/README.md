@@ -13,7 +13,7 @@ packaging should be 'ace-bar'
 #### plugin-version
 Ensure to enter the correct version for ace-maven-plugin that you have deployed.
 #### configuration properties
-Keep all the properties in 'configuration' block as it is. Many of these properties have been defined in maven setting.xml and referenced here. Since these values are global for the environment, it makes sense to keep them in settings.xml instead of putting them individually in each projects' pom file.
+Keep all the properties in 'configuration' block as it is. Many of these properties have been defined in maven settings.xml and referenced here. Since these values are global for the environment, it makes sense to keep them in settings.xml instead of putting them individually in each projects' pom file.
 #### distributionManagement
 Define the values respective to your environment. In this case, we have considered nexus repository and the parameters defined in setting.xml have been referenced. 
 #### scm values
