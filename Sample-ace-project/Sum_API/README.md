@@ -2,7 +2,7 @@
 This is a sample Rest API project that uses ace-maven-plugin for building and creating environment specific BAR files. This is a maven project.
 
 ## 'properties' folder
-The 'properties' folder can contain any number of properties files. The properties files contain the environment specific values of node properties, UDPs etc. Corresponding to each properties file, a BAR file will be created. This sample project contains one properties file, namely 'DEV.properties'.
+The 'properties' folder can contain any number of properties files. The properties files contain the environment specific values of node properties, UDPs etc. Corresponding to each properties file, an overridden BAR file will be created. This sample project contains one properties file, namely 'DEV.properties'.
 
 ## pom.xml
 Notice the following configurations:
