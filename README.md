@@ -24,6 +24,9 @@ Edit the settings.xml located in 'conf' folder under maven home directory. You c
     <password>Passw0rd</password>
  </server>`
 * Update the profile properties and repository locations
+* Update the 'eclipse.workspace' and 'perform.workspace' values as per your environment. You may keep these values if you are using Jenkins with home directory '/var/lib/jenkins'. Also if you are using jenkins, you may need to update {JENKINS_HOME_DIR}/config.xml to have below values:
+`<workspaceDir>${ITEM_ROOTDIR}/workspace</workspaceDir>
+ <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>`
 
 ### 3) Update the pom.xml
 Clone this repository.
