@@ -25,7 +25,7 @@
 					<barName>${project.build.directory}/ace/${project.artifactId}.bar</barName>
 					<!-- The variable 'eclipse.workspace' is defined in settings.xml.-->
 					<!--<workspace>${eclipse.workspace}</workspace>-->
-					<workspace>workspace</workspace>
+					<workspace></workspace>
 					<versionString />
 					<cleanBuild>true</cleanBuild>
 					<deployAsSource>true</deployAsSource>
