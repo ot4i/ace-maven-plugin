@@ -36,3 +36,7 @@ Navigate to the ace-maven-plugin directory under which pom.xml is present.
 
 * To deploy the plugin to repository: `mvn clean deploy`
 * To install the plugin locally: `mvn clean install`
+
+### 5) Using the plugin
+There is a sample ACE project inside 'Sample-ace-project' directory. First convert the ACE project to a maven project and update the POM file of the project. You may look at step 4 of below article to understand how to convert the ACE project to a maven project using toolkit.
+`https://developer.ibm.com/integration/blog/2019/04/10/ibm-ace-v11-continuous-integration-maven-jenkins/`
