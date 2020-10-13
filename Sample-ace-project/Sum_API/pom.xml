@@ -2,7 +2,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ibm.ace</groupId>
 	<artifactId>Sum_API</artifactId>
-	<version>1.0.4-SNAPSHOT</version>
+	<!-- For performing maven release, you would change it to snapshot version, e.g. 1.0.5-SNAPSHOT -->
+	<version>1.0.5</version>
 	<packaging>ace-bar</packaging>
 	<name>${project.artifactId}</name>
 
@@ -23,9 +24,10 @@
 					<toolkitInstallDir>${ace.dir}</toolkitInstallDir>	
 					<aceRunDir>${ace.rundir}</aceRunDir>
 					<barName>${project.build.directory}/ace/${project.artifactId}.bar</barName>
-					<!-- The variable 'eclipse.workspace' is defined in settings.xml.-->
+					<!-- The variable 'eclipse.workspace' is defined in settings.xml. For this example, the workspace is harcoded, you would change
+                                        it to dynamic location as per your jenkins workspace configuration. {eclipse.workspace} is dynamic location defined in settingx.xml-->
 					<!--<workspace>${eclipse.workspace}</workspace>-->
-					<workspace>.</workspace>
+					<workspace>/root/workspace/ace-maven-plugin/Sample-ace-project</workspace>
 					<versionString />
 					<cleanBuild>true</cleanBuild>
 					<deployAsSource>true</deployAsSource>
