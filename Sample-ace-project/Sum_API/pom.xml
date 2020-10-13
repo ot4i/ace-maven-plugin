@@ -17,7 +17,7 @@
 			<plugin>
 				<groupId>ibm.maven.plugins</groupId>
 				<artifactId>ace-maven-plugin</artifactId>
-				<version>11.38</version>
+				<version>11.39</version>
 
 				<configuration>
 					<toolkitInstallDir>${ace.dir}</toolkitInstallDir>	
@@ -73,8 +73,8 @@
 		
 	</distributionManagement>
 	<scm>
-		<url>git@github.ibm.com:anand-awasthi/Sum_API.git</url>
-		<connection>scm:git:git@github.ibm.com:anand-awasthi/Sum_API.git</connection>
+		<url>git@github.com:ot4i/ace-maven-plugin/Sample-ace-project/Sum_API</url>
+		<connection>scm:git:git@github.com:ot4i/ace-maven-plugin/Sample-ace-project/Sum_API</connection>
 	  <tag>HEAD</tag>
   </scm>	
 </project>
