@@ -44,7 +44,7 @@ Navigate to the ace-maven-plugin directory under which pom.xml is present.
 You would need to install xvfb package on the build server (linux). Use below command to install it on ubuntu:
 `sudo apt-get install -y xvfb`
 
-There is a sample ACE project inside 'Sample-ace-project' directory. First convert the ACE project to a maven project and update the POM file of the project. You may look at step 4 of below article to understand how to convert the ACE project to a maven project using toolkit.
+There is a sample ACE maven project inside 'Sample-ace-project' directory. If your ACE project is not a maven project, first convert it to a maven project and update the POM file of the project. You may look at step 4 of below article to understand how to convert the ACE project to a maven project using toolkit.
 `https://developer.ibm.com/integration/blog/2019/04/10/ibm-ace-v11-continuous-integration-maven-jenkins/`
 
 View the Readme file of the included sample ACE project
