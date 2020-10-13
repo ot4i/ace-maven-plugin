@@ -32,3 +32,5 @@ Run the below command after navigating to project directory. It will compile the
 To create overridden BAR files correspoding to each properties file and upload to repository, run below command:
 
 `mvn clean deploy`
+
+Note that you may run the command as 'sudo' if the user does not has permissions to read/write in the workspace directory.
