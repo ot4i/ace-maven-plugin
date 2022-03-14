@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: ibm.maven.plugins.ace.mojos.CreateBarMojoUnitTest
 -------------------------------------------------------------------------------
-Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.185 sec
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.723 sec

@@ -34,5 +34,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="logback-classic-1.0.13.jar"/>
+	<classpathentry kind="lib" path="C:/data/dev/junit/junit-4.13.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

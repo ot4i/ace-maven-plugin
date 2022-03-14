@@ -75,6 +75,13 @@ public class CreateBarMojo extends AbstractMojo {
      */
     @Parameter(property = "ace.excludeArtifactsPattern", defaultValue = "**/pom.xml")
     protected String excludeArtifactsPattern;
+    
+    /**
+     * Name of the directory to create the tmp files; required to build the project 
+     */
+    @Parameter(property = "ace.aceTmpDir", defaultValue = "${project.build.directory}", required = true)
+    protected String aceTmpDir;
+    
 
     /**
      * Include artifacts pattern (or patterns, comma separated). By default, the default value used for mqsipackagebar, except .esql & .subflow, which as not compilable
@@ -103,12 +110,20 @@ public class CreateBarMojo extends AbstractMojo {
      */
     @Parameter(property = "ace.skipWSErrorCheck", defaultValue = "false")
     protected Boolean skipWSErrorCheck;
+    
+  
 
     /**
      * Installation directory of the ace Toolkit
      */
     @Parameter(property = "ace.toolkitInstallDir", required = true)
     protected File toolkitInstallDir;
+    
+    /**
+     * Installation directory of the ace Toolkit
+     */
+    @Parameter(property = "ace.aceRunDir", required = true)
+    protected File aceRunDir;
 
     /**
      * Major Version number of the ace Toolkit. (Current not used, but will be needed when support for difference Versions with different options is supported)
@@ -139,7 +154,8 @@ public class CreateBarMojo extends AbstractMojo {
      */
     @Parameter(property = "ace.useClassloaders", defaultValue = "false", required = true)
     protected Boolean useClassloaders;
-
+    
+    
     /**
      * The Maven Project Object
      */
@@ -151,6 +167,44 @@ public class CreateBarMojo extends AbstractMojo {
      */
     @Parameter(property = "session", required = true, readonly = true)
     protected MavenSession session;
+    
+
+    /** 
+     * ibmint parameter section; added by C.Weiss, IBM 02/2022  
+     * **/
+    
+    /**
+     * Whether ibmint package should be used instead of mqsicreatebar 
+     */
+    @Parameter(property = "ace.ibmintPackage", defaultValue = "false", required = false)
+    protected Boolean ibmintPackage;
+    
+    /**
+     * filepath for overrides-file; set if overrides-file parameter should be used for ibmint package 
+     */
+    @Parameter(property = "ace.overridesFile", defaultValue = "", required = false)
+    protected String overridesFile;
+    
+    /**
+     * filepath for keywords-file; set if keywords-file parameter should be used for ibmint package 
+     */
+    @Parameter(property = "ace.keywordsFile", defaultValue = "", required = false)
+    protected String keywordsFile;
+    
+    /**
+     * Wheter java code should be NOT compiled  
+     */
+    @Parameter(property = "ace.doNotCompileJava", defaultValue = "false", required = false)
+    protected Boolean doNotCompileJava;
+    
+    /**
+     * Wheter maps and schemas should be compiled   
+     */
+    @Parameter(property = "ace.compileMapsAndSchemas", defaultValue = "false", required = false)
+    protected Boolean compileMapsAndSchemas;
+    
+    
+
 
     /**
      * The Maven PluginManager Object
@@ -188,8 +242,9 @@ public class CreateBarMojo extends AbstractMojo {
 
         for (Dependency dependency : project.getDependencies()) {
 
-            // only check for dependencies with scope "compile"
-            if (!dependency.getScope().equals("compile")) {
+            // only check for dependencies with scope "compile" AND no standard jar files 
+
+            if ((!dependency.getScope().equals("compile")) || (dependency.getType().equals("jar"))) {
                 continue;
             }
 
@@ -208,34 +263,55 @@ public class CreateBarMojo extends AbstractMojo {
                 }
             }
         }
-
-        // if there are applications, add them
-        if (!apps.isEmpty()) {
-            params.add("-a");
-            params.addAll(apps);
-        }
-
         
-
-        // if there are libraries, add them
-        if (!libs.isEmpty()) {
-            params.add("-l");
-            params.addAll(libs);
+        //create different commands 
+        if (ibmintPackage) {
+        	
+        	//logic for ibmint package  
+        	//TODO: to extend, as we can only handle one build at the moment 
+            if (!apps.isEmpty()) {
+            	params.add("--project");
+            	params.addAll(apps);
+            } 
+         
+            if (!libs.isEmpty()) {
+                params.add("--project");
+                params.addAll(libs);
+            }
+            
+            if (!policies.isEmpty()) {
+            	 params.add("--project");
+                 params.addAll(policies);
+             }
+            
+            
+        } else { 
+        	
+        	//logic for mqsicreatebar 
+        	if (!apps.isEmpty()) {
+                params.add("-a");
+                params.addAll(apps);
+            }
+        	
+        	// if there are libraries, add them
+            if (!libs.isEmpty()) {
+                params.add("-l");
+                params.addAll(libs);
+            }
+            
+            // if there are policy projects, add them
+            if (!policies.isEmpty()) {
+                params.add("-x");
+                params.addAll(policies);
+                params.add("-p");
+                params.addAll(policies);
+            }
+        	
+        	
         }
         
-        // if there are policy projects, add them
-        if (!policies.isEmpty()) {
-            params.add("-x");
-            params.addAll(policies);
-            params.add("-p");
-            params.addAll(policies);
-        }
-        
-     // deployAsSource?
-        if (deployAsSource) {
-            params.add("-deployAsSource");
-        }
-
+          
+        //Comment Christoph Weiss, IBM 16.02.2022; following code is commented; reason unknown 
         // if there are no applications and no libraries, add "unmanaged" objects
         /*
          * if (apps.isEmpty() && libs.isEmpty()) {
@@ -246,33 +322,73 @@ public class CreateBarMojo extends AbstractMojo {
 
         return params;
     }
-
+    
+    /*
+     * constructs the parameter either for mqsicreatebar or ibmint package 
+     */
     protected List<String> constructParams() throws MojoFailureException {
         List<String> params = new ArrayList<String>();
 
-        // workspace parameter - required
+        //create the workspace 
         createWorkspaceDirectory();
-        params.add("-data");
-        params.add(workspace.toString());
-
-        // bar file name - required
-        params.add("-b");
-        params.add(barName.getAbsolutePath());
-
-        if (cleanBuild) {
-            params.add("-cleanBuild");
+        
+        //add workspace to parameter 
+        if (ibmintPackage) {
+        	params.add("--input-path"); 
+        	params.add(workspace.toString());
+        	
+        	params.add("--output-bar-file");
+        	params.add(barName.getAbsolutePath());
+        	
+        	if ((overridesFile !=null) && (overridesFile.length() > 0)) {
+        		params.add("--overrides-file");
+        		params.add(overridesFile);
+        	}
+        	
+        	if ((keywordsFile !=null) && (keywordsFile.length() > 0)) {
+        		params.add("--keywords-file");
+        		params.add(keywordsFile);
+        	}
+        	
+        	if (doNotCompileJava) {
+        		params.add("--do-not-compile-java");
+        	}
+        	
+        	if (compileMapsAndSchemas) {
+        		params.add("--compile-maps-and-schemas");
+        	}
+        	
+        	
+        } else { 
+        	params.add("-data");
+        	params.add(workspace.toString());
+        	
+        	params.add("-b");
+            params.add(barName.getAbsolutePath());
+            
+            //cleanBuild - optional 
+            if (cleanBuild) {
+                params.add("-cleanBuild");
+            }
+            
+            // use esql21 - optional
+            if (esql21) {
+                params.add("-esql21");
+            }
+            
+            // deployAsSource? - optional 
+            if (deployAsSource) {
+                params.add("-deployAsSource");
+            }
         }
-
-       /* if (versionString != null && versionString.length() != 0) {
+        
+        
+        // Comment Christoph Weiss, IBM 16.02.2021: old code; unclear why it was 'commented' 
+        /* if (versionString != null && versionString.length() != 0) {
             params.add("-version");
             params.add(versionString);
         }*/
-
-        // esql21 - optional
-        if (esql21) {
-            params.add("-esql21");
-        }
-
+        
         // project name - optional
 
         /*
@@ -293,18 +409,27 @@ public class CreateBarMojo extends AbstractMojo {
          * }
          */
 
-        // object names - required
+        
+        //call seperate method to add all project parameters 
         params.addAll(addObjectsAppsLibs());
 
-        if (skipWSErrorCheck) {
-            params.add("-skipWSErrorCheck");
+        //TODO to validate if I need to really put the parameters to the end; 
+        if (ibmintPackage) {
+        	// always trace into the file target/ace/mqsicreatebartrace.txt
+            params.add("--trace");
+            params.add(createBarTraceFile.getAbsolutePath());
+        	
+        } else { 
+        	//skipWSErrorCheck - option 
+        	if (skipWSErrorCheck) {
+                params.add("-skipWSErrorCheck");
+            }
+        	// always trace into the file target/ace/mqsicreatebartrace.txt
+            params.add("-trace");
+            params.add("-v");
+            params.add(createBarTraceFile.getAbsolutePath());
         }
-
-        // always trace into the file target/ace/mqsicreatebartrace.txt
-        params.add("-trace");
-        params.add("-v");
-        params.add(createBarTraceFile.getAbsolutePath());
-
+        
         return params;
     }
 
@@ -359,7 +484,8 @@ public class CreateBarMojo extends AbstractMojo {
     }
 
     /**
-     * executes mqsicreatebar. Since mqsicreatebar does something strange with
+     * executes 'mqsicreatebar' or 'ibmint package' 
+     * Since mqsicreatebar does something strange with
      * stdOut & stdErr, command must be written to a temporary file and executed
      * from there.
      * 
@@ -369,60 +495,84 @@ public class CreateBarMojo extends AbstractMojo {
     private void executeMqsiCreateBar(List<String> params)
             throws MojoFailureException {
 
-        File cmdFile = new File(System.getProperty("java.io.tmpdir")
+        //Changes C.Weiss, IBM 02/2022: 
+    	// - added aceTmpDir 
+    	// - add ibmint aternative
+    	// - used command handling from ValidateConfigurablePropertiesMojob 
+        File cmdFile = new File(aceTmpDir
                 + File.separator + "createbarCommand-" + UUID.randomUUID()
                 + ".cmd");
+        
 
         // make sure that it will be cleaned up on exit
-        cmdFile.deleteOnExit();
+        // cmdFile.deleteOnExit();
 
-        // construct the command - very windows-centric for now
+        
         List<String> command = new ArrayList<String>();
-        String executable = "\"" + toolkitInstallDir + File.separator
-                + "mqsicreatebar\"";
+        String executable = new String(""); 
+        String osName = System.getProperty("os.name").toLowerCase();
+        ProcessBuilder pb =null;
+        
+        
+        //select command based on pom config 
+        if (ibmintPackage) { 
+        	if (osName.contains("windows")) { 
+        		executable = aceRunDir+"/mqsiprofile&&ibmint package";
+        	} else {
+        		executable = ". "+aceRunDir+"/mqsiprofile&&ibmint package";
+        	}
+        	
+        } else {
+        	executable = new String(toolkitInstallDir + File.separator + "mqsicreatebar ");
+        }
+        
+      
+        
         command.add(executable);
         command.addAll(params);
-        //command.add("> " + "D:\\DevOps\\createbaroutput.txt" + " 2>&1");
 
         if (getLog().isDebugEnabled()) {
-            getLog().debug(
-                    "executing command file: " + cmdFile.getAbsolutePath());
-        }
-        getLog().info(
-                "executeMqsiCreateBar command: " + getCommandLine(command));
-
-        try {
-            FileUtils.fileWrite(cmdFile, getCommandLine(command));
-
-            // make sure it can be executed on Unix
-            cmdFile.setExecutable(true);
-        } catch (IOException e1) {
-            throw new MojoFailureException("Could not create command file: "
-                    + cmdFile.getAbsolutePath(), e1);
+        	if (osName.contains("windows")){
+            getLog().debug("executing command file: " + cmdFile.getAbsolutePath());
+        	}
+            getLog().debug("create bar command: " + getCommandLine(command));
         }
 
-        // ProcessBuilder pb = new ProcessBuilder(command);
-        ProcessBuilder pb = new ProcessBuilder(cmdFile.getAbsolutePath());
+        if (osName.contains("windows")){
+            try {
+                FileUtils.fileWrite(cmdFile, getCommandLine(command));
 
-        pb.directory(workspace);
+                // make sure it can be executed on Unix
+                cmdFile.setExecutable(true);
+            } catch (IOException e1) {
+                throw new MojoFailureException("Could not create command file: " + cmdFile.getAbsolutePath());
+            }
+            }
+
+        if (osName.contains("windows")){
+        	pb = new ProcessBuilder(cmdFile.getAbsolutePath());
+        }else if (osName.contains("linux")){
+        	pb = new ProcessBuilder();
+        	pb.command("bash", "-c", getCommandLine(command));
+        }
+        
+        
+        
         // redirect subprocess stderr to stdout
         pb.redirectErrorStream(true);
         Process process;
         ProcessOutputLogger stdOutHandler = null;
-        ProcessOutputLogger stdErrorHandler = null;
         try {
+            pb.redirectErrorStream(true);
             process = pb.start();
             stdOutHandler = new ProcessOutputLogger(process.getInputStream(), getLog());
-            stdErrorHandler = new ProcessOutputLogger(process.getErrorStream(), getLog());
             stdOutHandler.start();
-            stdErrorHandler.start();
             process.waitFor();
+
         } catch (IOException e) {
-            throw new MojoFailureException("Error executing: "
-                    + getCommandLine(command), e);
+            throw new MojoFailureException("Error executing: " + getCommandLine(command), e);
         } catch (InterruptedException e) {
-            throw new MojoFailureException("Error executing: "
-                    + getCommandLine(command), e);
+            throw new MojoFailureException("Error executing: " + getCommandLine(command), e);
         } finally {
             if (stdOutHandler != null) {
                 stdOutHandler.interrupt();
@@ -432,22 +582,16 @@ public class CreateBarMojo extends AbstractMojo {
                     // this should never happen, so ignore this one
                 }
             }
-            if (stdErrorHandler != null) {
-                stdErrorHandler.interrupt();
-                try {
-                    stdErrorHandler.join();
-                } catch (InterruptedException e) {
-                    // this should never happen, so ignore this one
-                }
-            }
         }
 
         if (process.exitValue() != 0) {
             // logOutputFile(outFile, "error");
-            throw new MojoFailureException(
-                    "mqsicreate bar finished with exit code: "
-                            + process.exitValue());
+            throw new MojoFailureException("create bar finished with exit code: " + process.exitValue());
         }
+
+        getLog().debug("create bar complete");
+
+        
     }
 
     private String getCommandLine(List<String> command) {

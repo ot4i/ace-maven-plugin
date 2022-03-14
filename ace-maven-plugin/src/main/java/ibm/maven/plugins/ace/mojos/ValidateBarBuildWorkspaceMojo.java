@@ -98,14 +98,17 @@ public class ValidateBarBuildWorkspaceMojo extends AbstractMojo {
             // checks that the directory name is the same as the name in the .project file
             String eclipseProjectName = EclipseProjectUtils.getProjectName(projectDirectory);
             if (!projectDirectoryName.equals(eclipseProjectName)) {
-                throw new MojoFailureException("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Project Name (in .project file) ('" + eclipseProjectName + "')");
+                // throw new MojoFailureException("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Project Name (in .project file) ('" + eclipseProjectName + "')");
+            	getLog().debug("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Project Name (in .project file) ('" + eclipseProjectName + "')");
             }
 
             // checks that the directory name is the same as the artifactId from the pom.xml file
             String artifactId = getProjectArtifactId(projectDirectory);
             if (artifactId != null && !projectDirectoryName.equals(artifactId)) {
-                throw new MojoFailureException("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Maven artifactId (in pom.xml): " + artifactId);
+                // throw new MojoFailureException("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Maven artifactId (in pom.xml): " + artifactId);
+            	getLog().debug("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Maven artifactId (in pom.xml): " + artifactId);
             }
+
         }
     }
 

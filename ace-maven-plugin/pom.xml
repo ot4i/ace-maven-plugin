@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>4.10</version> 
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -262,120 +262,6 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<profiles>
-		<profile>
-			<!-- activate this profile to enable integration-tests of the plugin -->
-			<id>it</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-invoker-plugin</artifactId>
-						<version>1.9</version>
-						<configuration>
-							<cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
-							<settingsFile>src/it/settings.xml</settingsFile>
-							<localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
-							<postBuildHookScript>verify</postBuildHookScript>
-
-							<!-- don't multithread, otherwise problems can happen when downloading 
-								artifacts from Nexus -->
-							<parallelThreads>1</parallelThreads>
-
-							<!-- selectively run tests -->
-							<!-- <pomExcludes> <pomExclude>CreateBarMojo1</pomExclude> </pomExcludes> 
-								<pomIncludes> <pomInclude>ValidateBarBuildWorkspaceMojo*</pomInclude> </pomIncludes> -->
-						</configuration>
-						<executions>
-							<execution>
-								<id>integration-test</id>
-								<goals>
-									<goal>install</goal>
-									<goal>run</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
-			<!-- activate this profile to enable signing of artifacts -->
-			<id>sign</id>
-			<activation>
-				<activeByDefault>false</activeByDefault>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.1</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-	<repositories>
-		<repository>
-			<id>central</id>
-			<name>Central Repository</name>
-			<url>http://127.0.0.1:8044/nexus/repository/maven-central/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>nexus-release</id>
-			<name>Corporate Repository</name>
-			<url>http://127.0.0.1:8044/nexus/repository/releases/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>JBoss3rdParty</id>
-			<name>JBoss3rdParty</name>
-			<url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>centralImage</id>
-			<name>Central Repository</name>
-			<url>http://repo1.maven.org/maven2/</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>central</id>
-			<name>Central Repository</name>
-			<url>http://127.0.0.1:8044/nexus/repository/maven-central/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>nexus-release</id>
-			<name>Corporate Repository</name>
-			<url>http://127.0.0.1:8044/nexus/repository/releases/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -411,5 +297,5 @@
 		<connection>scm:git:git@github.com:ot4i/ace-maven-plugin</connection>
             <tag>HEAD</tag>
 	</scm>
-	<version>11.39-SNAPSHOT</version>
-</project>
+	<version>12.0.1-SNAPSHOT</version>
+</project> 

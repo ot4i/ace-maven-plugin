@@ -163,6 +163,15 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
         executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version("2.8")), goal("unpack-dependencies"), configuration(element(name("outputDirectory"),
                 workspace.getAbsolutePath()), element(name("includeTypes"), UNPACK_ace_DEPENDENCY_TYPES), element(name("includeScope"), UNPACK_ace_DEPENDENCY_SCOPE)),
                 executionEnvironment(project, session, buildPluginManager));
+				
+				
+		// copy of jar dependencies to the target folder
+		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version("2.8")),
+				goal("copy-dependencies"),
+				configuration(element(name("outputDirectory"), workspace.getAbsolutePath()),
+						element(name("includeTypes"), "jar"),
+						element(name("includeScope"), UNPACK_ace_DEPENDENCY_SCOPE)),
+				executionEnvironment(project, session, buildPluginManager));
 
         // delete the dependency-maven-plugin-markers directory
         try {
