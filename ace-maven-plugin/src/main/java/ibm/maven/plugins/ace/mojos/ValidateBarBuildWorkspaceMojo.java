@@ -62,7 +62,9 @@ public class ValidateBarBuildWorkspaceMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        // the following code would be a nicer implementation, but breaks the Integration Tests
+        // Comment Christoph Weiss, IBM 14.03.22: below commented block is from a previous code committer 
+    	
+    	// the following code would be a nicer implementation, but breaks the Integration Tests
         //
         // Set<String> unpackaceDependencyTypes = PrepareBarBuildWorkspaceMojo.getUnpackaceDependencyTypes();
         //
@@ -76,7 +78,11 @@ public class ValidateBarBuildWorkspaceMojo extends AbstractMojo {
         //
         // String projectDirectoryName = dependency.getArtifactId();
 
-
+    	/*Comment Christoph Weiss, IBM 14.03.22: this is the original code -what does not make direkt sense 
+    	/* additional thougts: it would only make sense to check that all dependent projects are in place before we proceed. 
+    	 * this would be all projects defined in the .project file of the main application 
+    	 */
+    	/* 
         // loop through the project directories
         File[] projects = workspace.listFiles();
         //
@@ -110,6 +116,7 @@ public class ValidateBarBuildWorkspaceMojo extends AbstractMojo {
             }
 
         }
+        */ 
     }
 
     /**
