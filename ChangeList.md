@@ -2,7 +2,7 @@ Status: 18.03.2022
 
 Changes done: 
 - add ibmint package support (as alternative to mqsicreatebar) 
-- align handling of executing mqsi commands (incl logging) 
+- harmnonized mqsi commands (incl logging) 
 - changed aceTmpDir to fileTmpDir
 
 Changes planned: 
