@@ -10,6 +10,8 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
+
+import ibm.maven.plugins.ace.utils.CommandExecutionUtil;
 import ibm.maven.plugins.ace.utils.ConfigurablePropertiesUtil;
 import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
 import ibm.maven.plugins.ace.utils.ProcessOutputCatcher;
@@ -81,6 +83,12 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
      */
     @Parameter(property = "ace.failOnInvalidProperties", defaultValue = "true", required = true)
     protected Boolean failOnInvalidProperties;
+    
+    /**
+     * Name of the directory to create the tmp files; required to build the project 
+     */
+    @Parameter(property = "ace.fileTmpDir", defaultValue = "${project.build.directory}", required = true)
+    protected String fileTmpDir;
 
     /**
      * Installation directory of the ace Toolkit
@@ -368,86 +376,8 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
      */
     private void executeApplyBarOverride(List<String> params) throws MojoFailureException {
 
-    	 //Check underlying operating system
-        String osName = System.getProperty("os.name").toLowerCase();
-        String executable=null;
-        File cmdFile=null;
-        ProcessBuilder pb =null;
-       
-        List<String> command = new ArrayList<String>();
-       
-        if (osName.contains("windows")){
-        	cmdFile = new File(System.getProperty("java.io.tmpdir") + File.separator + "readbarCommand-" + UUID.randomUUID() + ".cmd");
-        	cmdFile.deleteOnExit();
-        	executable = aceRunDir+"/mqsiprofile&&mqsiapplybaroverride";
-        	
-        }else if(osName.contains("linux")){
-        	
-        	executable = ". "+aceRunDir+"/mqsiprofile&&mqsiapplybaroverride";
-        	
-        }
-        
-      
-        command.add(executable);
-        command.addAll(params);
-
-        if (getLog().isDebugEnabled()) {
-        	if (osName.contains("windows")){
-            getLog().debug("executing command file: " + cmdFile.getAbsolutePath());
-        	}
-            getLog().debug("executeMqsiApplyBarOverride command: " + getCommandLine(command));
-        }
-
-        if (osName.contains("windows")){
-            try {
-                FileUtils.fileWrite(cmdFile, getCommandLine(command));
-
-                // make sure it can be executed on Unix
-                cmdFile.setExecutable(true);
-            } catch (IOException e1) {
-                throw new MojoFailureException("Could not create command file: " + cmdFile.getAbsolutePath());
-            }
-            }
-
-        if (osName.contains("windows")){
-        	pb = new ProcessBuilder(cmdFile.getAbsolutePath());
-        }else if (osName.contains("linux")){
-        	pb = new ProcessBuilder();
-        	pb.command("bash", "-c", getCommandLine(command));
-        }
-        // redirect subprocess stderr to stdout
-        pb.redirectErrorStream(true);
-        Process process;
-        ProcessOutputLogger stdOutHandler = null;
-        try {
-            pb.redirectErrorStream(true);
-            process = pb.start();
-            stdOutHandler = new ProcessOutputLogger(process.getInputStream(), getLog());
-            stdOutHandler.start();
-            process.waitFor();
-
-        } catch (IOException e) {
-            throw new MojoFailureException("Error executing: " + getCommandLine(command), e);
-        } catch (InterruptedException e) {
-            throw new MojoFailureException("Error executing: " + getCommandLine(command), e);
-        } finally {
-            if (stdOutHandler != null) {
-                stdOutHandler.interrupt();
-                try {
-                    stdOutHandler.join();
-                } catch (InterruptedException e) {
-                    // this should never happen, so ignore this one
-                }
-            }
-        }
-
-        if (process.exitValue() != 0) {
-            // logOutputFile(outFile, "error");
-            throw new MojoFailureException("mqsiapplybaroverride finished with exit code: " + process.exitValue());
-        }
-
-        getLog().debug("mqsiapplybaroverride complete");
-
+    	CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, "mqsiapplybaroverride", params, getLog());
+    	
     }
 
     /**
@@ -456,90 +386,10 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
      * @throws MojoFailureException If an exception occurs
      */
     private List<String> executeReadBar(List<String> params) throws MojoFailureException {
-        ArrayList<String> output = new ArrayList<String>();
-
-     
-        //Check underlying operating system
-        String osName = System.getProperty("os.name").toLowerCase();
-        String executable=null;
-        File cmdFile=null;
-        ProcessBuilder pb =null;
-       
-        List<String> command = new ArrayList<String>();
         
-        if (osName.contains("windows")){
-        	cmdFile = new File(System.getProperty("java.io.tmpdir") + File.separator + "readbarCommand-" + UUID.randomUUID() + ".cmd");
-        	cmdFile.deleteOnExit();
-        	executable = aceRunDir+"/mqsiprofile&&mqsireadbar";
-        	
-        }else if(osName.contains("linux")){
-        	
-        	executable = ". "+aceRunDir+"/mqsiprofile&&mqsireadbar";
-        	
-        }
-        
-        command.add(executable);
-        command.addAll(params);
-       
+    	ArrayList<String> output = CommandExecutionUtil.runCommandWithOutput(aceRunDir, fileTmpDir, "mqsireadbar", params, getLog()); 
 
-        if (getLog().isDebugEnabled()) {
-        	if (osName.contains("windows")){
-            getLog().debug("executing command file: " + cmdFile.getAbsolutePath());
-        	}
-            getLog().debug("executeMqsiReadBar command: " + getCommandLine(command));
-        }
-
-        if (osName.contains("windows")){
-        try {
-            FileUtils.fileWrite(cmdFile, getCommandLine(command));
-
-            // make sure it can be executed on Unix
-            cmdFile.setExecutable(true);
-        } catch (IOException e1) {
-            throw new MojoFailureException("Could not create command file: " + cmdFile.getAbsolutePath());
-        }
-        }
-
-        if (osName.contains("windows")){
-        	pb = new ProcessBuilder(cmdFile.getAbsolutePath());
-        }else if (osName.contains("linux")){
-        	pb = new ProcessBuilder();
-        	pb.command("bash", "-c", getCommandLine(command));
-        }
-
-        // redirect subprocess stderr to stdout
-        pb.redirectErrorStream(true);
-        Process process;
-        ProcessOutputCatcher stdOutHandler = null;
-        try {
-            pb.redirectErrorStream(true);
-            process = pb.start();
-            stdOutHandler = new ProcessOutputCatcher(process.getInputStream(), output);
-            stdOutHandler.start();
-            process.waitFor();
-
-        } catch (IOException e) {
-            throw new MojoFailureException("Error executing: " + getCommandLine(command), e.getCause());
-        } catch (InterruptedException e) {
-            throw new MojoFailureException("Error executing: " + getCommandLine(command), e.getCause());
-        } finally {
-            if (stdOutHandler != null) {
-                stdOutHandler.interrupt();
-                try {
-                    stdOutHandler.join();
-                } catch (InterruptedException e) {
-                    // this should never happen, so ignore this one
-                }
-            }
-        }
-
-        if (process.exitValue() != 0) {
-            // logOutputFile(outFile, "error");
-            throw new MojoFailureException("mqsireadbar finished with exit code: " + process.exitValue());
-        }
-
-        getLog().info("mqsireadbar complete");
-        if (getLog().isDebugEnabled()) {
+    	if (getLog().isDebugEnabled()) {
             Log log = getLog();
             for (String outputLine : output) {
                 log.debug(outputLine);

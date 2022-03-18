@@ -1,5 +1,6 @@
 package ibm.maven.plugins.ace.mojos;
 
+import ibm.maven.plugins.ace.utils.CommandExecutionUtil;
 import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
 import ibm.maven.plugins.ace.utils.ProcessOutputLogger;
 import ibm.maven.plugins.ace.utils.ZipUtils;
@@ -79,8 +80,8 @@ public class CreateBarMojo extends AbstractMojo {
     /**
      * Name of the directory to create the tmp files; required to build the project 
      */
-    @Parameter(property = "ace.aceTmpDir", defaultValue = "${project.build.directory}", required = true)
-    protected String aceTmpDir;
+    @Parameter(property = "ace.fileTmpDir", defaultValue = "${project.build.directory}", required = true)
+    protected String fileTmpDir;
     
 
     /**
@@ -484,114 +485,26 @@ public class CreateBarMojo extends AbstractMojo {
     }
 
     /**
-     * executes 'mqsicreatebar' or 'ibmint package' 
-     * Since mqsicreatebar does something strange with
-     * stdOut & stdErr, command must be written to a temporary file and executed
-     * from there.
+     * runs either ibmint package or mqsicreatebar - depending on the plugin config  
      * 
      * @param params
      * @throws MojoFailureException If an exception occurs
      */
     private void executeMqsiCreateBar(List<String> params)
             throws MojoFailureException {
-
-        //Changes C.Weiss, IBM 02/2022: 
-    	// - added aceTmpDir 
-    	// - add ibmint aternative
-    	// - used command handling from ValidateConfigurablePropertiesMojob 
-        File cmdFile = new File(aceTmpDir
-                + File.separator + "createbarCommand-" + UUID.randomUUID()
-                + ".cmd");
-        
-
-        // make sure that it will be cleaned up on exit
-        // cmdFile.deleteOnExit();
-
-        
-        List<String> command = new ArrayList<String>();
-        String executable = new String(""); 
-        String osName = System.getProperty("os.name").toLowerCase();
-        ProcessBuilder pb =null;
-        
-        
-        //select command based on pom config 
-        if (ibmintPackage) { 
-        	if (osName.contains("windows")) { 
-        		executable = aceRunDir+"/mqsiprofile&&ibmint package";
-        	} else {
-        		executable = ". "+aceRunDir+"/mqsiprofile&&ibmint package";
-        	}
-        	
-        } else {
-        	executable = new String(toolkitInstallDir + File.separator + "mqsicreatebar ");
-        }
-        
-      
-        
-        command.add(executable);
-        command.addAll(params);
-
-        if (getLog().isDebugEnabled()) {
-        	if (osName.contains("windows")){
-            getLog().debug("executing command file: " + cmdFile.getAbsolutePath());
-        	}
-            getLog().debug("create bar command: " + getCommandLine(command));
-        }
-
-        if (osName.contains("windows")){
-            try {
-                FileUtils.fileWrite(cmdFile, getCommandLine(command));
-
-                // make sure it can be executed on Unix
-                cmdFile.setExecutable(true);
-            } catch (IOException e1) {
-                throw new MojoFailureException("Could not create command file: " + cmdFile.getAbsolutePath());
-            }
-            }
-
-        if (osName.contains("windows")){
-        	pb = new ProcessBuilder(cmdFile.getAbsolutePath());
-        }else if (osName.contains("linux")){
-        	pb = new ProcessBuilder();
-        	pb.command("bash", "-c", getCommandLine(command));
-        }
-        
-        
-        
-        // redirect subprocess stderr to stdout
-        pb.redirectErrorStream(true);
-        Process process;
-        ProcessOutputLogger stdOutHandler = null;
-        try {
-            pb.redirectErrorStream(true);
-            process = pb.start();
-            stdOutHandler = new ProcessOutputLogger(process.getInputStream(), getLog());
-            stdOutHandler.start();
-            process.waitFor();
-
-        } catch (IOException e) {
-            throw new MojoFailureException("Error executing: " + getCommandLine(command), e);
-        } catch (InterruptedException e) {
-            throw new MojoFailureException("Error executing: " + getCommandLine(command), e);
-        } finally {
-            if (stdOutHandler != null) {
-                stdOutHandler.interrupt();
-                try {
-                    stdOutHandler.join();
-                } catch (InterruptedException e) {
-                    // this should never happen, so ignore this one
-                }
-            }
-        }
-
-        if (process.exitValue() != 0) {
-            // logOutputFile(outFile, "error");
-            throw new MojoFailureException("create bar finished with exit code: " + process.exitValue());
-        }
-
-        getLog().debug("create bar complete");
-
-        
+    	
+    	String cmd = new String("");
+    	
+    	if (ibmintPackage) { 
+    		getLog().info("running ibmint"); 
+    		cmd = "ibmint package";
+    	} else {
+    		getLog().info("running mqsicreatebar");
+    		cmd = "mqsicreatebar";
+    	}
+    		
+    	CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, cmd, params, getLog());
+       
     }
 
     private String getCommandLine(List<String> command) {
