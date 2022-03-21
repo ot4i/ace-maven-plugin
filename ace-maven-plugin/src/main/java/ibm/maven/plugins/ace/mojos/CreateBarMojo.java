@@ -77,11 +77,7 @@ public class CreateBarMojo extends AbstractMojo {
     @Parameter(property = "ace.excludeArtifactsPattern", defaultValue = "**/pom.xml")
     protected String excludeArtifactsPattern;
     
-    /**
-     * Name of the directory to create the tmp files; required to build the project 
-     */
-    @Parameter(property = "ace.fileTmpDir", defaultValue = "${project.build.directory}", required = true)
-    protected String fileTmpDir;
+
     
 
     /**
@@ -112,7 +108,11 @@ public class CreateBarMojo extends AbstractMojo {
     @Parameter(property = "ace.skipWSErrorCheck", defaultValue = "false")
     protected Boolean skipWSErrorCheck;
     
-  
+    /**
+     * Name of the directory to create the tmp files; required to build the project 
+     */
+    @Parameter(property = "ace.fileTmpDir", defaultValue = "${project.build.directory}", required = true)
+    protected String fileTmpDir;
 
     /**
      * Installation directory of the ace Toolkit
@@ -141,7 +141,7 @@ public class CreateBarMojo extends AbstractMojo {
     /**
      * The path of the workspace in which the projects are extracted to be built.
      */
-    @Parameter(property = "ace.workspace", defaultValue = "${project.build.directory}/ace/workspace", required = true)
+    @Parameter(property = "ace.workspace", defaultValue = "${project.basedir}/..", required = true)
     protected File workspace;
 
     /**

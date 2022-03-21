@@ -19,7 +19,7 @@ public class CleanBarBuildWorkspaceMojo extends AbstractMojo {
     /**
      * The path of the workspace in which the projects were created.
      */
-    @Parameter(property = "ace.workspace", defaultValue = "${project.build.directory}/ace/workspace", required = true)
+    @Parameter(property = "ace.workspace", defaultValue = "${project.basedir}/..", required = true)
     protected File workspace;
 
     /**

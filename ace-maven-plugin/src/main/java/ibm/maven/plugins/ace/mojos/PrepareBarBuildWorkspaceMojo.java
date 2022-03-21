@@ -73,7 +73,7 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
     /**
      * The path of the workspace in which the projects are extracted to be built.
      */
-    @Parameter(property = "ace.workspace", defaultValue = "${project.build.directory}/ace/workspace", required = true)
+    @Parameter(property = "ace.workspace", defaultValue = "${project.basedir}/..", required = true)
     protected File workspace;
 
     /**

@@ -115,16 +115,11 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
  /*   @Parameter(property = "ace.readBarTraceFile", defaultValue = "${project.build.directory}/readbartrace.txt", required = true)
     protected File readBarTraceFile;
 */
-    /**
-     * Appends the _ (underscore) character and the value of VersionString to the names of the compiled versions of the message flows (.cmf) files added to the BAR file, before the file extension.
-     */
-    @Parameter(property = "ace.versionString", defaultValue = "${project.version}")
-    protected String versionString;
 
     /**
      * The path of the workspace in which the projects are extracted to be built.
      */
-    @Parameter(property = "ace.workspace", defaultValue = "${project.build.directory}/ace/workspace", required = true)
+    @Parameter(property = "ace.workspace", defaultValue = "${project.basedir}/..", required = true)
     protected File workspace;
 
 
@@ -232,7 +227,6 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
                 
                 // Updated by Anand Awasthi
                 String outputBarFile = new File(barName.getParent(), propFile.getName().replaceAll("properties$", "bar")).toString();
-                outputBarFile = outputBarFile.replaceAll(".bar", "_"+versionString+".bar");
                 params.add(outputBarFile);
 
                 // (Optional) The path to one of the following resources:
@@ -281,19 +275,6 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
         } catch (IOException e) {
             throw new MojoFailureException("Error applying bar overrides", e);
         }
-    }
-
-    /**
-     * @return dummy comment
-     * @throws MojoExecutionException If an exception occurs
-     */
-    private String getApplicationParameter() throws MojoExecutionException {
-        String appParam = getApplicationName();
-        if (versionString != null || !versionString.isEmpty()) {
-            appParam = appParam + "_" + versionString;
-        }
-
-        return appParam;
     }
 
     /**
