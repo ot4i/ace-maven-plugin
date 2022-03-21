@@ -10,6 +10,7 @@ Changes done:
 Changes planned: 
 - maven dependency handling for shared libs 
 (unpacking currently in workspace folder - but without further handling) 
+- rewrite validate bar workspace logic (to ensure that only the required projects are in place) 
 - add sample project 
 - update documentation 
  
