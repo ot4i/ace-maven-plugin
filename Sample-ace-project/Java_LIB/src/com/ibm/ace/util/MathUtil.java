@@ -22,5 +22,12 @@ public class MathUtil {
 		return new Boolean(false);
 		
 	}
+	
+	public static Boolean testZwei(Long VALUE) { 
+		
+		return Primes.isPrime(VALUE.intValue());
+		
+		
+	}
 
 }

@@ -15,7 +15,7 @@ CREATE COMPUTE MODULE postSum_Compute
 		 
 		CALL CalculateSum(InputRoot.JSON.Data.number1,InputRoot.JSON.Data.number2, tmpSum );  
 		SET tmpTimestamp = GetCurrentTimestamp();  
-		SET tmpPrime = TestMath(); 
+		SET tmpPrime = TestMathZwei(tmpSum); 
 		
 		SET OutputRoot.JSON.Data.sum = tmpSum; 
 		SET OutputRoot.JSON.Data.timstamp = tmpTimestamp;
