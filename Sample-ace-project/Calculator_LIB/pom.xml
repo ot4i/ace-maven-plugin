@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ibm.ace</groupId>
-	<artifactId>Sum_API</artifactId>
+	<artifactId>Calculator_LIB</artifactId>
 	<!-- For performing maven release, you would change it to snapshot version, e.g. 1.0.5-SNAPSHOT -->
 	<version>1.0.5</version>
 	<packaging>ace-bar</packaging>
@@ -18,21 +18,21 @@
 			<plugin>
 				<groupId>ibm.maven.plugins</groupId>
 				<artifactId>ace-maven-plugin</artifactId>
-				<version>12.0.3-SNAPSHOT</version>
+				<version>12.0.1-SNAPSHOT</version>
 
 				<configuration>
 					<!-- <toolkitInstallDir>${ace.dir}</toolkitInstallDir>	--> 
-					<toolkitInstallDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\tools</toolkitInstallDir>
-
-					<aceRunDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\server\bin</aceRunDir>
-					<!-- <barName>${project.build.directory}/ace/${project.artifactId}.bar</barName> --> 
+					<toolkitInstallDir>C:\PROGRA~1\IBM\ACE\12.0.1.0\tools</toolkitInstallDir>
+					
+					<aceRunDir>C:\PROGRA~1\IBM\ACE\12.0.1.0\server\bin</aceRunDir>
+					<barName>${project.build.directory}/ace/${project.artifactId}.bar</barName>
 					<!-- The variable 'eclipse.workspace' is defined in settings.xml. 
 					For this example, the workspace is harcoded, you would change
                     it to dynamic location as per your jenkins workspace configuration. 
 					{eclipse.workspace} is dynamic location defined in settingx.xml-->
 					<!--<workspace>${eclipse.workspace}</workspace>-->
 					<!-- <workspace>/root/workspace/ace-maven-plugin/Sample-ace-project</workspace> --> 
-
+					
 					<workspace>C:\Users\ChristophWeiss\IBM\ACET12\workspace_maven</workspace>
 					<versionString />
 					<cleanBuild>true</cleanBuild>
@@ -66,19 +66,20 @@
 				<version>2.8.2</version>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
+			    <groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>3.0.0</version> 
 			</plugin>
 		</plugins>
-
+		
 	</build>
 	<dependencies>
 		<dependency>
-			<groupId>com.ibm.ace</groupId>
-			<artifactId>Calculator_LIB</artifactId>
-			<version>1.0.6</version>
-			<type>zip</type>
+	
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+    <version>5.2.0</version>
+
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

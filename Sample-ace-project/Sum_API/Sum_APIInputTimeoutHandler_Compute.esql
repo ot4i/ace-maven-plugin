@@ -3,7 +3,7 @@
 CREATE COMPUTE MODULE Sum_APIInputTimeoutHandler_Compute
 	CREATE FUNCTION Main() RETURNS BOOLEAN
 	BEGIN
-		SET OutputRoot.JSON.Data.sum = 0;
+		SET OutputRoot.JSON.Data.sum = 3;
 		RETURN TRUE;
 	END;
 

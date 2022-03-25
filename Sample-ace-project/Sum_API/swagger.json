@@ -49,9 +49,17 @@
       "type" : "object",
       "properties" : {
         "sum" : {
-          "type" : "integer"
+          "type" : "object",
+          "properties" : { }
+        },
+        "timestamp" : {
+          "type" : "string"
+        },
+        "prime" : {
+          "type" : "boolean"
         }
-      }
+      },
+      "required" : [ ]
     }
   }
 }

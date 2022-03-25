@@ -1,9 +1,28 @@
+PATH CommonCalc;
+
 
 
 CREATE COMPUTE MODULE postSum_Compute
 	CREATE FUNCTION Main() RETURNS BOOLEAN
 	BEGIN
+		
+		/*
+		*CALL CalculateSum(InputRoot.JSON.Data.number1,InputRoot.JSON.Data.number2,OutputRoot.JSON.Data.sum);
+		*/ 
+		DECLARE tmpSum  INTEGER 0;
+		DECLARE tmpTimestamp CHAR; 
+		DECLARE tmpPrime BOOLEAN; 
+		 
+		CALL CalculateSum(InputRoot.JSON.Data.number1,InputRoot.JSON.Data.number2, tmpSum );  
+		SET tmpTimestamp = GetCurrentTimestamp();  
+		SET tmpPrime = TestMath(); 
+		
+		SET OutputRoot.JSON.Data.sum = tmpSum; 
+		SET OutputRoot.JSON.Data.timstamp = tmpTimestamp;
+		SET OutputRoot.JSON.Data.prime = tmpPrime;  
+		/*
 		SET OutputRoot.JSON.Data.sum = InputRoot.JSON.Data.number1 + InputRoot.JSON.Data.number2;
+		*/ 
 		RETURN TRUE;
 	END;
 

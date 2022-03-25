@@ -1,24 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Sum_API</name>
+	<name>Calculator_LIB</name>
 	<comment></comment>
 	<projects>
-		<project>Caclulator_LIB</project>
-		<project>Calculator_LIB</project>
+		<project>Java_LIB</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>org.eclipse.m2e.core.maven2Builder</name>
+			<name>com.ibm.etools.mft.applib.applibbuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>com.ibm.etools.mft.restapi.ui.restApiBuilder</name>
+			<name>com.ibm.etools.mft.applib.applibresourcevalidator</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
 		<buildCommand>
-			<name>com.ibm.etools.mft.json.builder.JSONBuilder</name>
+			<name>com.ibm.etools.mft.connector.policy.ui.PolicyBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>com.ibm.etools.mft.connector.ui.editor.connectorServiceBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>com.ibm.etools.mft.connector.ui.editor.connectorEventBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>com.ibm.etools.mft.uri.sharedlibbuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -78,6 +92,11 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
+			<name>com.ibm.etools.mft.json.builder.JSONBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>com.ibm.etools.mft.restapi.ui.restApiDefinitionsBuilder</name>
 			<arguments>
 			</arguments>
@@ -107,27 +126,11 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>com.ibm.etools.mft.applib.applibbuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>com.ibm.etools.mft.applib.applibresourcevalidator</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
-			<name>com.ibm.etools.mft.connector.policy.ui.PolicyBuilder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.m2e.core.maven2Nature</nature>
-		<nature>com.ibm.etools.mft.restapi.ui.Nature</nature>
+		<nature>com.ibm.etools.msgbroker.tooling.libraryNature</nature>
 		<nature>com.ibm.etools.msgbroker.tooling.messageBrokerProjectNature</nature>
-		<nature>com.ibm.etools.msgbroker.tooling.applicationNature</nature>
+		<nature>com.ibm.etools.msgbroker.tooling.sharedLibraryNature</nature>
 		<nature>com.ibm.etools.mft.bar.ext.barnature</nature>
 	</natures>
 </projectDescription>
