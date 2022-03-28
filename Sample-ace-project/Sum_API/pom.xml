@@ -3,7 +3,7 @@
 	<groupId>com.ibm.ace</groupId>
 	<artifactId>Sum_API</artifactId>
 	<!-- For performing maven release, you would change it to snapshot version, e.g. 1.0.5-SNAPSHOT -->
-	<version>1.0.5</version>
+	<version>1.0.0</version>
 	<packaging>ace-bar</packaging>
 	<name>${project.artifactId}</name>
 
@@ -21,19 +21,31 @@
 				<version>12.0.3-SNAPSHOT</version>
 
 				<configuration>
-					<!-- <toolkitInstallDir>${ace.dir}</toolkitInstallDir>	--> 
+					<!-- *************************************  
+					     **        general settings         **
+					     ************************************* --> 
+					
+					<!-- installation directories for toolkit and server (runtime) -->
 					<toolkitInstallDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\tools</toolkitInstallDir>
-
 					<aceRunDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\server\bin</aceRunDir>
-					<!-- <barName>${project.build.directory}/ace/${project.artifactId}.bar</barName> --> 
-					<!-- The variable 'eclipse.workspace' is defined in settings.xml. 
-					For this example, the workspace is harcoded, you would change
-                    it to dynamic location as per your jenkins workspace configuration. 
-					{eclipse.workspace} is dynamic location defined in settingx.xml-->
-					<!--<workspace>${eclipse.workspace}</workspace>-->
-					<!-- <workspace>/root/workspace/ace-maven-plugin/Sample-ace-project</workspace> --> 
-
-					<workspace>C:\Users\ChristophWeiss\IBM\ACET12\workspace_maven</workspace>
+					
+					<!--  additional properties with default values  -->
+					<!-- (1) name of the resulting bar file 
+					     default: ${project.build.directory}/ace/${project.artifactId}-${project.version}.bar 
+					 	 <barName>${project.build.directory}/ace/${project.artifactId}.bar</barName> --> 
+					<!-- (2) tmp directory used for the windows mqsi cmd files 
+					     default: ${project.build.directory}
+					 	 <tmpFileDir>${project.build.directory}</tmpFileDir> --> 
+					<!-- (2) workspace directory  
+					     default: ${project.build.directory}\..
+					 	 <workspace>${project.build.directory}\..</workspace> --> 				 
+					
+					<!-- *************************************  
+					     **        mqsicreatebar settings   **
+					     ************************************* -->
+					
+					<!--  mqsicreate bar is used as default to create the bar file  -->
+					
 					<versionString />
 					<cleanBuild>true</cleanBuild>
 					<deployAsSource>true</deployAsSource>
@@ -43,6 +55,28 @@
 					<defaultPropertiesFile>C:\Users\ChristophWeiss\IBM\ACET12\workspace_maven\Sum_API\properties\DEV.properties</defaultPropertiesFile>
 					<debugWorkspace>true</debugWorkspace>
 					<applyBarOverride>false</applyBarOverride>
+					
+					<!-- *************************************  
+					     **        ibmint settings          **
+					     ************************************* -->
+					     
+					<!-- ibmint can be used as alternative to mqsicreatebar  
+					documentation see : https://www.ibm.com/docs/en/app-connect/12.0?topic=commands-ibmint-package-command--> 
+					
+					<!-- defines if ibmint package should be used instead of mqsicreatebar; option; default: false --> 
+					<!-- <ibmintPackage>true</ibmintPackage> --> 
+					
+					<!-- parameters  
+					overrides-file filePath; optional; the name of the file that contains the overrides to apply.
+					<overridesFile>filepath</overridesFile>
+					keywords-file filePath; optional; the path of the file that contains the keywords to apply
+					<keywordsFile>filepath</overridesFile>
+					do-not-compile-java; optional; prevent compilation of Java resources; default false
+					<doNotCompileJava>true</doNotCompileJava> 
+					compile-maps-and-schemas; optional; enable compilation of maps and schemas; false
+					<compileMapsAndSchemas></compileMapsAndSchemas> 
+					--> 					
+					
 				</configuration>
 
 				<extensions>true</extensions>
@@ -66,36 +100,12 @@
 				<version>2.8.2</version>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
+			    <groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>3.0.0</version> 
 			</plugin>
 		</plugins>
-
+	
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>com.ibm.ace</groupId>
-			<artifactId>Calculator_LIB</artifactId>
-			<version>1.0.6</version>
-			<type>zip</type>
-			<scope>compile</scope>
-		</dependency>
-	</dependencies>
-	<!--  
-	<distributionManagement>
-		<repository>
-			<id>releases</id>
-			<name>Corporate Repository</name>
-			<url>${nexus.url}</url>
-			<layout>default</layout>
-		</repository>
-		
-	</distributionManagement>
-	<scm>
-		<url>git@github.com:ot4i/ace-maven-plugin/Sample-ace-project/Sum_API</url>
-		<connection>scm:git:git@github.com:ot4i/ace-maven-plugin/Sample-ace-project/Sum_API</connection>
-	  <tag>HEAD</tag>
-  </scm>	
-   -->
+
 </project>
