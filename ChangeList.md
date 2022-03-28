@@ -13,8 +13,10 @@ Changes planned:
 (unpacking currently in workspace folder - but without further handling) 
 - update/rewrite bar override (handling configPropFileDirectory, defaultPropertiesFile)  
 - update/rewrite validate bar workspace logic (to ensure that only the required projects are in place) 
-- update documentation 
-- general cleanup (.project test file, bin/target folder etc.) 
+- update documentation  
+- general cleanup  (.project test file, bin/target folder etc., end-of-lines etc.) 
+- add sample pom for "combined build" 
+
  
 
 Nice to have: 
