@@ -1,4 +1,4 @@
-Status: 18.03.2022 
+Status: 28.03.2022 
 
 Changes done: 
 - add ibmint package support (as alternative to mqsicreatebar) 
@@ -11,7 +11,7 @@ Changes done:
 Changes planned: 
 - maven dependency handling for shared libs 
 (unpacking currently in workspace folder - but without further handling) 
-- update/rewrite bar override (handling configPropFileDirectory, defaultPropertiesFile)  
+- update/rewrite bar override (handling configPropFileDirectory, defaultPropertiesFile, multiple props files?)  
 - update/rewrite validate bar workspace logic (to ensure that only the required projects are in place) 
 - update documentation  
 - general cleanup  (.project test file, bin/target folder etc., end-of-lines etc.) 
