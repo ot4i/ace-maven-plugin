@@ -5,14 +5,16 @@ Changes done:
 - harmnonized mqsi commands (incl logging) 
 - changed config parameter aceTmpDir to fileTmpDir
 - consistent file names for bar files 
-- made workspace parameter optional  
+- made workspace parameter optional 
+- updated sample-ace-project  
 
 Changes planned: 
 - maven dependency handling for shared libs 
 (unpacking currently in workspace folder - but without further handling) 
-- rewrite validate bar workspace logic (to ensure that only the required projects are in place) 
-- add sample project 
+- update/rewrite bar override (handling configPropFileDirectory, defaultPropertiesFile)  
+- update/rewrite validate bar workspace logic (to ensure that only the required projects are in place) 
 - update documentation 
+- general cleanup (.project test file, bin/target folder etc.) 
  
 
 Nice to have: 

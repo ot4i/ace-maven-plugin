@@ -11,6 +11,7 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
 import ibm.maven.plugins.ace.utils.PomXmlUtils;
+import net.lingala.zip4j.ZipFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -163,6 +164,45 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
         executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version("2.8")), goal("unpack-dependencies"), configuration(element(name("outputDirectory"),
                 workspace.getAbsolutePath()), element(name("includeTypes"), UNPACK_ace_DEPENDENCY_TYPES), element(name("includeScope"), UNPACK_ace_DEPENDENCY_SCOPE)),
                 executionEnvironment(project, session, buildPluginManager));
+        
+        //
+        File[] workspaceContet = workspace.listFiles() ; 
+        
+        /*
+         * step 1: find all bar files and unpack them them 
+         */
+        for (File content : workspaceContet) {
+        	if (content.isFile() && content.getName().endsWith(".bar")) {
+        		try { 
+        			new ZipFile(content).extractAll(workspace.getAbsolutePath());
+        		} catch (Exception e) {
+        			 e.printStackTrace();
+        		}
+        		
+        	}
+        	
+        }
+        
+        /*
+         * step 2: find all shlibzip and unpack them 
+         */
+         workspaceContet = workspace.listFiles() ; 
+        for (File content : workspaceContet) {
+        	if (content.isFile() && content.getName().endsWith(".shlibzip")) {
+        		try { 
+        			new ZipFile(content).extractAll(workspace.getAbsolutePath());
+        		} catch (Exception e) {
+        			 e.printStackTrace();
+        		}
+        		
+        	}
+        	
+        }
+        
+        
+        //look for all dependencies 
+        //if bar - unzip them to the final folder 
+        
 				
 				
 		// copy of jar dependencies to the target folder
