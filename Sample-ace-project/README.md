@@ -22,7 +22,7 @@ The Maven Builds can be done via the Toolkit or a standard Command Line.
 The challenge is that the Calculator_LIB needs to include the JAVA_LIB as well as Apache Common Math library.
 Because of this the build is done in two steps:  
 
-**Step 1: Build of Java_LIB** 
+**Step 1: Build of Java_LIB**  
 The Java_LIB project includes an own pom.xml file. The Maven build (via the pom file) performs the following tasks:
 - copy of the defined Maven dependencies (Apache Common Math) to the Calculator_LIB project directory  
 - re-creation of the Eclipse project files (.classpath, .project and .settings folder)
@@ -43,8 +43,23 @@ To perform the build, change to the **.\Calculator_LIB** folder and run the comm
 
 
 ## Sum_API 
-As the Calculator_LIB the Sum_API is using teh ace-maven-plugin tp create the desired bar file. 
+The Sum_API is also using the ace-maven-plugin to create the desired bar file. 
+Important: Sum_API includes a project reference to the Calculator_LIB. Thus the project needs to be available when running a 'mqsicreatebar' based build. 
+However you do not have to checkout the Calculator_LIB project. Instead you can simply define a maven dependency. The ace-maven-plugin will then take to create the corresponding project in the workspace directory. 
 
-To perform the build, change to the **.\Sum_API** folder and run the command: 
-`mvn clean install`
+Dependency example: 
 
+```javascript
+<dependencies>
+		<dependency>
+			<groupId>com.ibm.ace</groupId>
+			<artifactId>Calculator_LIB</artifactId>
+			<version>1.0.0</version>
+			<scope>compile</scope>
+			<type>zip</type> 
+		</dependency>
+</dependencies>
+```
+
+#Known Limitations  
+- As of today only the ace-maven-plugin only supports the dependency handling / unpacking of SharedLibs. 
