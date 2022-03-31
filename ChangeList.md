@@ -7,15 +7,16 @@ Changes done:
 - consistent file names for bar files 
 - made workspace parameter optional 
 - updated sample-ace-project  
+- updated bar override handling (allows multiple properties, keeps original file) 
 
 Changes planned: 
 - maven dependency handling for shared libs 
-(unpacking currently in workspace folder - but without further handling) 
-- update/rewrite bar override (handling configPropFileDirectory, defaultPropertiesFile, multiple props files?)  
+(unpacking currently in workspace folder - but without further handling)   
 - update/rewrite validate bar workspace logic (to ensure that only the required projects are in place) 
 - update documentation  
 - general cleanup  (.project test file, bin/target folder etc., end-of-lines etc.) 
-- add sample pom for "combined build" 
+- update plugin versions / review logback-classic-1.0.13.jar 
+- add sample pom for "combined build"
 
  
 

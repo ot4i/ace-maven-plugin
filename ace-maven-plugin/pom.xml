@@ -2,9 +2,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ibm.maven.plugins</groupId>
 	<artifactId>ace-maven-plugin</artifactId>
+	<version>12.0.3-SNAPSHOT</version>
+	
 	<packaging>maven-plugin</packaging>
 	<name>ace-maven-plugin</name>
 	<url>http://maven.apache.org</url>
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -56,15 +59,15 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version> 
+			<!--   <version>4.10</version> -->
 			<scope>test</scope>
 		</dependency>
 		<!--  for zip file handling -->
 		<dependency>
-    <groupId>net.lingala.zip4j</groupId>
-    <artifactId>zip4j</artifactId>
-    <version>2.9.1</version>
-</dependency>
+    		<groupId>net.lingala.zip4j</groupId>
+    		<artifactId>zip4j</artifactId>
+    		<version>2.9.1</version>
+		</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>
@@ -286,22 +289,16 @@
 				<version>2.4.1</version>
 				<type>maven-plugin</type>
 			</dependency>
+			<!--  
+			<dependency>
+    			<groupId>net.lingala.zip4j</groupId>
+    			<artifactId>zip4j</artifactId>
+    			<version>2.9.1</version>
+    			<scope>compile</scope>
+			</dependency>
+			 -->
 		</dependencies>
 	</dependencyManagement>
-	<distributionManagement>
-		<repository>
-			<id>releases</id>
-			<name>Corporate Repository</name>
-			<url>http://127.0.0.1:8044/nexus/repository/releases/</url>
-			<layout>default</layout>
-		</repository>
-
-	</distributionManagement>
-	<scm>
-               
-		<url>git@github.com:ot4i/ace-maven-plugin</url>
-		<connection>scm:git:git@github.com:ot4i/ace-maven-plugin</connection>
-            <tag>HEAD</tag>
-	</scm>
-	<version>12.0.3-SNAPSHOT</version>
+	
+	
 </project> 

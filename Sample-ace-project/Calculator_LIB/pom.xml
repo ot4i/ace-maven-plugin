@@ -51,10 +51,25 @@
 					<deployAsSource>true</deployAsSource>
 					<esql21>false</esql21>
 					<applicationName>${project.artifactId}</applicationName>
-					<configPropFileDirectory>C:\Users\ChristophWeiss\IBM\ACET12\workspace_mave\Sum_API\properties</configPropFileDirectory>
-					<defaultPropertiesFile>C:\Users\ChristophWeiss\IBM\ACET12\workspace_maven\Sum_API\properties\DEV.properties</defaultPropertiesFile>
 					<debugWorkspace>true</debugWorkspace>
 					<applyBarOverride>false</applyBarOverride>
+					
+					
+					<!-- *************************************  
+					     ** mqsiapplybar override settings  **
+					     ************************************* -->
+						 
+					<!-- file to 'write' all found properties using mqsireadbar  
+					default: ${project.build.directory}/ace/default.properties 
+					<defaultPropertiesFile>...</defaultPropertiesFile>
+					--> 
+					<!-- directory with properties files for 'mqsiapplybar override'; 
+					taken into account when applyBarOverride is set to 'true' 
+					default: ${project.basedir}/properties 
+					important: the plugin will create one bar for each property file --> 
+					<!-- 
+					<configPropFileDirectory>...</configPropFileDirectory>
+					--> 
 					
 					<!-- *************************************  
 					     **        ibmint settings          **
