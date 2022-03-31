@@ -35,7 +35,6 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.dependency.utils.DependencyUtil;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -195,15 +194,4 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 		
 	}
 
-	/**
-	 * @return the types that will be unpacked when preparing the Bar Build
-	 *         Workspace
-	 */
-	public static Set<String> getUnpackaceDependencyTypes() {
-		HashSet<String> types = new HashSet<String>();
-		for (String type : DependencyUtil.tokenizer(UNPACK_ace_DEPENDENCY_TYPES)) {
-			types.add(type);
-		}
-		return types;
-	}
 }
