@@ -15,24 +15,24 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.3.3</version><!-- latest version 3.8.5 by 31/03/2022; old: 3.3.3 -->
+			<version>3.8.5</version><!-- latest version 3.8.5 by 31/03/2022; old: 3.3.3 -->
 		</dependency>
 		<dependency>
 			<!-- annotations are needed only to build the plugin -->
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.4</version><!-- latest version 3.6.4 by 31/03/2022; old: 3.4 -->
+			<version>3.6.4</version><!-- latest version 3.6.4 by 31/03/2022; old: 3.4 -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.twdata.maven</groupId>
 			<artifactId>mojo-executor</artifactId>
-			<version>2.2.0</version><!-- latest version 2.4.0 by 31/03/2022; old 2.2.0; used 2.3.3 because of implementation dependencies -->
+			<version>2.3.3</version><!-- latest version 2.4.0 by 31/03/2022; old 2.2.0; using 2.3.3 because of implementation dependencies -->
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-utils</artifactId>
-			<version>2.0.6</version><!-- latest version 3.4.1 by 31/03/2022; old: 2.0.6 -->
+			<version>3.3.1</version><!-- latest version 3.4.1 by 31/03/2022; old: 2.0.6; using 3.3.1 because of  compatibility reasons  -->
 		</dependency>
 		<dependency>
 			<groupId>org.apache.ant</groupId>
@@ -43,7 +43,7 @@
 			<!-- jaxb for sources generated from xsd -->
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
-			<version>2.2.12</version><!-- latest version 2.4.0-b180830.0359 by 31/03/2022; old: 2.2.12; update to 2.3.1 as latest 'official stable' version -->
+			<version>2.2.12</version><!-- latest version 2.4.0-b180830.0359 by 31/03/2022; still using  2.2.12 because of compatibility reasons -->
 		</dependency>
 		<!--  for zip file handling -->
 		<dependency>
@@ -59,7 +59,7 @@
 		<dependency>
     		<groupId>commons-io</groupId>
     		<artifactId>commons-io</artifactId>
-    		<version>2.11.0</version>
+    		<version>2.11.0</version> <!-- latest version 2.11.0 by 31/03/2022; added -->
 		</dependency>
 	</dependencies>
 	<reporting>
@@ -68,7 +68,7 @@
 				<!-- required for plugin site generation -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.4</version>
+				<version>3.6.4</version> <!-- latest version 3.6.4 by 31/03/2022; old: 3.4 -->
 			</plugin>
 		</plugins>
 	</reporting>
