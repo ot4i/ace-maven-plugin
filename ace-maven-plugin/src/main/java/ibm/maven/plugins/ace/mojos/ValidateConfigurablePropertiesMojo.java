@@ -134,13 +134,11 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 	@Component
 	protected BuildPluginManager buildPluginManager;
 
-	/**
-	 * Projects containing files to include in the BAR file in the workspace.
-	 * Required for a new workspace. A new workspace is a system folder which don't
-	 * contain a .metadata folder.
-	 */
-	@Parameter(property = "ace.applicationName")
-	protected String applicationName;
+    /*
+     * application / service name
+     */
+    @Parameter(property = "ace.applicationName", defaultValue = "${project.artifactId}")
+    protected String applicationName;
 
 	public void execute() throws MojoFailureException, MojoExecutionException {
 

@@ -101,12 +101,10 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 	protected File unpackBarDirectory;
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		
+
 		unpackaceDependencies();
-	
+
 	}
-
-
 
 	/**
 	 * @param pomFile
@@ -129,12 +127,13 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 	}
 
 	/**
-	 * goal of the method is to create sharedLibs projects defined by Maven dependencies 
-	 * for this purpose the method performs the following tasks: 
-	 * - unpacks dependencies of scope "compile" and type "zip" to unpackDependencyDirectory  
-	 * - filter dependencies for bar files - and unpack them to  unpackBarDirectory
-	 * - filter unpacked bar files for sharedLibs and unpack them to the workspace directory  
-	 * - create a .project file for the sharedLibs projects 
+	 * goal of the method is to create sharedLibs projects defined by Maven
+	 * dependencies for this purpose the method performs the following tasks: -
+	 * unpacks dependencies of scope "compile" and type "zip" to
+	 * unpackDependencyDirectory - filter dependencies for bar files - and unpack
+	 * them to unpackBarDirectory - filter unpacked bar files for sharedLibs and
+	 * unpack them to the workspace directory - create a .project file for the
+	 * sharedLibs projects
 	 * 
 	 * @throws MojoExecutionException If an exception occurs
 	 */
@@ -153,45 +152,54 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 				executionEnvironment(project, session, buildPluginManager));
 
 		try {
-			// step 1: unpack all bar files
-			List<File> barFiles = FileUtils.getFiles(unpackDependenciesDirectory, "*.bar", "default.bar");
-			for (File barFile : barFiles) {
-				new ZipFile(barFile).extractAll(unpackBarDirectory.getAbsolutePath());
-				getLog().info(
-						"unpacking " + barFile.getName() + " to " + unpackBarDirectory.getAbsolutePath().toString());
+			// step 1: create basic directory
+
+			// step 2: unpack all bar files
+			if (unpackDependenciesDirectory.exists()) {
+				List<File> barFiles = FileUtils.getFiles(unpackDependenciesDirectory, "*.bar", "default.bar");
+				for (File barFile : barFiles) {
+					new ZipFile(barFile).extractAll(unpackBarDirectory.getAbsolutePath());
+					getLog().info("unpacking " + barFile.getName() + " to "
+							+ unpackBarDirectory.getAbsolutePath().toString());
+				}
+			} else {
+				getLog().info("unpack dependency directory does not exist");
 			}
 
-			// step 2: unpack all sharedlibs - and unpack them directly to the workspace
-			List<File> sharedLibs = FileUtils.getFiles(unpackBarDirectory, "*.shlibzip", "default.shlibzip");
-			for (File sharedLib : sharedLibs) {
-				String projectName = FileUtils.removeExtension(sharedLib.getName());
+			// step 3: unpack all sharedlibs - and unpack them directly to the workspace
+			if (unpackBarDirectory.exists()) {
+				List<File> sharedLibs = FileUtils.getFiles(unpackBarDirectory, "*.shlibzip", "default.shlibzip");
+				for (File sharedLib : sharedLibs) {
+					String projectName = FileUtils.removeExtension(sharedLib.getName());
 
-				// determine the targetDirectory
-				String targetDirectory = workspace.getAbsolutePath().toString() + "/" + projectName;
-				File projectDirectory = new File(targetDirectory);
+					// determine the targetDirectory
+					String targetDirectory = workspace.getAbsolutePath().toString() + "/" + projectName;
+					File projectDirectory = new File(targetDirectory);
 
-				new ZipFile(sharedLib).extractAll(projectDirectory.getAbsolutePath());
-				getLog().info(
-						"unpacking " + sharedLib.getName() + " to " + projectDirectory.getAbsolutePath().toString());
+					new ZipFile(sharedLib).extractAll(projectDirectory.getAbsolutePath());
+					getLog().info("unpacking " + sharedLib.getName() + " to "
+							+ projectDirectory.getAbsolutePath().toString());
 
-				ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-				InputStream inStream = classloader.getResourceAsStream("templates/project.txt");
+					ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+					InputStream inStream = classloader.getResourceAsStream("templates/project.txt");
 
-				String projectFile = IOUtils.toString(inStream);
-				projectFile = projectFile.replace("projectname", projectName);
+					String projectFile = IOUtils.toString(inStream);
+					projectFile = projectFile.replace("projectname", projectName);
 
-				String targetFileName = workspace.getAbsolutePath().toString() + "/" + projectName + "/.project";
-				File targetFile = new File(targetFileName);
+					String targetFileName = workspace.getAbsolutePath().toString() + "/" + projectName + "/.project";
+					File targetFile = new File(targetFileName);
 
-				Files.write(Paths.get(targetFile.getAbsolutePath()), projectFile.getBytes(StandardCharsets.UTF_8));
+					Files.write(Paths.get(targetFile.getAbsolutePath()), projectFile.getBytes(StandardCharsets.UTF_8));
 
+				}
+			} else {
+				getLog().info("unpack bar directory does not exist");
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		
 	}
 
 }

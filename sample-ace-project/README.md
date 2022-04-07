@@ -41,6 +41,12 @@ Based the build of Step 1 the bar will include te Apache Common Math jar.
 To perform the build, change to the **.\Calculator_LIB** folder and run the command: 
 `mvn clean install`  (alternative mvn clean deploy to upload the artifact directly to a central repository) 
 
+** Alternative: combine build 
+The sample folder includes also a pom sample file to run both builds at once.  
+To execute the build, change to the root folder and run the following command:   
+`mvn -f ./combine-java-calculator-sample-pom.xml clean install`  
+
+
 
 ## Sum_API 
 The Sum_API is also using the ace-maven-plugin to create the desired bar file. 

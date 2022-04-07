@@ -46,13 +46,16 @@
 					
 					<!--  mqsicreate bar is used as default to create the bar file  -->
 					
-					<versionString />
 					<cleanBuild>true</cleanBuild>
 					<deployAsSource>true</deployAsSource>
 					<esql21>false</esql21>
-					<applicationName>${project.artifactId}</applicationName>
 					<debugWorkspace>true</debugWorkspace>
 					<applyBarOverride>false</applyBarOverride>
+					
+					<!-- applicationName 
+					default: ${project.artifactId} e.g. Sum_API
+					<applicationName>...</applicationName>
+					--> 
 
 
 					<!-- *************************************  

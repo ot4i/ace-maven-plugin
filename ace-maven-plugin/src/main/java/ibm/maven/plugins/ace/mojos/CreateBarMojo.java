@@ -98,7 +98,7 @@ public class CreateBarMojo extends AbstractMojo {
      * Application/Service Name to add to bar file
      */
 
-    @Parameter(property = "ace.applicationName", defaultValue = "")
+    @Parameter(property = "ace.applicationName", defaultValue = "${project.artifactId}")
     protected String applicationName;
 
 
