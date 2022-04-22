@@ -36,9 +36,13 @@
 					<!-- (2) tmp directory used for the windows mqsi cmd files 
 					     default: ${project.build.directory}
 					 	 <tmpFileDir>${project.build.directory}</tmpFileDir> --> 
-					<!-- (2) workspace directory  
+					<!-- (3) workspace directory  
 					     default: ${project.build.directory}\..
 					 	 <workspace>${project.build.directory}\..</workspace> --> 				 
+					<!-- (4) parameter to define if the source code should be added to a "bar package" 
+						note: other packages currently not supported 
+						default: true 
+						<packageSource>true</packageSource>
 					
 					<!-- *************************************  
 					     **        mqsicreatebar settings   **

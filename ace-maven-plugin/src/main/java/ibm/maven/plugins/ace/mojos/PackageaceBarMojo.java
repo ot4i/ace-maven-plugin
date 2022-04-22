@@ -43,6 +43,14 @@ public class PackageaceBarMojo extends CreateBarMojo {
     @Parameter(defaultValue = "${project.build.directory}/assemblies/ace-bar-project.xml", readonly = true)
     private File buildAssemblyFile;
 
+    
+    /**
+     * The path to store the "source code" 
+     */
+    @Parameter(defaultValue = "${project.build.directory}/ace", readonly = true)
+    private String outputDirectorySourceCode;
+    
+    
     /**
      * The Maven Project Object
      */
@@ -54,6 +62,13 @@ public class PackageaceBarMojo extends CreateBarMojo {
      */
     @Parameter(property = "session", required = true, readonly = true)
     protected MavenSession session;
+    
+    /**
+     * Whether the applybaroverride command should be executed or not
+     */
+    @Parameter(property = "ace.packageSource", defaultValue = "true", required = true)
+    protected Boolean packageSource;
+    
 
     /**
      * The Maven PluginManager Object
@@ -69,6 +84,27 @@ public class PackageaceBarMojo extends CreateBarMojo {
     }
 
     private void packageaceBarArtifact() throws MojoFailureException, MojoExecutionException {
+    	
+    	/*
+    	 * add source code to ace directory 
+    	 */
+    	if (packageSource) {
+    		getLog().info("adding source code to assembly"); 
+               
+    		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-source-plugin"), version("3.2.1")),
+    				goal("jar-no-fork"),
+    				configuration(
+    						element(name("outputDirectory"), outputDirectorySourceCode),
+    						element(name("excludes"), "target/**")),
+    				executionEnvironment(project, session, buildPluginManager));
+    	} else {
+    		getLog().info("no source code packaged for the assembly");
+    	}
+    	
+    	
+    	/*
+    	 * package based on assembly defintion  
+    	 */
         InputStream is = this.getClass().getResourceAsStream("/assemblies/ace-bar-project.xml");
         FileOutputStream fos;
         buildAssemblyFile.getParentFile().mkdirs();

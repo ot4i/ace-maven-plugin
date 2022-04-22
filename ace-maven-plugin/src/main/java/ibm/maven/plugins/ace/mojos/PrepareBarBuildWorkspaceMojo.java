@@ -142,8 +142,8 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 		// define the directory to be unpacked into and create it
 		workspace.mkdirs();
 
-		// unpack all dependencies that match the given scope to the
-		// "unpackDependencyDirectory
+		// step 1: 
+		// unpack all dependencies that match the given scope; target: unpackDependencyDirectory 
 		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version("2.8")),
 				goal("unpack-dependencies"),
 				configuration(element(name("outputDirectory"), unpackDependenciesDirectory.getAbsolutePath()),
@@ -152,20 +152,41 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 				executionEnvironment(project, session, buildPluginManager));
 
 		try {
-			// step 1: create basic directory
-
-			// step 2: unpack all bar files
+		
+			// step 2: unpack all source files
 			if (unpackDependenciesDirectory.exists()) {
-				List<File> barFiles = FileUtils.getFiles(unpackDependenciesDirectory, "*.bar", "default.bar");
-				for (File barFile : barFiles) {
-					new ZipFile(barFile).extractAll(unpackBarDirectory.getAbsolutePath());
-					getLog().info("unpacking " + barFile.getName() + " to "
-							+ unpackBarDirectory.getAbsolutePath().toString());
-				}
+				List<File> sourceFiles = FileUtils.getFiles(unpackDependenciesDirectory, "*sources.jar", "default.jar");
+				for (File sourceFile : sourceFiles) {
+					String[] fileParts =  (FileUtils.removeExtension(sourceFile.getName())).split("-");
+					String projectName = fileParts[0]; 
+					getLog().info("found source for project: "+projectName); 
+					
+					//define target environment and unpack sources 
+					String targetDirectory = workspace.getAbsolutePath().toString() + "/" + projectName;
+					File projectDirectory = new File(targetDirectory);
+					
+					
+					new ZipFile(sourceFile).extractAll(projectDirectory.getAbsolutePath());
+					getLog().info("unpacking " + sourceFile.getName() + " to "
+							+ projectDirectory.getAbsolutePath().toString());
+					/*
+					//patch .project file 
+					//TODO: current assumption that we only handle "shared libs"  
+					ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+					InputStream inStream = classloader.getResourceAsStream("templates/project.txt");
+
+					String projectFile = IOUtils.toString(inStream);
+					projectFile = projectFile.replace("projectname", projectName);
+
+					String targetFileName = workspace.getAbsolutePath().toString() + "/" + projectName + "/.project";
+					File targetFile = new File(targetFileName);
+
+					Files.write(Paths.get(targetFile.getAbsolutePath()), projectFile.getBytes(StandardCharsets.UTF_8));
+						*/			}
 			} else {
 				getLog().info("unpack dependency directory does not exist");
 			}
-
+			/* 	
 			// step 3: unpack all sharedlibs - and unpack them directly to the workspace
 			if (unpackBarDirectory.exists()) {
 				List<File> sharedLibs = FileUtils.getFiles(unpackBarDirectory, "*.shlibzip", "default.shlibzip");
@@ -195,7 +216,7 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 			} else {
 				getLog().info("unpack bar directory does not exist");
 			}
-
+		*/ 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,4 +1,4 @@
-Status: 01.04.2022 
+Status: 07.04.2022 
 
 Changes done: 
 - added ibmint package support (as alternative to mqsicreatebar) 
