@@ -42,7 +42,7 @@
 					<!-- (4) parameter to define if the source code should be added to a "bar package" 
 						note: other packages currently not supported 
 						default: true 
-						<packageSource>true</packageSource>
+						<packageSource>true</packageSource> --> 
 					
 					<!-- *************************************  
 					     **        mqsicreatebar settings   **

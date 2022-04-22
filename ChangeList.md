@@ -1,4 +1,4 @@
-Status: 07.04.2022 
+Status: 22.04.2022 
 
 Changes done: 
 - added ibmint package support (as alternative to mqsicreatebar) 
@@ -9,13 +9,12 @@ Changes done:
 - made workspace parameter optional 
 - updated sample-ace-project / incl. sample pom for a combined java / shared lib build 
 - updated bar override handling (allows multiple properties, keeps original file)
+- additional source packaging for "bar file builds" 
 - added maven dependencies handling of shared libs 
 - cleanup used maven dependencies / libraries - incl. update to latests possible versions
 
 Changes planned: 
 - update/rewrite validate bar workspace logic (to ensure that only the required projects are in place)
-- further cleanup pom  
-- mqsicreatebar / unpackage 
 - update documentation  
 - further cleanup  (.project test file, bin/target folder etc., end-of-lines etc.) 
 
