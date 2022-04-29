@@ -28,6 +28,7 @@
 			<groupId>org.twdata.maven</groupId>
 			<artifactId>mojo-executor</artifactId>
 			<version>2.3.3</version><!-- latest version 2.4.0 by 31/03/2022; old 2.2.0; using 2.3.3 because of implementation dependencies -->
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>

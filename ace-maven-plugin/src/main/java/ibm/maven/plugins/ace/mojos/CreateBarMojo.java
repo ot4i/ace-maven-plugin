@@ -462,7 +462,7 @@ public class CreateBarMojo extends AbstractMojo {
         executeMqsiCreateBar(params);
 
         try {
-            // if classloaders are in use, all jars are to be removed
+            /* check for classloaders */ 
             if (useClassloaders) {
                 getLog().info(
                         "Classloaders in use. All jars will be removed from the bar file.");
@@ -477,6 +477,9 @@ public class CreateBarMojo extends AbstractMojo {
                     ZipUtils.removeFiles(barName, discardJarsPattern);
                 }
             }
+            
+            
+          
         } catch (IOException e) {
             throw new MojoFailureException(
                     "Error removing jar files from bar file", e);
