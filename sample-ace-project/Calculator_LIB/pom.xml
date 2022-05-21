@@ -43,6 +43,16 @@
 						note: other packages currently not supported 
 						default: true 
 						<packageSource>true</packageSource> --> 
+					<!-- (5) paramter to define if 'java classloader" settings for Java Compute Nodes
+						are allowed 
+						default: false  --> 
+						<!-- <useClassloaders>true</useClassloaders> --> 
+					<!-- (6) parameter to define if the build should fail if 
+						- classloaders are defined - but useClassloaders it set to false 
+						- multiple different classloaders are defined
+						default: true  --> 
+					    <!-- <failOnInvalidClassloader>false</failOnInvalidClassloader> --> 
+
 					
 					<!-- *************************************  
 					     **        mqsicreatebar settings   **

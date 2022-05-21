@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ibm.ace</groupId>
-	<artifactId>Sum_API</artifactId>
+	<artifactId>Calculator_LIB</artifactId>
 	<!-- For performing maven release, you would change it to snapshot version, e.g. 1.0.5-SNAPSHOT -->
 	<version>1.0.0</version>
 	<packaging>ace-bar</packaging>
@@ -29,7 +29,6 @@
 					<toolkitInstallDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\tools</toolkitInstallDir>
 					<aceRunDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\server\bin</aceRunDir>
 					
-					
 					<!--  additional properties with default values  -->
 					<!-- (1) name of the resulting bar file 
 					     default: ${project.build.directory}/ace/${project.artifactId}-${project.version}.bar 
@@ -39,21 +38,12 @@
 					 	 <tmpFileDir>${project.build.directory}</tmpFileDir> --> 
 					<!-- (3) workspace directory  
 					     default: ${project.build.directory}\..
-					 	 <workspace>${project.build.directory}\..</workspace> --> 				 	
+					 	 <workspace>${project.build.directory}\..</workspace> --> 				 
 					<!-- (4) parameter to define if the source code should be added to a "bar package" 
 						note: other packages currently not supported 
 						default: true 
-						<packageSource>true</packageSource> -->
-					<!-- (5) paramter to define if 'java classloader" settings for Java Compute Nodes
-						are allowed 
-						default: false  --> 
-						<!-- <useClassloaders>true</useClassloaders> --> 
-					<!-- (6) parameter to define if the build should fail if 
-						- classloaders are defined - but useClassloaders it set to false 
-						- multiple different classloaders are defined
-						default: true  --> 
-					    <!-- <failOnInvalidClassloader>false</failOnInvalidClassloader> --> 
-						
+						<packageSource>true</packageSource> --> 
+					
 					<!-- *************************************  
 					     **        mqsicreatebar settings   **
 					     ************************************* -->
@@ -67,11 +57,11 @@
 					<applyBarOverride>false</applyBarOverride>
 					
 					<!-- applicationName 
-					default: ${project.artifactId} e.g. Sum_API
+					default: ${project.artifactId} e.g. Calculator_LIB
 					<applicationName>...</applicationName>
 					--> 
-
-
+					
+					
 					<!-- *************************************  
 					     ** mqsiapplybar override settings  **
 					     ************************************* -->
@@ -87,8 +77,7 @@
 					<!-- 
 					<configPropFileDirectory>...</configPropFileDirectory>
 					--> 
-
-				
+					
 					<!-- *************************************  
 					     **        ibmint settings          **
 					     ************************************* -->
@@ -140,14 +129,5 @@
 		</plugins>
 	
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>com.ibm.ace</groupId>
-			<artifactId>Calculator_LIB</artifactId>
-			<version>1.0.0</version>
-			<scope>compile</scope>
-			<type>zip</type> 
-		</dependency>
-	</dependencies>
 
 </project>
