@@ -69,5 +69,7 @@ Dependency example:
 To perform the build, change to the **.\Sum_API** folder and run the command: 
 `mvn clean install`  (alternative mvn clean deploy to upload the artifact directly to a central repository) 
 
+
+
 # Known Limitations  
 - As of today only the ace-maven-plugin only supports the dependency handling / unpacking of SharedLibs. 

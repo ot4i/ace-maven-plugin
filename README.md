@@ -48,3 +48,12 @@ There is a sample ACE maven project inside 'Sample-ace-project' directory. If yo
 `https://developer.ibm.com/integration/blog/2019/04/10/ibm-ace-v11-continuous-integration-maven-jenkins/`
 
 View the Readme file of the included sample ACE project
+
+### 6) Specific notes on plugin configuration 
+
+**(1) Use of javaclass loaders**   
+A Java Compute Node allows you to set a specific "class loader"  within the Node properties section.
+Typically this will be a "Shared Lib Classloader". See for example: https://www.ibm.com/docs/en/integration-bus/10.0?topic=libraries-shared-java-files 
+  
+If you use this construct you have to set the plugin parameter `useClassloaders` to true. 
+Otherwise the build will fail. For the syntax take a look at the sample for the pom files. 
