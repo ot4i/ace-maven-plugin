@@ -91,7 +91,7 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 	/**
 	 * directory to unpack all dependencies
 	 */
-	@Parameter(property = "ace.unpackDependenciesDirectory", defaultValue = "${project.basedir}/../dependencies/${project}", required = true, readonly = true)
+	@Parameter(property = "ace.unpackDependenciesDirectory", defaultValue = "${project.basedir}/../dependencies/${project.artifact.artifactId}", required = true, readonly = true)
 	protected File unpackDependenciesDirectory;
 
 
