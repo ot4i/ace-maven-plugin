@@ -91,14 +91,10 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 	/**
 	 * directory to unpack all dependencies
 	 */
-	@Parameter(property = "ace.unpackDependenciesDirectory", defaultValue = "${project.build.directory}/dependencies", required = true, readonly = true)
+	@Parameter(property = "ace.unpackDependenciesDirectory", defaultValue = "${project.basedir}/../dependencies/${project}", required = true, readonly = true)
 	protected File unpackDependenciesDirectory;
 
-	/**
-	 * directory for all bar files / out of the dependencies
-	 */
-	@Parameter(property = "ace.unpackBarDirectory", defaultValue = "${project.build.directory}/dependencies/bars", required = true, readonly = true)
-	protected File unpackBarDirectory;
+
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 

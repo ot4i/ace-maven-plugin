@@ -15,8 +15,8 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 /**
- * Goal which reads the default.properties file to figure out if the classloader approach for this bar project is consistent. Either all jar nodes in all flows must use a classloader or none of them
- * should.
+ * Goal which reads the default.properties file to figure out if the classloader approach for this bar project is consistent. 
+ * Either all jar nodes in all flows must use a classloader or none of them should.
  */
 @Mojo(name = "validate-classloader-approach")
 public class ValidateClassloaderApproachMojo extends AbstractMojo {
@@ -41,8 +41,10 @@ public class ValidateClassloaderApproachMojo extends AbstractMojo {
 
     public void execute() throws MojoFailureException {
 
-        // the defaultPropertiesFile will be created in an earlier Maven build
-        // step
+    	/*
+         * step 1 - get all properties from the default properties file 
+         * (created in an earlier build step)  
+         */
         List<String> configurableProperties;
         try {
             configurableProperties = readFromFile(defaultPropertiesFile);
@@ -50,6 +52,10 @@ public class ValidateClassloaderApproachMojo extends AbstractMojo {
             throw new MojoFailureException("Error reading " + defaultPropertiesFile, e);
         }
 
+        /*
+         * step 2 - debug logging of all found properties 
+         * (only if debug is enabled) 
+         */
         if (getLog().isDebugEnabled()) {
             getLog().debug("Configurable Properties:");
             for (String property : configurableProperties) {
@@ -58,8 +64,10 @@ public class ValidateClassloaderApproachMojo extends AbstractMojo {
             }
         }
 
-        // loop through the javaClassLoader properties to see if they're
-        // consistent (all defined or all not defined)
+        /* 
+         * step 3 - get all properties ending with ".javaClassLoader" 
+         * (properties from a Java Compute Node) 
+         */
         List<String> clProps = ConfigurablePropertiesUtil.getJavaClassLoaderProperties(configurableProperties);
 
         for (String clProp : clProps) {
