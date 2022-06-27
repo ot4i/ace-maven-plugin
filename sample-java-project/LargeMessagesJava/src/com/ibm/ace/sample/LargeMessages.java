@@ -1,6 +1,7 @@
+package com.ibm.ace.sample;
 /*
  * Sample program for use with IBM Integration Bus
- * © Copyright International Business Machines Corporation 2005, 2015
+ * ï¿½ Copyright International Business Machines Corporation 2005, 2015
  * Licensed Materials - Property of IBM
 */
 
