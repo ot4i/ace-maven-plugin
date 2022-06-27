@@ -28,31 +28,8 @@
 		<sourceDirectory>src</sourceDirectory>
 		<outputDirectory>bin</outputDirectory>
 
-
 		<plugins>
-			<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<echo>Deleting settings folder</echo>
-								<delete dir=".settings" />
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			--> 
-
-
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -61,91 +38,10 @@
 					<source>${java.source.version}</source>
 					<target>${java.target.version}</target>
 					<includes>
-						<include>*.java</include>
+						<include>**/*.java*.java</include>
 					</includes>
 				</configuration>
 			</plugin>
-			<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>${maven.eclipse.plugin.version}</version>
-				<configuration>
-					<additionalBuildcommands>
-						<buildCommand>
-							<name>org.eclipse.jdt.core.javabuilder</name>
-							<arguments>
-							</arguments>
-						</buildCommand>
-						<buildCommand>
-							<name>com.ibm.etools.mft.java.builder.javabuilder</name>
-							<arguments>
-							</arguments>
-						</buildCommand>
-						<buildCommand>
-							<name>com.ibm.etools.mft.bar.ext.barbuilder</name>
-							<arguments>
-							</arguments>
-						</buildCommand>
-					</additionalBuildcommands>
-					<additionalProjectnatures>
-						<projectnature>org.eclipse.jdt.core.javanature</projectnature>
-						<projectnature>com.ibm.etools.mft.bar.ext.barnature</projectnature>
-					</additionalProjectnatures>
-				</configuration>
-				<executions>
-					<execution>
-						<id>eclipse-plugin-eclipse</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>eclipse</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			--> 
-			<!-- 
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>${maven.clean.plugin.version}</version>
-				<configuration>
-					<excludeDefaultDirectories>true</excludeDefaultDirectories>
-					<filesets>
-						<fileset>
-							<directory>.</directory>
-							<includes>
-								<include>**/*.class</include>
-							</includes>
-							<followSymlinks>false</followSymlinks>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-			--> 
-			<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>${maven.jar.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>default-jar</id>
-						<phase>none</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<version>${maven.install.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>default-install</id>
-						<phase>none</phase>
-					</execution>
-				</executions>
-			</plugin>
-			--> 
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<configuration>
