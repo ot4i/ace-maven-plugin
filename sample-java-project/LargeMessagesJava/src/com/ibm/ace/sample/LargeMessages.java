@@ -5,6 +5,8 @@ package com.ibm.ace.sample;
  * Licensed Materials - Property of IBM
 */
 
+import org.apache.commons.math3.primes.Primes;
+
 import com.ibm.broker.javacompute.MbJavaComputeNode;
 import com.ibm.broker.plugin.MbElement;
 import com.ibm.broker.plugin.MbException;
@@ -103,6 +105,13 @@ public class LargeMessages extends
         	}
         	while(refEnvironmentSaleList != null && !refEnvironmentSaleList.getName().equals(REPEATING_ELEMENT));
         }
+        
+        /* 
+         * simple test for maven dependency handling 
+         */
+        boolean isPrime = Primes.isPrime(intNumberOfSaleListsFound);
+        System.out.println("number of sales list found ["+intNumberOfSaleListsFound+"] is a prime: "+isPrime); 
+        
 	}
 	
 	/**

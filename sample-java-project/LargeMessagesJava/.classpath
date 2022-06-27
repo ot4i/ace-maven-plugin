@@ -5,5 +5,7 @@
 	<classpathentry kind="var" path="JCN_HOME/javacompute.jar"/>
 	<classpathentry kind="var" path="JCN_HOME/jplugin2.jar"/>
 	<classpathentry kind="con" path="com.ibm.etools.mft.uri.classpath.MBProjectReference"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

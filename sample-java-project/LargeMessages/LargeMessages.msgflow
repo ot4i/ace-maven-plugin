@@ -7,7 +7,7 @@
     <colorGraphic32 xmi:type="utility:GIFFileGraphic" resourceName="platform:/plugin/LargeMessages/icons/full/obj30/LargeMessages.gif"/>
     <longDescription xmi:type="utility:ConstantString" string="Sample program for use with IBM Integration Bus&#xD;&#xA;© Copyright International Business Machines Corporation 2005, 2015&#xD;&#xA;Licensed Materials - Property of IBM"/>
     <composition>
-      <nodes xmi:type="ComIbmJavaCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_7" location="298,189" javaClass="com.ibm.ace.sample.LargeMessages" javaClassLoader="">
+      <nodes xmi:type="ComIbmJavaCompute.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_7" location="298,189" javaClass="com.ibm.ace.sample.LargeMessages">
         <translation xmi:type="utility:ConstantString" string="ProduceMessageSlicesFromRepeatingElements"/>
       </nodes>
       <nodes xmi:type="ComIbmFileOutput.msgnode:FCMComposite_1" xmi:id="FCMComposite_1_4" location="556,129" outputDirectory="C:\temp_out" outputFilename="out*.xml" outputMode="archiveAndReplaceWithTimestamp">
