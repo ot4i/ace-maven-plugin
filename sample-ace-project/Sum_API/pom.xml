@@ -53,6 +53,17 @@
 						- multiple different classloaders are defined
 						default: true  --> 
 					    <!-- <failOnInvalidClassloader>false</failOnInvalidClassloader> --> 
+					
+					<!-- (7) parameter to set a custom maven settings file  
+						- note: mqsicreatebar is using maven default settings 
+						- when set a dedicated org.eclipse.m2e.core.prefs will be created for the Eclipse instance, started by mqsicreatebar
+						- importand: requires escaping - see sample 
+						default: ""  --> 
+					    <!-- <customMavenSettings></customMavenSettings> 
+						<customMavenSettings>${mavenSettings}</customMavenSettings> 
+						sample 
+						<customMavenSettings>C\:\\\\maven-test\\\\settings.xml</customMavenSettings>
+						--> 
 						
 					<!-- *************************************  
 					     **        mqsicreatebar settings   **

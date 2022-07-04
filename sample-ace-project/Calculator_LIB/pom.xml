@@ -6,6 +6,7 @@
 	<version>1.0.0</version>
 	<packaging>ace-bar</packaging>
 	<name>${project.artifactId}</name>
+	
 
 	<build>
 		<defaultGoal>package</defaultGoal>
@@ -28,6 +29,7 @@
 					<!-- installation directories for toolkit and server (runtime) -->
 					<toolkitInstallDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\tools</toolkitInstallDir>
 					<aceRunDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\server\bin</aceRunDir>
+					
 					
 					<!--  additional properties with default values  -->
 					<!-- (1) name of the resulting bar file 
@@ -52,7 +54,16 @@
 						- multiple different classloaders are defined
 						default: true  --> 
 					    <!-- <failOnInvalidClassloader>false</failOnInvalidClassloader> --> 
-
+					<!-- (7) parameter to set a custom maven settings file  
+						- note: mqsicreatebar is using maven default settings 
+						- when set a dedicated org.eclipse.m2e.core.prefs will be created for the Eclipse instance, started by mqsicreatebar
+						- importand: requires escaping - see sample 
+						default: ""  --> 
+					    <!-- <customMavenSettings></customMavenSettings> 
+						<customMavenSettings>${mavenSettings}</customMavenSettings> 
+						sample 
+						<customMavenSettings>C\:\\\\maven-test\\\\settings.xml</customMavenSettings>
+						--> 
 					
 					<!-- *************************************  
 					     **        mqsicreatebar settings   **
