@@ -41,8 +41,13 @@ Navigate to the ace-maven-plugin directory under which pom.xml is present.
 * To install the plugin locally: `mvn clean install`
 
 ### 5) Using the plugin
-You would need to install xvfb package on the build server (linux). Use below command to install it on ubuntu:
-`sudo apt-get install -y xvfb`
+If your run on Linux you have to install the xvfb package and open a display. Run e.g. the following commands on unbuntu (make sure to select the correct bashrc file depending on the 'build user'): 
+
+- `sudo apt-get install -y xvfb`
+-  echo "Xvfb -ac :100 &" >> /root/.bashrc
+-  echo "export DISPLAY=:100" >> /root/.bashrc
+
+In the case of RHEL you have to install further packages. Follow the instructions here: https://www.ibm.com/support/pages/node/6823669
 
 There is a sample ACE maven project inside 'Sample-ace-project' directory. If your ACE project is not a maven project, first convert it to a maven project and update the POM file of the project. You may look at step 4 of below article to understand how to convert the ACE project to a maven project using toolkit.
 `https://developer.ibm.com/integration/blog/2019/04/10/ibm-ace-v11-continuous-integration-maven-jenkins/`
