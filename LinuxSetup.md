@@ -52,7 +52,7 @@ vi ./LargeMessages/pom.xml
 <aceRunDir>/opt/ace-12.0.6.0/server/bin</aceRunDir>  
 ```
   
-*Step 6: run the sample-java-project*
+**Step 6: run the sample-java-project**
 start a xvfb terminal in the background:  Xvfb -ac :101 & 
 export the display:  export DISPLAY=:101
 run in  /ace-maven-plugin/sample-java-project: --> mvn -f ./combine-java-aceapp-pom.xml clean install
