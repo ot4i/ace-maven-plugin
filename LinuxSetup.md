@@ -23,7 +23,7 @@ ls -la <installdir>/ace-12.0.n.0/server/bin/mqsiprofile   --> should allow to li
 # Run a "test build" to verify the setup 
 Prerequsites: mvn is installed (yum install maven) 
 
-**Step 2: start a new session for your user (e.g. jenkins)**
+**Step 2: start a new session for your user (e.g. jenkins)**        
 Seems that there is an issue when mqsiprofile was already sourced before the build (see step 5 above) 
 Currently investigating it. 
 Workaround: create a new session for the user
