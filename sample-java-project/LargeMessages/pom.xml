@@ -32,8 +32,8 @@
 					     ************************************* --> 
 					
 					<!-- installation directories for toolkit and server (runtime) -->
-					<toolkitInstallDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\tools</toolkitInstallDir>
-					<aceRunDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\server\bin</aceRunDir>
+					<toolkitInstallDir>/opt/ace-12.0.6.0/tools</toolkitInstallDir>
+					<aceRunDir>/opt/ace-12.0.6.0/server/bin</aceRunDir>
 					<!-- customer maven settings see (7) below --> 
 					<customMavenSettings>${mavenSettings}</customMavenSettings>
 					
