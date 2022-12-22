@@ -115,7 +115,7 @@
 					documentation see : https://www.ibm.com/docs/en/app-connect/12.0?topic=commands-ibmint-package-command--> 
 					
 					<!-- defines if ibmint package should be used instead of mqsicreatebar; option; default: false --> 
-					<!-- <ibmintPackage>true</ibmintPackage> --> 
+					<ibmintPackage>true</ibmintPackage> 
 					
 					<!-- parameters  
 					overrides-file filePath; optional; the name of the file that contains the overrides to apply.
