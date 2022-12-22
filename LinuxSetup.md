@@ -56,5 +56,38 @@ vi ./LargeMessages/pom.xml
 start a xvfb terminal in the background:  Xvfb -ac :101 & 
 export the display:  export DISPLAY=:101
 run in  /ace-maven-plugin/sample-java-project: --> mvn -f ./combine-java-aceapp-pom.xml clean install
+
+# Install and configure Jenkins
+Prerequisite: 
+- ensure that maven is installed on your system 
   
+The official Jenkins install docu can be found here: https://www.jenkins.io/doc/book/installing/linux/ 
+However the steps below vary a little bit as we install an 'older LTS' release - as we only require Java 8
+
+//ensure to have wget and git available
+sudo yum install wget git -y  
+
+//configure jenkins repository; important: using redhat mirror because of key issues on jenkins 
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins.repo 
+sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
+  
+//install jenkins
+sudo yum install jenkins-2.346-1.1
+  
+//enabling and starting the jenkins service
+sudo systemctl enable jenkins
+sudo systemctl start jenkins
+  
+important: default user for jenkins is "jenkins"
+This could be change in  cat /etc/sysconfig/jenkins (look for entry 'JENKINS_USER') 
+
+follow the steps on https://www.jenkins.io/doc/book/installing/linux/ to 
+- change the port (default 8080) 
+- adjust firewall settings 
+- unlock Jenkins (requires a "one time password stored in the installed files) 
+- install the suggested plugins 
+  
+  
+
+ 
 
