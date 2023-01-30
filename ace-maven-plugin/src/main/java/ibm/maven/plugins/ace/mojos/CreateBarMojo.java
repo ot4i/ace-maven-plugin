@@ -177,8 +177,8 @@ public class CreateBarMojo extends AbstractMojo {
     /**
      * Whether ibmint package should be used instead of mqsicreatebar 
      */
-    @Parameter(property = "ace.ibmintPackage", defaultValue = "false", required = false)
-    protected Boolean ibmintPackage;
+    @Parameter(property = "ace.ibmint", defaultValue = "false", required = false)
+    protected Boolean ibmint;
     
     /**
      * filepath for overrides-file; set if overrides-file parameter should be used for ibmint package 
@@ -266,7 +266,7 @@ public class CreateBarMojo extends AbstractMojo {
         }
         
         //create different commands 
-        if (ibmintPackage) {
+        if (ibmint) {
         	
         	//logic for ibmint package  
         	//TODO: to extend, as we can only handle one build at the moment 
@@ -334,7 +334,7 @@ public class CreateBarMojo extends AbstractMojo {
         createWorkspaceDirectory();
         
         //add workspace to parameter 
-        if (ibmintPackage) {
+        if (ibmint) {
         	params.add("--input-path"); 
         	params.add(workspace.toString());
         	
@@ -415,7 +415,7 @@ public class CreateBarMojo extends AbstractMojo {
         params.addAll(addObjectsAppsLibs());
 
         //TODO to validate if I need to really put the parameters to the end; 
-        if (ibmintPackage) {
+        if (ibmint) {
         	// always trace into the file target/ace/mqsicreatebartrace.txt
             params.add("--trace");
             params.add(createBarTraceFile.getAbsolutePath());
@@ -498,7 +498,7 @@ public class CreateBarMojo extends AbstractMojo {
     	
     	String cmd = new String("");
     	
-    	if (ibmintPackage) { 
+    	if (ibmint) { 
     		getLog().info("running ibmint"); 
     		cmd = "ibmint package";
     	} else {

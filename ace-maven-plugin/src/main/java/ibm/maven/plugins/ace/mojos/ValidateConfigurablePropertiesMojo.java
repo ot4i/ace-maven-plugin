@@ -116,6 +116,14 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 	@Parameter(property = "ace.applyBarOverrideTraceFile", defaultValue = "${project.build.directory}/applybaroverridetrace.txt", required = true)
 	protected File applyBarOverrideTraceFile;
 
+	
+    /**
+     * Whether ibmint package should be used instead of mqsicreatebar 
+     */
+    @Parameter(property = "ace.ibmint", defaultValue = "false", required = false)
+    protected Boolean ibmint;
+    
+	
 	/**
 	 * The Maven Project Object
 	 */
@@ -203,68 +211,60 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 
 				List<String> params = new ArrayList<String>();
 
-				// (Required) The path to the BAR file.
-				params.add("-b");
-				params.add(barName.getAbsolutePath());
-
-				// (Optional) The name of the output BAR file to which the BAR file changes are
-				// to be made.
-				params.add("-o");
-				// String outputBarFile = new File(propFile.getParent(),
-				// propFile.getName().replaceAll("properties$", "bar")).getAbsolutePath();
-
-				// Update by Ch Weiss;  
 				String outputFileName = FilenameUtils.removeExtension(barName.getName())+"-"+propFile.getName().replaceAll("properties$", "bar");
 				String outputBarFile  = new File(barName.getParent(), outputFileName).toString(); 
+				String command ="mqsiapplybaroverride"; 
 				
-				params.add(outputBarFile); 
+				if (ibmint) { 
+					//handling for ibmint 
+					
+					//override command
+					command="ibmint apply overrides";
+					
+					params.add(propFile.getAbsolutePath());
+					
+					params.add("--input-bar-file"); 
+					params.add(barName.getAbsolutePath());
 				
-
-				// (Optional) The path to one of the following resources:
-				// - A BAR file that contains the deployment descriptor.
-				// - A properties file in which each line contains a property-name=override.
-				// - A deployment descriptor that is used to apply overrides to the BAR file.
-				params.add("-p");
-				params.add(propFile.getAbsolutePath());
-
-				// (Optional) The name of an application in the BAR file
-
-				// Added below code on 8/23/2018 - Updated it for policy projects for ACE v11 on
-				// 4/7/2019
-				if (EclipseProjectUtils.isApplication(new File(workspace, applicationName), getLog())) {
-					params.add("-k");
-				} else if (EclipseProjectUtils.isLibrary(new File(workspace, applicationName), getLog())) {
-					params.add("-y");
-				} else if (EclipseProjectUtils.isPolicyProject(new File(workspace, applicationName), getLog())) {
-					params.add("-x");
+					params.add("--output-bar-file"); 
+					params.add(outputBarFile);
+					
+					params.add("--trace"); 
+					params.add(getTraceFileParameter(propFile));
+				
+					
+				} else { 
+					//handling for mqsiapplybar override 
+					params.add("-b");
+					params.add(barName.getAbsolutePath());
+					
+					params.add("-o");
+					params.add(outputBarFile);
+					
+					params.add("-p");
+					params.add(propFile.getAbsolutePath());
+					
+					if (EclipseProjectUtils.isApplication(new File(workspace, applicationName), getLog())) {
+						params.add("-k");
+					} else if (EclipseProjectUtils.isLibrary(new File(workspace, applicationName), getLog())) {
+						params.add("-y");
+					} 
+					
+					params.add(getApplicationName());
+					
+					// (Optional) Specifies that all deployment descriptor files are updated
+					// recursively.
+					if (applyBarOverrideRecursively) {
+						params.add("-r");
+					}
+					
+					// (Optional) Specifies that the internal trace is to be sent to the named file.
+					params.add("-v");
+					params.add(getTraceFileParameter(propFile));
 				}
-				// Addition done on 8/23/2018
-
-				// params.add(getApplicationParameter());
-				params.add(getApplicationName());
-
-				// (Optional) A list of the property-name=override pairs,
-				// current-property-value=override pairs.
-				// -m
-
-				// (Optional) Specifies that all deployment descriptor files are updated
-				// recursively.
-				if (applyBarOverrideRecursively) {
-					params.add("-r");
-				}
-
-				// (Optional) Specifies that the internal trace is to be sent to the named file.
-				params.add("-v");
-				params.add(getTraceFileParameter(propFile));
-
-				// (Optional) The name of a library in the BAR file to which to apply overrides.
-				// -y
-
-				executeApplyBarOverride(params);
-
+				
+				executeApplyBarOverride(command, params);	
 			}
-
-			
 
 		} catch (IOException e) {
 			throw new MojoFailureException("Error applying bar overrides", e);
@@ -342,9 +342,14 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 				throw new MojoFailureException("Error loading properties file: " + file.getAbsolutePath(), e);
 			}
 		}
-
-		if (failOnInvalidProperties && invalidPropertiesFound) {
-			throw new MojoFailureException("Invalid properties were found");
+		
+		if (invalidPropertiesFound) { 
+		
+			if (failOnInvalidProperties) {
+				throw new MojoFailureException("Invalid properties were found");
+			} else { 
+				getLog().warn("found none matching properties");
+			}
 		}
 	}
 
@@ -352,9 +357,9 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 	 * @param params
 	 * @throws MojoFailureException If an exception occurs
 	 */
-	private void executeApplyBarOverride(List<String> params) throws MojoFailureException {
-
-		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, "mqsiapplybaroverride", params, getLog());
+	private void executeApplyBarOverride(String command, List<String> params) throws MojoFailureException {
+		
+		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, command, params, getLog());
 
 	}
 
