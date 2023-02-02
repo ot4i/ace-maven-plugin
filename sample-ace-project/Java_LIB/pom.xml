@@ -1,12 +1,11 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-
 	<groupId>com.ibm.ace.test</groupId>
 	<version>1.0.0-SNAPSHOT</version>
 	<artifactId>Java_LIB</artifactId>
-
+	<packaging>jar</packaging>
 	<properties>
 		<sharedLibProject.path>../Calculator_LIB</sharedLibProject.path>
 		<maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
@@ -15,130 +14,24 @@
 		<maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
 		<maven.eclipse.plugin.version>2.10</maven.eclipse.plugin.version>
 	</properties>
-
-	<dependencies>	 
+	<dependencies>
 		<dependency>
-    		<groupId>org.apache.commons</groupId>
-    		<artifactId>commons-math3</artifactId>
-    		<version>3.5</version>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.5</version>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<outputDirectory>bin</outputDirectory>
-
-
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>3.0.0</version>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<echo>Deleting settings folder</echo>
-								<delete dir=".settings" />
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>${maven.compiler.plugin.version}</version>
-				<configuration>
-					<source>${java.source.version}</source>
-					<target>${java.target.version}</target>
-					<includes>
-						<include>*.java</include>
-					</includes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<version>${maven.eclipse.plugin.version}</version>
-				<configuration>
-					<additionalBuildcommands>
-						<buildCommand>
-							<name>org.eclipse.jdt.core.javabuilder</name>
-							<arguments>
-							</arguments>
-						</buildCommand>
-						<buildCommand>
-							<name>com.ibm.etools.mft.java.builder.javabuilder</name>
-							<arguments>
-							</arguments>
-						</buildCommand>
-						<buildCommand>
-							<name>com.ibm.etools.mft.bar.ext.barbuilder</name>
-							<arguments>
-							</arguments>
-						</buildCommand>
-					</additionalBuildcommands>
-					<additionalProjectnatures>
-						<projectnature>org.eclipse.jdt.core.javanature</projectnature>
-						<projectnature>com.ibm.etools.mft.bar.ext.barnature</projectnature>
-					</additionalProjectnatures>
-				</configuration>
-				<executions>
-					<execution>
-						<id>eclipse-plugin-eclipse</id>
-						<phase>generate-resources</phase>
-						<goals>
-							<goal>eclipse</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			 
-			<plugin>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>${maven.clean.plugin.version}</version>
-				<configuration>
-					<excludeDefaultDirectories>true</excludeDefaultDirectories>
-					<filesets>
-						<fileset>
-							<directory>.</directory>
-							<includes>
-								<include>**/*.class</include>
-							</includes>
-							<followSymlinks>false</followSymlinks>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-			 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>${maven.jar.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>default-jar</id>
-						<phase>none</phase>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<version>${maven.install.plugin.version}</version>
-				<executions>
-					<execution>
-						<id>default-install</id>
-						<phase>none</phase>
-					</execution>
-				</executions>
+				<configuration>
+					<outputDirectory>${sharedLibProject.path}</outputDirectory>
+				</configuration>
 			</plugin>
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
@@ -159,42 +52,6 @@
 				</executions>
 			</plugin>
 		</plugins>
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.apache.maven.plugins
-										</groupId>
-										<artifactId>
-											maven-eclipse-plugin
-										</artifactId>
-										<versionRange>
-											[2.10,)
-										</versionRange>
-										<goals>
-											<goal>eclipse</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore/>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
 </project>
 

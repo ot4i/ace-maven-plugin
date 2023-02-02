@@ -18,7 +18,7 @@
 			<plugin>
 				<groupId>ibm.maven.plugins</groupId>
 				<artifactId>ace-maven-plugin</artifactId>
-				<version>12.0.3-SNAPSHOT</version>
+				<version>12.0.4-SNAPSHOT</version>
 
 				<configuration>
 					<!-- *************************************  
@@ -26,9 +26,8 @@
 					     ************************************* --> 
 					
 					<!-- installation directories for toolkit and server (runtime) -->
-					<toolkitInstallDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\tools</toolkitInstallDir>
-					<aceRunDir>C:\PROGRA~1\IBM\ACE\12.0.3.0\server\bin</aceRunDir>
-					
+					<toolkitInstallDir>C:\PROGRA~1\IBM\ACE\12.0.6.0\tools</toolkitInstallDir>
+					<aceRunDir>C:\PROGRA~1\IBM\ACE\12.0.6.0\server\bin</aceRunDir>
 					
 					<!--  additional properties with default values  -->
 					<!-- (1) name of the resulting bar file 
@@ -75,18 +74,26 @@
 					<deployAsSource>true</deployAsSource>
 					<esql21>false</esql21>
 					<debugWorkspace>true</debugWorkspace>
-					<applyBarOverride>false</applyBarOverride>
 					
 					<!-- applicationName 
 					default: ${project.artifactId} e.g. Sum_API
 					<applicationName>...</applicationName>
 					--> 
-
-
+ 
+				
 					<!-- *************************************  
-					     ** mqsiapplybar override settings  **
-					     ************************************* -->
-						 
+					     ** general overwrite settings      **
+					     ************************************* --> 
+					
+					<!--  general setting for overwrite ;  taken by mqsiapplyoverride AND ibmint apply overwrite 
+					-->
+					<!-- parameter ot define if an overwrite should happen --> 
+					<applyBarOverride>false</applyBarOverride>
+					
+					<!-- parameter to define if the build process should fail if 
+					invalid properties were found --> 
+					<failOnInvalidProperties>false</failOnInvalidProperties>
+				
 					<!-- file to 'write' all found properties using mqsireadbar  
 					default: ${project.build.directory}/ace/default.properties 
 					<defaultPropertiesFile>...</defaultPropertiesFile>
@@ -95,10 +102,8 @@
 					taken into account when applyBarOverride is set to 'true' 
 					default: ${project.basedir}/properties 
 					important: the plugin will create one bar for each property file --> 
-					<!-- 
-					<configPropFileDirectory>...</configPropFileDirectory>
-					--> 
-
+					<!-- <configPropFileDirectory></configPropFileDirectory>-->
+				
 				
 					<!-- *************************************  
 					     **        ibmint settings          **
@@ -108,7 +113,7 @@
 					documentation see : https://www.ibm.com/docs/en/app-connect/12.0?topic=commands-ibmint-package-command--> 
 					
 					<!-- defines if ibmint package should be used instead of mqsicreatebar; option; default: false --> 
-					<!-- <ibmintPackage>true</ibmintPackage> --> 
+					<ibmint>true</ibmint>
 					
 					<!-- parameters  
 					overrides-file filePath; optional; the name of the file that contains the overrides to apply.
@@ -151,6 +156,8 @@
 		</plugins>
 	
 	</build>
+	<!-- not required for ibmint -->
+	<!-- 
 	<dependencies>
 		<dependency>
 			<groupId>com.ibm.ace</groupId>
@@ -160,5 +167,6 @@
 			<type>zip</type> 
 		</dependency>
 	</dependencies>
+	-->
 
 </project>
