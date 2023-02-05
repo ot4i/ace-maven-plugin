@@ -5,7 +5,8 @@
 	<groupId>com.ibm.ace.test</groupId>
 	<version>1.0.0-SNAPSHOT</version>
 	<artifactId>Java_LIB</artifactId>
-	<packaging>jar</packaging>
+	<!-- 
+	<packaging>jar</packaging> -->
 	<properties>
 		<sharedLibProject.path>../Calculator_LIB</sharedLibProject.path>
 		<maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
@@ -20,23 +21,43 @@
 			<artifactId>commons-math3</artifactId>
 			<version>3.5</version>
 		</dependency>
+		<dependency>
+			<groupId>com.ibm.broker</groupId>
+			<artifactId>plugin</artifactId>
+			<version>12.0.6.0</version>
+			<scope>system</scope>
+			<systemPath>C:\PROGRA~1\IBM\ACE\12.0.6.0\server\classes\jplugin2.jar</systemPath>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.broker</groupId>
+			<artifactId>javacompute</artifactId>
+			<version>12.0.6.0</version>
+			<scope>system</scope>
+			<systemPath>C:\PROGRA~1\IBM\ACE\12.0.6.0\server\classes\javacompute.jar</systemPath>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<outputDirectory>bin</outputDirectory>
 		<plugins>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>${maven.jar.plugin.version}</version>
+				
 				<configuration>
 					<outputDirectory>${sharedLibProject.path}</outputDirectory>
 				</configuration>
+				
 			</plugin>
+			
+			
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<configuration>
 					<excludeScope>provided</excludeScope>
+					<excludeScope>system</excludeScope>
 					<excludeTransitive>false</excludeTransitive>
 				</configuration>
 				<executions>
@@ -51,6 +72,39 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.10.1</version>
+				<configuration>
+					<compilerArgs>
+						<arg>-cp</arg>
+						<arg>${cp};C:\PROGRA~1\IBM\ACE\12.0.6.0\server\classes\javacompute.jar:C:\PROGRA~1\IBM\ACE\12.0.6.0\server\classes\jplugin2.jar</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+			-->
+			<!-- 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<skipMain>true</skipMain>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			-->
+		
+			
 		</plugins>
 	</build>
 </project>

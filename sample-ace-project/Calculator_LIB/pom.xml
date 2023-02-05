@@ -116,6 +116,7 @@
 					<!-- defines if ibmint package should be used instead of mqsicreatebar; option; default: false --> 
 					<ibmint>true</ibmint>
 					
+					
 					<!-- parameters  
 					overrides-file filePath; optional; the name of the file that contains the overrides to apply.
 					<overridesFile>filepath</overridesFile>
