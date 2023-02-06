@@ -1,4 +1,4 @@
-## ibm int 
+## ibmint 
 
 Aktuelle unterstützte Use Cases: 
 - Shared Lib mit Java Anteil - Java Part nur mit Maven Dependencies     
