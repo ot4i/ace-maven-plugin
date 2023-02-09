@@ -1,0 +1,139 @@
+Es ist wichtig zu verstehen, daß es zwischen den zwei Modi "mqsicreatebar" und "ibmint" die folgende Unterschiede gibt: 
+
+**Scenario 1 - Build im Toolkit** 
+- Verwendung von Eclipse, m2e Plugin und mqsicreatebar
+- .project Abhängigkeiten werden aufgelöst (Eclipse Feature) 
+- maven dependencies vom Java Projekt werden mitgenommen (über "Maven Builder" in .project Datei; Intepretation der .classpath Einträge) 
+
+**Scenario 2 - Build (Server oder Lokal) mit mqsicreatebar**   
+- Da mqsicreatebar ein Headless Eclipse aufruft, werden hier wieder Eclipse, m2e Plugin und mqsicreatebar verwendet 
+- .project Abhängigkeiten werden aufgelöst
+- maven dependencies vom Java Projekt werden mitgenommen (über "Maven Builder" in .project Datei; Intepretation der .classpath Einträge) 
+
+**Scenario 3 - Build (Server oder Lokal) mit ibmint**  
+- Es wird hier KEIN Headless Eclipse verwendet 
+- Das bedeutet auch das .project Abängigkeiten nicht aufgelöst werden
+- maven dependencies vom Java Projekt werden nicht mitgenommen (über .classpath Einträge)
+
+## SharedLib mit Java Projekt über ibmint bauen 
+Um aktuell das gleiche Ergebnis wie mit mqsicreatebar und Eclipse zu bekommen ist aktuell folgender Ansatz implementiert: 
+
+1.) Build vom Java Projekt 
+- Build Schritt besteht nur aus der Kopie der Dependencies in das "SharedLib Hauptprojekt"   
+- keine Kompilierung der eigentlichen Java Klassen
+- Beispiele siehe: https://github.com/ChrWeissDe/ace-maven-plugin/tree/feature/ibmint-only/sample-ace-project/Java_LIB 
+
+
+2.) Build der SharedLibrary 
+- über ACE Maven Pluging (Version im ibmint-only branch 
+- zusätzliche Parameter "ibmintDependencies" und "addJars" 
+- Parameter "ibmintDependencies": Angabe vom Java Projekt - wird dann mit --project in den ibmint Aufruf übernommen 
+- Parameter "addJars": scannt das SharedLibrary Projekt und nimmt die jars in die Umgebungsvariable MQSI_EXTRA_BUILD_CLASSPATH auf; damit ist sichergestellt, dass alle Klassen kompiliert werden können. 
+- Beispiel: https://github.com/ChrWeissDe/ace-maven-plugin/blob/feature/ibmint-only/sample-ace-project/Calculator_LIB/pom.xml   
+(Achtung ibmint muss im Beispiel noch auf "true" gesetzt werden)   
+ 
+
+## Gut zu wissen 
+**Issue: zusätzliche Einträge in .classpath können verhindern, das Maven Dependencies richtig übernommen werden**   
+- Ausgangslage ist eine SharedLib mit einem zugehörigen Java Projekt   
+- Wie in Scenario 1 und 2 beschrieben, werden die Maven Dependencies vom Java Projekt übernommen   
+- Dies erfolgt unten über den Eintrag MAVEN2_CLASSPATH_CONTAINER und name="maven.pomderived" value="true"   
+- Wenn die gleiche Library einer Dependency aber zusätzlich in der .classpath Datei referenziert wird - (siehe Eintrag für commons-math3-3.5.jar), wird diese NICHT über den Maven Mechanismus in der SharedLibrary abgelegt. 
+
+```
+	.classpath Datei 
+	<!-- zusätzliche classapth Entry -- die common-maths wird nicht in die Shared Lib übernommen --> 
+	<classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-math3/3.5/commons-math3-3.5.jar"/>
+	 
+	<classpathentry kind="con" path="com.ibm.etools.mft.uri.classpath.MBProjectReference"/>
+	<classpathentry kind="lib" path="C:/Program Files/IBM/ACE/12.0.6.0/server/classes/javacompute.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/IBM/ACE/12.0.6.0/server/classes/jplugin2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
+	
+	.pom Datei 
+	
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-math3</artifactId>
+		<version>3.5</version>
+	</dependency>
+		<dependency>
+    	<groupId>commons-io</groupId>
+    	<artifactId>commons-io</artifactId>
+    	<version>2.10.0</version> <!-- latest version 2.11.0 by 31/03/2022; added -->
+	</dependency>
+```
+
+
+
+## Backup - zu sortieren 
+
+### ibmint 
+
+Aktuelle unterstützte Use Cases: 
+- Shared Lib mit Java Anteil - Java Part nur mit Maven Dependencies     
+- Application, REST APIs (ohne Java Anteil / Java Calls) 
+- Policy Projects
+
+
+
+### Weiterer Punkte 
+
+Ausgabe von aktuellen Classpath: 
+mvn dependency:build-classpath -Dmdep.outputFile=cp.txt
+
+
+ibmint would normally use the .classpath file in the Java project for the classpath when building, and should handle the various different entries in that file these days (early v12 fixpacks might not handle all of them).
+It's possible that some entries still aren't being handled properly (would be good to know what's not working) but MQSI_EXTRA_BUILD_CLASSPATH can add additional JARs as a workaround.
+
+## Verprobte Optionen 
+
+
+Optionen: 
+(1) Build der Java Projekte mit "Standard Maven Build", Bau von SharedLib via ibmint 
+Vorraussetzung: Externe Abhängigkeiten müsen in den "Compile Classpath von Maven" mit aufgenommen werden 
+
+
+(1a) Erweiterung Maven Build Path via "System Scope Dependencies" 
+- einfachste Variante 
+- Hinterlegung der jars als "System Scope" mit Angabe vom "System Path" 
+siehe auch: https://stackoverflow.com/questions/2479046/maven-how-to-add-additional-libs-not-available-in-repo
+- **verprobt, funktioniert** 
+- wird tlw. als "bad practice" angesehen, da es anscheinend bei Erstellung von "Maven Assemblies" zu Problemen kommen kann
+- zu prüfen, ob wird das in unserem Fall vernachlässigen können. 
+- aktuell auch als "deprecated" gemarkt, unklar aber wann es wirklich deprecated wird 
+--> funktioniert am Ende aber nicht; da im Toolkit die Dependencies mit in die bar aufgenommen werden ....   
+
+(1b) Erweiterung Maven Build Path via "Provided Scope Dependencies"
+- analog zu 1a) ; Dependencies müssen aber zumindest im "lokal Maven" hinterlegt sein 
+- generell möglich die Installation ins lokal Maven mit in den Build Job aufzunehmen 
+(Maven Repository auf dem Build Server) 
+- Alternative: generelle Hinterlegung der Dependencies auf dem zentralen Nexus 
+--> funktioniert am Ende aber nicht; da im Toolkit die Dependencies mit in die bar aufgenommen werden ....     
+
+
+(1c) Modifizierung Erweiterung des Java Classpaths via compilerArgs Argument 
+- der Java Classpath kann leider nicht direkt gesetzt werden 
+- Workaround: Ausgabe Java Classpath in Datei, einlesen, modifizieren und setzen als "compilerArgs" 
+- siehe: https://stackoverflow.com/questions/3410548/maven-add-a-folder-or-jar-file-into-current-classpath
+--> verprobt - funktioniert aber nicht; der -classpath Parameter wird gesetzt, ist aber dann doppelt vorhanden; dies führt dann zu Problemen   
+
+
+(2) Build von Shared Lib mit Java Projekt nur über "ibmint" 
+- gemeinsamer Bau der Shared und Java Lib via ibmint (zusätzlicher Eintrag in der pom.xml) 
+- initial verprobt 
+- issues: Maven Dependencies werden nicht korrekt aufgelöst
+- Maven Eintrag: <classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-math3/3.5/commons-math3-3.5.jar"/> 
+- Dependencies müssen in classpath als "lib" Eintrag (während dem Build) angepasst werden 
+- weiter Verprobung notwendig 
+- weiterer Gedanke: Java Projekt als Hauptprojekt --> damit Zugriff auf die pom Dependencies ? 
+--> aktueller Ansatz der weiter verfolgt wird; erster Prototyp / Ansatz siehe oben 
+
+
+
+
+
