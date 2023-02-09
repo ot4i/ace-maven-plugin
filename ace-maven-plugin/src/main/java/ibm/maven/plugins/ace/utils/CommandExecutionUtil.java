@@ -29,8 +29,9 @@ public final class CommandExecutionUtil {
         List<String> command = new ArrayList<String>();
 
         if (osName.contains("windows")){
-            cmdFile = new File(fileTmpDir + File.separator + cmd + "Command-" + UUID.randomUUID() + ".cmd");
-            //TODO: add variable to control behaviour 
+            //cmdFile = new File(fileTmpDir + File.separator + cmd + "Command-" + UUID.randomUUID() + ".cmd");
+        	cmdFile = new File(fileTmpDir + File.separator  + "Command-" + UUID.randomUUID() + ".cmd");
+        	//TODO: add variable to control behaviour 
             // cmdFile.deleteOnExit();
             executable = aceRunDir + "/mqsiprofile&&" + cmd;
         } else if(osName.contains("linux") || osName.contains("mac os x")){	
