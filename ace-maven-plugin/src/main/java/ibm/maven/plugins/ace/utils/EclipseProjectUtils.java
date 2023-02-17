@@ -70,6 +70,20 @@ public class EclipseProjectUtils {
 
         return getProjectDescription(projectDirectory).getName();
     }
+    /**
+     * returns the name of the project out of the .project file
+     * 
+     * @param projectDirectory the (workspace) directory containing the project
+     * @return the name of the project out of the .project file
+     * @throws MojoFailureException if something goes wrong
+     */
+   
+    public static List<String> getProjectsDependencies(File projectDirectory) throws MojoFailureException {
+    	
+        return getProjectDescription(projectDirectory).getProjects().getProject(); 
+        
+    }
+    
 
     /**
      * @param projectDirectory the (workspace) directory containing the project
@@ -140,6 +154,24 @@ public class EclipseProjectUtils {
                 .contains("com.ibm.etools.mft.policy.ui.Nature")) {
             log.debug(
                     projectDirectory + " is an ace Policy project");
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * @param projectDirectory the (workspace) directory containing the project
+     * @param log logger to be used if debugging information should be produced
+     * @return true if the project is an ace Application
+     * @throws MojoFailureException if something went wrong
+     */
+    public static boolean isJavaProject(File projectDirectory, Log log) throws MojoFailureException {
+
+        List<String> natureList = getProjectDescription(projectDirectory).getNatures().getNature();
+        if (natureList
+                .contains("org.eclipse.jdt.core.javanature")) {
+            log.debug(projectDirectory + " is a java project");
             return true;
         } else {
             return false;

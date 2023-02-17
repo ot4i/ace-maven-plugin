@@ -21,28 +21,12 @@
 			<artifactId>commons-math3</artifactId>
 			<version>3.5</version>
 		</dependency>
-			<dependency>
-    		<groupId>commons-io</groupId>
-    		<artifactId>commons-io</artifactId>
-    		<version>2.10.0</version> <!-- latest version 2.11.0 by 31/03/2022; added -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>5.1.0</version>
 		</dependency>
 		
-		<!-- 
-		<dependency>
-			<groupId>com.ibm.broker</groupId>
-			<artifactId>plugin</artifactId>
-			<version>12.0.6.0</version>
-			<scope>system</scope>
-			<systemPath>C:\PROGRA~1\IBM\ACE\12.0.6.0\server\classes\jplugin2.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.ibm.broker</groupId>
-			<artifactId>javacompute</artifactId>
-			<version>12.0.6.0</version>
-			<scope>system</scope>
-			<systemPath>C:\PROGRA~1\IBM\ACE\12.0.6.0\server\classes\javacompute.jar</systemPath>
-		</dependency>
-		--> 
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
