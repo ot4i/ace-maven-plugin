@@ -19,7 +19,7 @@
 			<plugin>
 				<groupId>ibm.maven.plugins</groupId>
 				<artifactId>ace-maven-plugin</artifactId>
-				<version>12.0.5-SNAPSHOT</version>
+				<version>12.0.6-SNAPSHOT</version>
 
 				<configuration>
 					<!-- *************************************  
@@ -114,9 +114,8 @@
 					documentation see : https://www.ibm.com/docs/en/app-connect/12.0?topic=commands-ibmint-package-command--> 
 					
 					<!-- defines if ibmint package should be used instead of mqsicreatebar; option; default: false --> 
-					<ibmint>false</ibmint>
-					<ibmintDependencies>Java_LIB</ibmintDependencies>
-					<addJars>true</addJars>
+					<ibmint>true</ibmint>
+				
 					
 					<!-- parameters  
 					overrides-file filePath; optional; the name of the file that contains the overrides to apply.

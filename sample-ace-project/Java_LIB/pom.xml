@@ -20,33 +20,32 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-math3</artifactId>
 			<version>3.5</version>
+			<scope>compile</scope>
 		</dependency>
+		<!-- not required, added to test transitive dependencies -->
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>5.1.0</version>
 		</dependency>
-		
+		<!-- not required, added to test that scope 'provided' is skipped  -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot</artifactId>
+			<version>3.0.2</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<outputDirectory>bin</outputDirectory>
 		<plugins>
+			<!-- following plugins are used for local command line testing --> 
 			<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>${maven.jar.plugin.version}</version>
-				<configuration>
-					<outputDirectory>${sharedLibProject.path}</outputDirectory>
-				</configuration>
-			</plugin>
-			--> 
 			<plugin>
 				<artifactId>maven-dependency-plugin</artifactId>
 				<configuration>
 					<excludeScope>provided</excludeScope>
-					<excludeScope>system</excludeScope>
 					<excludeTransitive>false</excludeTransitive>
 				</configuration>
 				<executions>
@@ -56,7 +55,9 @@
 							<goal>copy-dependencies</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${sharedLibProject.path}</outputDirectory>
+							<outputDirectory>.</outputDirectory>
+							<excludeScope>provided</excludeScope>
+							<excludeTransitive>false</excludeTransitive>
 						</configuration>
 					</execution>
 				</executions>
@@ -77,8 +78,9 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+			--> 
 		</plugins>
+		
 	</build>
 </project>
 

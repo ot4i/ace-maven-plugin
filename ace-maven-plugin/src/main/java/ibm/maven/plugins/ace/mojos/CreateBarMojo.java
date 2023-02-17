@@ -372,11 +372,11 @@ public class CreateBarMojo extends AbstractMojo {
 
 		if (ibmint) {
 
-			/* handling for ibmint - outsourced to dedicated method */ 
+			/* handling for ibmint - outsourced to dedicated method */
 			ibmintCompile();
 		} else {
 
-			//* handling for ibmint - outsourced to dedicated method */ 
+			// * handling for ibmint - outsourced to dedicated method */
 			List<String> params = constructParams();
 			executeMqsiCreateBar(params);
 
@@ -421,16 +421,19 @@ public class CreateBarMojo extends AbstractMojo {
 
 			getLog().debug("found project dependency: " + projectDependency);
 			File dependencyDirectory = new File(workspace, projectDependency);
-			if (EclipseProjectUtils.isJavaProject(dependencyDirectory, getLog())) {
 
-				// adding project to list
-				javaDependencies.add(projectDependency);
-				getLog().debug("added as javaDependencies: " + projectDependency);
+			try {
 
-				// lookup dependencies
-				File pomFile = new File(dependencyDirectory, "pom.xml");
-				Model model;
-				try {
+				if (EclipseProjectUtils.isJavaProject(dependencyDirectory, getLog())) {
+
+					// adding project to list
+					javaDependencies.add(projectDependency);
+					getLog().debug("added as javaDependencies: " + projectDependency);
+
+					// lookup dependencies
+					File pomFile = new File(dependencyDirectory, "pom.xml");
+					Model model;
+
 					model = PomXmlUtils.unmarshallPomFile(pomFile);
 
 					// iterate over dependencies
@@ -438,16 +441,21 @@ public class CreateBarMojo extends AbstractMojo {
 							.getDependency()) {
 						getLog().debug("found dependency: " + dependency);
 						// format for jk: and("org.apache.poi:poi-ooxml:5.1.0")
-						String mavenCoordinate = new String(dependency.getGroupId() + ":" + dependency.getArtifactId()
-								+ ":" + dependency.getVersion());
-						deps = deps.and(mavenCoordinate);
-					}
 
-				} catch (JAXBException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					throw new MojoFailureException(e.getCause());
+						if ((dependency.getScope() == null) || (dependency.getScope().equalsIgnoreCase("compile"))) {
+							String mavenCoordinate = new String(dependency.getGroupId() + ":"
+									+ dependency.getArtifactId() + ":" + dependency.getVersion());
+							deps = deps.and(mavenCoordinate);
+						}
+
+					}
 				}
+
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				getLog().warn("handling for dependency project [" + projectDependency
+						+ "] failed; project might likely not exist");
 			}
 		}
 
@@ -457,6 +465,8 @@ public class CreateBarMojo extends AbstractMojo {
 		 */
 		JkDependencyResolver resolver = JkDependencyResolver.of();
 		resolver.addRepos(JkRepo.ofMavenCentral());
+		
+		
 		List<Path> libs = resolver.resolve(deps).getFiles().getEntries(); // local download
 		StringBuffer classpathExt = new StringBuffer("");
 		int count = 0;
@@ -544,7 +554,7 @@ public class CreateBarMojo extends AbstractMojo {
 	 * @throws MojoFailureException If an exception occurs
 	 */
 	private void executeMqsiCreateBar(List<String> params) throws MojoFailureException {
-		
+
 		getLog().info("running mqsicreatebar");
 		String cmd = new String("mqsicreatebar");
 		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, cmd, params, getLog());
