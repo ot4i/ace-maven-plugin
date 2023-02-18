@@ -321,6 +321,8 @@ public class CreateBarMojo extends AbstractMojo {
 
 		params.add("-b");
 		params.add(barName.getAbsolutePath());
+		
+		
 
 		// cleanBuild - optional
 		if (cleanBuild) {
@@ -337,6 +339,8 @@ public class CreateBarMojo extends AbstractMojo {
 			params.add("-deployAsSource");
 		}
 
+		params.addAll(addObjectsAppsLibs());
+		
 		// skipWSErrorCheck - option
 		if (skipWSErrorCheck) {
 			params.add("-skipWSErrorCheck");
