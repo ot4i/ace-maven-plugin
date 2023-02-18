@@ -9,6 +9,6 @@
     <modules>
         <module>./Java_LIB</module>
         <module>./Calculator_LIB</module>
-		<!-- <module>./Sum_API</module> --> 
+		<module>./Sum_API</module>
     </modules>
 </project>

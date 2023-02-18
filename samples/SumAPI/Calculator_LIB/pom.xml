@@ -1,11 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.ibm.ace</groupId>
-	<artifactId>Sum_API</artifactId>
+	<artifactId>Calculator_LIB</artifactId>
 	<!-- For performing maven release, you would change it to snapshot version, e.g. 1.0.5-SNAPSHOT -->
 	<version>1.0.0</version>
 	<packaging>ace-bar</packaging>
 	<name>${project.artifactId}</name>
+	
 
 	<build>
 		<defaultGoal>package</defaultGoal>
@@ -18,7 +19,7 @@
 			<plugin>
 				<groupId>ibm.maven.plugins</groupId>
 				<artifactId>ace-maven-plugin</artifactId>
-				<version>12.0.4-SNAPSHOT</version>
+				<version>12.0.6-SNAPSHOT</version>
 
 				<configuration>
 					<!-- *************************************  
@@ -114,6 +115,7 @@
 					
 					<!-- defines if ibmint package should be used instead of mqsicreatebar; option; default: false --> 
 					<ibmint>true</ibmint>
+				
 					
 					<!-- parameters  
 					overrides-file filePath; optional; the name of the file that contains the overrides to apply.
@@ -156,17 +158,6 @@
 		</plugins>
 	
 	</build>
-	<!-- not required for ibmint -->
-	<!-- 
-	<dependencies>
-		<dependency>
-			<groupId>com.ibm.ace</groupId>
-			<artifactId>Calculator_LIB</artifactId>
-			<version>1.0.0</version>
-			<scope>compile</scope>
-			<type>zip</type> 
-		</dependency>
-	</dependencies>
-	-->
+	
 
 </project>
