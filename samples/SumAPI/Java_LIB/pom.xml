@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ibm.ace.test</groupId>
+	<version>1.0.0-SNAPSHOT</version>
+	<artifactId>Java_LIB</artifactId>
+	<!-- 
+	<packaging>jar</packaging> -->
+	<properties>
+		<sharedLibProject.path>../Calculator_LIB</sharedLibProject.path>
+		<maven.compiler.plugin.version>3.3</maven.compiler.plugin.version>
+		<maven.jar.plugin.version>2.4</maven.jar.plugin.version>
+		<maven.install.plugin.version>2.5.2</maven.install.plugin.version>
+		<maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
+		<maven.eclipse.plugin.version>2.10</maven.eclipse.plugin.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-math3</artifactId>
+			<version>3.5</version>
+			<scope>compile</scope>
+		</dependency>
+		<!-- not required, added to test transitive dependencies -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>5.1.0</version>
+		</dependency>
+		<!-- not required, added to test that scope 'provided' is skipped  -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot</artifactId>
+			<version>3.0.2</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<outputDirectory>bin</outputDirectory>
+		<plugins>
+			<!-- following plugins are used for local command line testing --> 
+			<!-- 
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<configuration>
+					<excludeScope>provided</excludeScope>
+					<excludeTransitive>false</excludeTransitive>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>.</outputDirectory>
+							<excludeScope>provided</excludeScope>
+							<excludeTransitive>false</excludeTransitive>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>default-compile</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+						<configuration>
+							<skipMain>true</skipMain>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			--> 
+		</plugins>
+		
+	</build>
+</project>
+
+
+

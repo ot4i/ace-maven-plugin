@@ -1,4 +1,6 @@
 target
+bin
+.metadata
+.tpignore
+.travis.yml
 
-
-sample-ace-project/.metadata/

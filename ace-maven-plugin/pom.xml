@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ibm.maven.plugins</groupId>
 	<artifactId>ace-maven-plugin</artifactId>
-	<version>12.0.4-SNAPSHOT</version>
+	<version>12.0.6-SNAPSHOT</version>
 	
 	<packaging>maven-plugin</packaging>
 	<name>ace-maven-plugin</name>
@@ -51,6 +51,12 @@
     		<groupId>net.lingala.zip4j</groupId>
     		<artifactId>zip4j</artifactId>
     		<version>2.10.0</version><!-- latest version 2.10 by 31/03/2022; old: 2.9.1 -->
+		</dependency>
+		<!--  added for additional dependency handling / download -->
+		<dependency>
+  			<groupId>dev.jeka</groupId>
+  			<artifactId>jeka-core</artifactId>
+  			<version>0.10.9</version> <!--  latest version 0.10.9 by 15/02/2023 -->
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
