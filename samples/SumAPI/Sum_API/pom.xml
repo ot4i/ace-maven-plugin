@@ -156,17 +156,4 @@
 		</plugins>
 	
 	</build>
-	<!-- not required for ibmint -->
-	<!-- 
-	<dependencies>
-		<dependency>
-			<groupId>com.ibm.ace</groupId>
-			<artifactId>Calculator_LIB</artifactId>
-			<version>1.0.0</version>
-			<scope>compile</scope>
-			<type>zip</type> 
-		</dependency>
-	</dependencies>
-	-->
-
 </project>

@@ -156,8 +156,7 @@
 		</plugins>
 	
 	</build>
-	<!-- not required for ibmint -->
-	<!-- 
+	<!-- only required for mqsicreatebar -->
 	<dependencies>
 		<dependency>
 			<groupId>com.ibm.ace</groupId>
@@ -167,6 +166,4 @@
 			<type>zip</type> 
 		</dependency>
 	</dependencies>
-	-->
-
 </project>
