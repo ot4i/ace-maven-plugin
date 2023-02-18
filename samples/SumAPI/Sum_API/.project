@@ -3,7 +3,6 @@
 	<name>Sum_API</name>
 	<comment></comment>
 	<projects>
-		<project>Caclulator_LIB</project>
 		<project>Calculator_LIB</project>
 	</projects>
 	<buildSpec>
