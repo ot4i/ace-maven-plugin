@@ -32,6 +32,11 @@ Um aktuell das gleiche Ergebnis wie mit mqsicreatebar und Eclipse zu bekommen is
 - Beispiel: https://github.com/ChrWeissDe/ace-maven-plugin/blob/feature/ibmint-only/sample-ace-project/Calculator_LIB/pom.xml   
 (Achtung ibmint muss im Beispiel noch auf "true" gesetzt werden)   
  
+## What you should know 
+ibmint benötigt temporär einen Dateizugriff und verwendet dafür den MQSI_WORKPATH
+Da dieser typischerweise nicht zur Verfügung steht - erstellt das ace-maven-plugin einen (temporären) Workpath unter {project.build.directory}/tmp-work-dir.
+Ein alternatives Verzeichnis kann in der pom über den Parameter mqsiTempWorkDir gesetzt werden. 
+
 
 ## Gut zu wissen 
 **Issue: zusätzliche Einträge in .classpath können verhindern, das Maven Dependencies richtig übernommen werden**   

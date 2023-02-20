@@ -22,6 +22,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
@@ -116,12 +117,23 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 	@Parameter(property = "ace.applyBarOverrideTraceFile", defaultValue = "${project.build.directory}/applybaroverridetrace.txt", required = true)
 	protected File applyBarOverrideTraceFile;
 
+	/**
+	 * Whether additional debug information should be printed out
+	 */
+	@Parameter(property = "ace.debug", defaultValue = "false", required = true, readonly = true)
+	protected Boolean debug;
 	
     /**
      * Whether ibmint package should be used instead of mqsicreatebar 
      */
     @Parameter(property = "ace.ibmint", defaultValue = "false", required = false)
     protected Boolean ibmint;
+    
+    /*
+	 * added temporary mqsiWorkDir - only used in context of ibmint 
+	 */
+	@Parameter(property = "ace.mqsiTempWorkDir", defaultValue = "${project.build.directory}/tmp-work-dir", required = true, readonly = true)
+	protected File mqsiTempWorkDir;
     
 	
 	/**
@@ -219,8 +231,11 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 					//handling for ibmint 
 					
 					//override command
-					command="ibmint apply overrides";
 					
+					/*ensure that always a temporary workdir is used*/ 
+					//command is prefixed with '/mqsiprofile&&'
+					command=new String ("SET MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& SET MQSI_WORKPATH="+mqsiTempWorkDir+"&&ibmint apply overrides");
+				
 					params.add(propFile.getAbsolutePath());
 					
 					params.add("--input-bar-file"); 
@@ -262,6 +277,15 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 					params.add("-v");
 					params.add(getTraceFileParameter(propFile));
 				}
+				
+				
+				if (debug) {
+					 Map<String, String> env = System.getenv();
+					 getLog().info("**** start debug environment");
+				     env.forEach((k, v) -> getLog().info(k + ":" + v));
+				     getLog().info("**** end debug environment");
+				}
+				
 				
 				executeApplyBarOverride(command, params);	
 			}

@@ -7,10 +7,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import javax.xml.bind.JAXBException;
+import java.util.Map;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
@@ -23,7 +21,6 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.util.FileUtils;
 
 import dev.jeka.core.api.depmanagement.JkDependencySet;
 import dev.jeka.core.api.depmanagement.JkRepo;
@@ -190,6 +187,14 @@ public class CreateBarMojo extends AbstractMojo {
 	 */
 	@Parameter(property = "session", required = true, readonly = true)
 	protected MavenSession session;
+	
+	
+	/**
+	 * Whether additional debug information should be printed out
+	 */
+	@Parameter(property = "ace.debug", defaultValue = "false", required = true, readonly = true)
+	protected Boolean debug;
+	
 
 	/**
 	 * ibmint parameter section; added by C.Weiss, IBM 02/2022
@@ -201,9 +206,6 @@ public class CreateBarMojo extends AbstractMojo {
 	@Parameter(property = "ace.ibmint", defaultValue = "false", required = false)
 	protected Boolean ibmint;
 
-	/**
-	 * ibmint parameter section; added by C.Weiss, IBM 02/2022
-	 **/
 
 	/**
 	 * filepath for overrides-file; set if overrides-file parameter should be used
@@ -232,10 +234,10 @@ public class CreateBarMojo extends AbstractMojo {
 	protected Boolean compileMapsAndSchemas;
 
 	/*
-	 * added temporary
+	 * added temporary mqsiWorkDir - only used in context of ibmint 
 	 */
-	@Parameter(property = "ace.unpackDependenciesDirectory", defaultValue = "${project.basedir}", required = true, readonly = true)
-	protected File unpackDependenciesDirectory;
+	@Parameter(property = "ace.mqsiTempWorkDir", defaultValue = "${project.build.directory}/tmp-work-dir", required = true, readonly = true)
+	protected File mqsiTempWorkDir;
 
 	/**
 	 * The Maven PluginManager Object
@@ -538,12 +540,24 @@ public class CreateBarMojo extends AbstractMojo {
 
 		// handle classpath - add aditional jars when specified via pom
 		// MQSI_EXTRA_BUILD_CLASSPATH
+		
+		/*ensure that always a temporary workdir is used*/ 
+		//command is prefixed with '/mqsiprofile&&'
+		cmd.append("SET MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& SET MQSI_WORKPATH="+mqsiTempWorkDir+"&&"); 
+	
 
 		if ((classpathExt != null) && (classpathExt.length() > 0)) {
 			// found a classpath
-			cmd.append("set MQSI_EXTRA_BUILD_CLASSPATH=");
+			cmd.append("SET MQSI_EXTRA_BUILD_CLASSPATH=");
 			cmd.append(classpathExt);
 			cmd.append(" && ");
+		}
+		
+		if (debug) {
+			 Map<String, String> env = System.getenv();
+			 getLog().info("**** start debug environment");
+		     env.forEach((k, v) -> getLog().info(k + ":" + v));
+		     getLog().info("**** end debug environment");
 		}
 
 		cmd.append("ibmint package ");
@@ -560,6 +574,14 @@ public class CreateBarMojo extends AbstractMojo {
 	private void executeMqsiCreateBar(List<String> params) throws MojoFailureException {
 
 		getLog().info("running mqsicreatebar");
+		
+		if (debug) {
+			 Map<String, String> env = System.getenv();
+			 getLog().info("**** start debug environment");
+		     env.forEach((k, v) -> getLog().info(k + ":" + v));
+		     getLog().info("**** end debug environment");
+		}
+		
 		String cmd = new String("mqsicreatebar");
 		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, cmd, params, getLog());
 
