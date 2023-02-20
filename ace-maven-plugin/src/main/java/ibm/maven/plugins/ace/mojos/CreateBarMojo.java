@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
@@ -543,9 +544,16 @@ public class CreateBarMojo extends AbstractMojo {
 		
 		/*ensure that always a temporary workdir is used*/ 
 		//command is prefixed with '/mqsiprofile&&'
-		cmd.append("SET MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& SET MQSI_WORKPATH="+mqsiTempWorkDir+"&&"); 
-	
-
+		String osName = System.getProperty("os.name").toLowerCase();
+        
+        if (osName.contains("windows")){
+        	cmd.append("SET MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& SET MQSI_WORKPATH="+mqsiTempWorkDir+"&&");
+        } else if(osName.contains("linux") || osName.contains("mac os x")){	
+        	cmd.append("export MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& export MQSI_WORKPATH="+mqsiTempWorkDir+"&&");
+        } else {
+            throw new MojoFailureException("Unexpected OS: " + osName);
+        }
+		
 		if ((classpathExt != null) && (classpathExt.length() > 0)) {
 			// found a classpath
 			cmd.append("SET MQSI_EXTRA_BUILD_CLASSPATH=");

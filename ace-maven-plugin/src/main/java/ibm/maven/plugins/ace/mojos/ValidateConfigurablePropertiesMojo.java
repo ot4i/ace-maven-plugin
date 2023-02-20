@@ -234,6 +234,19 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 					
 					/*ensure that always a temporary workdir is used*/ 
 					//command is prefixed with '/mqsiprofile&&'
+					//command is prefixed with '/mqsiprofile&&'
+					; 
+					String osName = System.getProperty("os.name").toLowerCase();
+			        
+			        if (osName.contains("windows")){
+			        	command=new String("SET MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& SET MQSI_WORKPATH="+mqsiTempWorkDir+"&&");
+			        } else if(osName.contains("linux") || osName.contains("mac os x")){	
+			        	command=new String("export MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& export MQSI_WORKPATH="+mqsiTempWorkDir+"&&");
+			        } else {
+			            throw new MojoFailureException("Unexpected OS: " + osName);
+			        }
+					
+			        
 					command=new String ("SET MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& SET MQSI_WORKPATH="+mqsiTempWorkDir+"&&ibmint apply overrides");
 				
 					params.add(propFile.getAbsolutePath());
