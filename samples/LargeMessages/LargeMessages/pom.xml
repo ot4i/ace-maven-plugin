@@ -81,7 +81,7 @@
 					<cleanBuild>true</cleanBuild>
 					<deployAsSource>true</deployAsSource>
 					<esql21>false</esql21>
-					<debugWorkspace>true</debugWorkspace>
+			
 					<applyBarOverride>false</applyBarOverride>
 					
 					<!-- applicationName 

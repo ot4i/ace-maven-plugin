@@ -24,6 +24,9 @@ public class CleanBarBuildWorkspaceMojo extends AbstractMojo {
 
     /**
      * set to true to disable the workspace cleaning
+     * 
+     * Comment ChrWeiss 20.02.2023: currently not used; however left within the code 
+     * 
      */
     @Parameter(property = "ace.debugWorkspace", defaultValue = "true")
     protected boolean debugWorkspace;

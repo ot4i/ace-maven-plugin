@@ -73,7 +73,7 @@
 					<cleanBuild>true</cleanBuild>
 					<deployAsSource>true</deployAsSource>
 					<esql21>false</esql21>
-					<debugWorkspace>true</debugWorkspace>
+				
 					
 					<!-- applicationName 
 					default: ${project.artifactId} e.g. Sum_API
