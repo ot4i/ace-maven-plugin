@@ -557,14 +557,14 @@ public class CreateBarMojo extends AbstractMojo {
 		StringBuffer cmd = new StringBuffer("");
  
 		//handle mqsi_workpath 
-		cmd.append(exportCommand+" MQSI_REGISTRY="+mqsiTempWorkDir+"/config&& mqsicreateworkdir "+mqsiTempWorkDir+"&&"+exportCommand+" MQSI_WORKPATH="+mqsiTempWorkDir+"/config&&");
+		cmd.append(exportCommand+" MQSI_REGISTRY="+mqsiTempWorkDir+"/config && mqsicreateworkdir "+mqsiTempWorkDir+" && "+exportCommand+" MQSI_WORKPATH="+mqsiTempWorkDir+"/config && ");
         
 		// handle MQSI_EXTRA_BUILD_CLASSPATH
 		if ((classpathExt != null) && (classpathExt.length() > 0)) {
 			// found a classpath
 			cmd.append(exportCommand+" MQSI_EXTRA_BUILD_CLASSPATH=");
 			cmd.append(classpathExt);
-			cmd.append("&&");
+			cmd.append(" && ");
 		}
 		
 		if (debug) {
