@@ -139,7 +139,7 @@ public final class CommandExecutionUtil {
             // cmdFile.deleteOnExit();
             executable = aceRunDir + "/mqsiprofile&&" + cmd;
         } else if(osName.contains("linux") || osName.contains("mac os x")){	
-            executable = ". " + aceRunDir + "/mqsiprofile && " + cmd;
+            executable = ". " + aceRunDir + "/mqsiprofile ; " + cmd;
         } else {
             throw new MojoFailureException("Unexpected OS: " + osName);
         }
