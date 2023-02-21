@@ -36,7 +36,8 @@ public final class CommandExecutionUtil {
             executable = aceRunDir + "/mqsiprofile &&" + cmd;
         } else if(osName.contains("linux") || osName.contains("mac os x")){	
             cmdFile = new File(fileTmpDir + File.separator  + "Command-" + UUID.randomUUID() + ".sh");
-            executable = ". " + aceRunDir + "/mqsiprofile && " + cmd;
+            //note: requires a ';' to ensure that all succeeding commands will be called 
+            executable = ". " + aceRunDir + "/mqsiprofile ; " + cmd;
         } else {
             throw new MojoFailureException("Unexpected OS: " + osName);
         }
