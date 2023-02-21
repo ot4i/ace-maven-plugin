@@ -245,9 +245,6 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 			        } else {
 			            throw new MojoFailureException("Unexpected OS: " + osName);
 			        }
-					
-			        
-					command=new String ("SET MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& SET MQSI_WORKPATH="+mqsiTempWorkDir+"&&ibmint apply overrides");
 				
 					params.add(propFile.getAbsolutePath());
 					

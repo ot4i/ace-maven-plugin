@@ -545,20 +545,25 @@ public class CreateBarMojo extends AbstractMojo {
 		/*ensure that always a temporary workdir is used*/ 
 		//command is prefixed with '/mqsiprofile&&'
 		String osName = System.getProperty("os.name").toLowerCase();
+		String exportCommand=new String(); 
+		
         
         if (osName.contains("windows")){
-        	cmd.append("SET MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& SET MQSI_WORKPATH="+mqsiTempWorkDir+"&&");
+        	exportCommand="SET"; 
         } else if(osName.contains("linux") || osName.contains("mac os x")){	
-        	cmd.append("export MQSI_REGISTRY="+mqsiTempWorkDir+"&& mqsicreateworkdir "+mqsiTempWorkDir+"&& export MQSI_WORKPATH="+mqsiTempWorkDir+"&&");
+        	exportCommand="export";
         } else {
             throw new MojoFailureException("Unexpected OS: " + osName);
         }
+        
+        cmd.append(exportCommand+" MQSI_REGISTRY="+mqsiTempWorkDir+"/config&& mqsicreateworkdir "+mqsiTempWorkDir+"&&"+exportCommand+" MQSI_WORKPATH="+mqsiTempWorkDir+"/config&&");
+        
 		
 		if ((classpathExt != null) && (classpathExt.length() > 0)) {
 			// found a classpath
-			cmd.append("SET MQSI_EXTRA_BUILD_CLASSPATH=");
+			cmd.append(exportCommand+" MQSI_EXTRA_BUILD_CLASSPATH=");
 			cmd.append(classpathExt);
-			cmd.append(" && ");
+			cmd.append("&&");
 		}
 		
 		if (debug) {
