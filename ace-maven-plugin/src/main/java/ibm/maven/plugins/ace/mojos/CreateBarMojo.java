@@ -416,6 +416,23 @@ public class CreateBarMojo extends AbstractMojo {
 
 		// create the workspace
 		createWorkspaceDirectory();
+		
+		//set System specific settings
+		String osName = System.getProperty("os.name").toLowerCase();
+		String exportCommand=new String(); 
+		String pathDelimiter = new String(); 
+		
+        
+        if (osName.contains("windows")){
+        	exportCommand="SET"; 
+        	pathDelimiter=";";
+        } else if(osName.contains("linux") || osName.contains("mac os x")){	
+        	exportCommand="export";
+        	pathDelimiter=":";
+        } else {
+            throw new MojoFailureException("Unexpected OS: " + osName);
+        }
+        
 
 		// find Java Project dependencies
 		List<String> javaDependencies = new ArrayList<String>();
@@ -493,7 +510,7 @@ public class CreateBarMojo extends AbstractMojo {
 
 			if (count > 0) {
 				getLog().debug("adding seperator for classpath");
-				classpathExt.append(";");
+				classpathExt.append(pathDelimiter);
 			}
 			classpathExt.append(targetPath.toString());
 			count++;
@@ -538,27 +555,11 @@ public class CreateBarMojo extends AbstractMojo {
 		params.add(createBarTraceFile.getAbsolutePath());
 
 		StringBuffer cmd = new StringBuffer("");
-
-		// handle classpath - add aditional jars when specified via pom
-		// MQSI_EXTRA_BUILD_CLASSPATH
-		
-		/*ensure that always a temporary workdir is used*/ 
-		//command is prefixed with '/mqsiprofile&&'
-		String osName = System.getProperty("os.name").toLowerCase();
-		String exportCommand=new String(); 
-		
+ 
+		//handle mqsi_workpath 
+		cmd.append(exportCommand+" MQSI_REGISTRY="+mqsiTempWorkDir+"/config&& mqsicreateworkdir "+mqsiTempWorkDir+"&&"+exportCommand+" MQSI_WORKPATH="+mqsiTempWorkDir+"/config&&");
         
-        if (osName.contains("windows")){
-        	exportCommand="SET"; 
-        } else if(osName.contains("linux") || osName.contains("mac os x")){	
-        	exportCommand="export";
-        } else {
-            throw new MojoFailureException("Unexpected OS: " + osName);
-        }
-        
-        cmd.append(exportCommand+" MQSI_REGISTRY="+mqsiTempWorkDir+"/config&& mqsicreateworkdir "+mqsiTempWorkDir+"&&"+exportCommand+" MQSI_WORKPATH="+mqsiTempWorkDir+"/config&&");
-        
-		
+		// handle MQSI_EXTRA_BUILD_CLASSPATH
 		if ((classpathExt != null) && (classpathExt.length() > 0)) {
 			// found a classpath
 			cmd.append(exportCommand+" MQSI_EXTRA_BUILD_CLASSPATH=");
