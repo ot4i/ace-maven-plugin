@@ -35,6 +35,7 @@ public final class CommandExecutionUtil {
             // cmdFile.deleteOnExit();
             executable = aceRunDir + "/mqsiprofile &&" + cmd;
         } else if(osName.contains("linux") || osName.contains("mac os x")){	
+            cmdFile = new File(fileTmpDir + File.separator  + "Command-" + UUID.randomUUID() + ".sh");
             executable = ". " + aceRunDir + "/mqsiprofile && " + cmd;
         } else {
             throw new MojoFailureException("Unexpected OS: " + osName);
@@ -42,14 +43,28 @@ public final class CommandExecutionUtil {
 
         command.add(executable);
         command.addAll(params);
-
+        
+        try {
+        	log.info("setting command: " + getCommandLine(command));
+        	FileUtils.fileWrite(cmdFile, getCommandLine(command));
+            // make sure it can be executed on Unix
+            cmdFile.setExecutable(true);
+            pb = new ProcessBuilder(cmdFile.getAbsolutePath());
+            log.info("command file: " + cmdFile.getAbsolutePath());
+        } catch (IOException e1) {
+            throw new MojoFailureException("Could not create command file: " + cmdFile.getAbsolutePath());
+        }
+        
+        /* 
         if (log.isDebugEnabled()) {
             if (osName.contains("windows")){
                 log.debug("executing command file: " + cmdFile.getAbsolutePath());
             }
         }
        log.info("Command: " + getCommandLine(command));
-
+         */ 
+        
+        /*
         if (osName.contains("windows")){
             try {
                 FileUtils.fileWrite(cmdFile, getCommandLine(command));
@@ -69,12 +84,14 @@ public final class CommandExecutionUtil {
         } else {
             throw new MojoFailureException("Unexpected OS: " + osName);
         }
+        */ 
         // redirect subprocess stderr to stdout
         pb.redirectErrorStream(true);
         Process process;
         ProcessOutputLogger stdOutHandler = null;
         try {
-            pb.redirectErrorStream(true);
+        	log.info("start executing command..");
+        	pb.redirectErrorStream(true);
             process = pb.start();
             stdOutHandler = new ProcessOutputLogger(process.getInputStream(), log);
             stdOutHandler.start();
