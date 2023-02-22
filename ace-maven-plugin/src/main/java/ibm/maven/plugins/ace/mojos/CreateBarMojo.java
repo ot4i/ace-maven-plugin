@@ -413,6 +413,7 @@ public class CreateBarMojo extends AbstractMojo {
 	public void ibmintCompile() throws MojoFailureException {
 
 		List<String> params = new ArrayList<String>();
+		List<String> commands = new ArrayList<String>();
 
 		// create the workspace
 		createWorkspaceDirectory();
@@ -422,6 +423,7 @@ public class CreateBarMojo extends AbstractMojo {
 		String exportCommand=new String(); 
 		String pathDelimiter = new String(); 
 		String cmdJoinOperator = new String(); 
+		StringBuffer ibmintCommand = new StringBuffer("");
 		
         
         if (osName.contains("windows")){
@@ -520,66 +522,57 @@ public class CreateBarMojo extends AbstractMojo {
 		}
 
 		// assembling params
-		params.add("--input-path");
-		params.add(workspace.toString());
-
-		params.add("--output-bar-file");
-		params.add(barName.getAbsolutePath());
-
+		ibmintCommand.append("ibmint package ");
+		ibmintCommand.append("--input-path "+"\""+workspace.toString()+"\" ");
+		ibmintCommand.append("--output-bar-file \""+barName.getAbsolutePath()+"\" "); 
+		
+		
 		if ((overridesFile != null) && (overridesFile.length() > 0)) {
-			params.add("--overrides-file");
-			params.add(overridesFile);
+			ibmintCommand.append("--overrides-file "+overridesFile+" ");
 		}
 
 		if ((keywordsFile != null) && (keywordsFile.length() > 0)) {
-			params.add("--keywords-file");
-			params.add(keywordsFile);
+			ibmintCommand.append("--keywords-file "+keywordsFile+" ");
 		}
 
 		if (doNotCompileJava) {
-			params.add("--do-not-compile-java");
+			ibmintCommand.append("--do-not-compile-java ");
 		}
 
 		if (compileMapsAndSchemas) {
-			params.add("--compile-maps-and-schemas");
+			ibmintCommand.append("--compile-maps-and-schemas ");
 		}
 
 		// adding project
-		params.add("--project");
-		params.add(applicationName);
+		ibmintCommand.append("--project "+applicationName+" ");
 
 		for (String javaProjectDependency : javaDependencies) {
-			params.add("--project");
-			params.add(javaProjectDependency);
+			ibmintCommand.append("--project "+javaProjectDependency+" ");
 		}
 
 		// adding trace
-		params.add("--trace");
-		params.add(createBarTraceFile.getAbsolutePath());
+		ibmintCommand.append("--trace " + "\""+createBarTraceFile.getAbsolutePath()+"\" ");
 
-		StringBuffer cmd = new StringBuffer("");
- 
-		//handle mqsi_workpath 
-		//cmd.append(exportCommand+" MQSI_REGISTRY="+mqsiTempWorkDir+"/config"+cmdJoinOperator+" mqsicreateworkdir "+mqsiTempWorkDir+cmdJoinOperator+exportCommand+" MQSI_WORKPATH="+mqsiTempWorkDir+"/config"+cmdJoinOperator);
-		cmd.append(exportCommand+" MQSI_REGISTRY="+mqsiTempWorkDir+"/config& mqsicreateworkdir "+mqsiTempWorkDir+cmdJoinOperator+exportCommand+" MQSI_WORKPATH="+mqsiTempWorkDir+"/config"+cmdJoinOperator);
-        
+		//building up required command list 
+		commands.add(exportCommand+" MQSI_REGISTRY=\""+mqsiTempWorkDir+"/config\"");
+		commands.add("mqsicreateworkdir \""+mqsiTempWorkDir+"\"");
+		commands.add(exportCommand+" MQSI_WORKPATH=\""+mqsiTempWorkDir+"/config\""); 
+		
+		 
 		// handle MQSI_EXTRA_BUILD_CLASSPATH
-		if ((classpathExt != null) && (classpathExt.length() > 0)) {
-			// found a classpath
-			cmd.append(exportCommand+" MQSI_EXTRA_BUILD_CLASSPATH=");
-			cmd.append(classpathExt);
-			cmd.append(cmdJoinOperator);
+		if ((classpathExt != null) && (classpathExt.length() > 0)) {			
+			commands.add(exportCommand+" MQSI_EXTRA_BUILD_CLASSPATH="+classpathExt+" "); 
 		}
+		
+		commands.add(ibmintCommand.toString());
 		
 		if (debug) {
 			 Map<String, String> env = System.getenv();
-			 getLog().info("**** start debug environment information");
+			 getLog().info("**** start debug environment");
 		     env.forEach((k, v) -> getLog().info(k + ":" + v));
 		     getLog().info("**** end debug environment");
 		}
-
-		cmd.append("ibmint package ");
-		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, cmd.toString(), params, getLog());
+		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, commands, getLog());
 
 	}
 
