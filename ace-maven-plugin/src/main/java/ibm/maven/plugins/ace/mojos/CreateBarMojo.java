@@ -421,14 +421,17 @@ public class CreateBarMojo extends AbstractMojo {
 		String osName = System.getProperty("os.name").toLowerCase();
 		String exportCommand=new String(); 
 		String pathDelimiter = new String(); 
+		String cmdJoinOperator = new String(); 
 		
         
         if (osName.contains("windows")){
         	exportCommand="SET"; 
         	pathDelimiter=";";
+        	cmdJoinOperator="&"; 
         } else if(osName.contains("linux") || osName.contains("mac os x")){	
         	exportCommand="export";
         	pathDelimiter=":";
+        	cmdJoinOperator="&&"; 
         } else {
             throw new MojoFailureException("Unexpected OS: " + osName);
         }
@@ -557,19 +560,20 @@ public class CreateBarMojo extends AbstractMojo {
 		StringBuffer cmd = new StringBuffer("");
  
 		//handle mqsi_workpath 
-		cmd.append(exportCommand+" MQSI_REGISTRY="+mqsiTempWorkDir+"/config && mqsicreateworkdir "+mqsiTempWorkDir+" && "+exportCommand+" MQSI_WORKPATH="+mqsiTempWorkDir+"/config && ");
+		//cmd.append(exportCommand+" MQSI_REGISTRY="+mqsiTempWorkDir+"/config"+cmdJoinOperator+" mqsicreateworkdir "+mqsiTempWorkDir+cmdJoinOperator+exportCommand+" MQSI_WORKPATH="+mqsiTempWorkDir+"/config"+cmdJoinOperator);
+		cmd.append(exportCommand+" MQSI_REGISTRY="+mqsiTempWorkDir+"/config& mqsicreateworkdir "+mqsiTempWorkDir+cmdJoinOperator+exportCommand+" MQSI_WORKPATH="+mqsiTempWorkDir+"/config"+cmdJoinOperator);
         
 		// handle MQSI_EXTRA_BUILD_CLASSPATH
 		if ((classpathExt != null) && (classpathExt.length() > 0)) {
 			// found a classpath
 			cmd.append(exportCommand+" MQSI_EXTRA_BUILD_CLASSPATH=");
 			cmd.append(classpathExt);
-			cmd.append(" && ");
+			cmd.append(cmdJoinOperator);
 		}
 		
 		if (debug) {
 			 Map<String, String> env = System.getenv();
-			 getLog().info("**** start debug environment");
+			 getLog().info("**** start debug environment information");
 		     env.forEach((k, v) -> getLog().info(k + ":" + v));
 		     getLog().info("**** end debug environment");
 		}
