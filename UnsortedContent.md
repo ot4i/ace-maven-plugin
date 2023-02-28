@@ -1,3 +1,7 @@
+# THIS FILE CONTAINS UNSORTED CONTENT 
+
+#ibmint content 
+
 Es ist wichtig zu verstehen, daß es zwischen den zwei Modi "mqsicreatebar" und "ibmint" die folgende Unterschiede gibt: 
 
 **Scenario 1 - Build im Toolkit** 
@@ -139,6 +143,52 @@ siehe auch: https://stackoverflow.com/questions/2479046/maven-how-to-add-additio
 --> aktueller Ansatz der weiter verfolgt wird; erster Prototyp / Ansatz siehe oben 
 
 
+# UNSORTED CHANGES 
+## How to Setup Linux Jenkins Environment 
+
+## Steps to build the plugin
+
+### 5) Using the plugin
+If your run on Linux you have to install the xvfb package and open a display. Run e.g. the following commands on unbuntu (make sure to select the correct bashrc file depending on the 'build user'): 
+
+- `sudo apt-get install -y xvfb`
+-  echo "Xvfb -ac :100 &" >> /root/.bashrc
+-  echo "export DISPLAY=:100" >> /root/.bashrc
+
+In the case of RHEL you have to install further packages. Follow the instructions here: https://www.ibm.com/support/pages/node/6823669
+
+There is a sample ACE maven project inside 'Sample-ace-project' directory. If your ACE project is not a maven project, first convert it to a maven project and update the POM file of the project. You may look at step 4 of below article to understand how to convert the ACE project to a maven project using toolkit.
+`https://developer.ibm.com/integration/blog/2019/04/10/ibm-ace-v11-continuous-integration-maven-jenkins/`
+
+View the Readme file of the included sample ACE project
+
+### 6) Specific notes on plugin configuration 
+
+**(1) Use of javaclass loaders**   
+A Java Compute Node allows you to set a specific "class loader"  within the Node properties section.
+Typically this will be a "Shared Lib Classloader". See for example: https://www.ibm.com/docs/en/integration-bus/10.0?topic=libraries-shared-java-files 
+  
+If you use this construct you have to set the plugin parameter `useClassloaders` to true. 
+Otherwise the build will fail. For the syntax take a look at the sample for the pom files. 
+
+#ibmint options 
+3 Optionen: 
+
+1.) Ohne Java Pom 
+
+via Jeka Toolkit 
+issue: 
+- download Pfad für ivy.jar fest hinterlegt  
+- Ticket geöffnet 
+
+2.) Mit Java Pom 
+
+a) mit copy Dependencies und auslesen der dependencies 
+--> benötigt ein build vor dem eigentlichen Projekt 
+- liste der jar Dateien aus dem Hauptverzeichnis 
 
 
+b) mit pom dependency 
+--> benötigt ein build vor dem eigentlichen Projekt
+- liste der jar Dateien aus dem dependency tree 
 

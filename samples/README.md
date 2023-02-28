@@ -1,4 +1,4 @@
-**this readme requires a reorg**
+**this readme is under construction** 
 
 
 # Overview 
