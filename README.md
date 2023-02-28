@@ -1,3 +1,14 @@
+# About this branch 
+
+- this branch uses jeka for the automatic dependency resolution when building with ibmint 
+- in general 'working' - but has got the limitation that it requires a direct "internet connection" 
+- reason: jeka uses under the cover ivy - and downloads the ivy dependencies directly from maven central 
+- see following jeka issue: https://github.com/jeka-dev/jeka/issues/235
+
+
+
+--- original content 
+
 # ace-maven-plugin
 ## About
 This plugin can be used to build IBM App Connect Enterprise projects and create BAR files for deployment. You may install the plugin locally or can deploy it on the Enterprise repository server, which can be pulled during maven build of the ACE projects. We have included a sample 'settings.xml' file for maven instance, which makes use of Nexus as repository server. You should update the 'settings.xml' with the values appropriate for your environment.
