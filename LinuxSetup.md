@@ -72,7 +72,7 @@ sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat/jenkins
 sudo rpm --import https://pkg.jenkins.io/redhat/jenkins.io.key
   
 //install jenkins
-sudo yum install jenkins-2.346-1.1
+sudo yum install jenkins-2.346-1.1 //please check the lates version 
   
 //enabling and starting the jenkins service
 sudo systemctl enable jenkins

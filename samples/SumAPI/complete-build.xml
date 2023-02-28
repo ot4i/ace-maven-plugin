@@ -9,6 +9,7 @@
     <modules>
         <module>./Java_LIB</module>
         <module>./Calculator_LIB</module>
+		<module>./PolicyProject</module>
 		<module>./Sum_API</module>
     </modules>
 </project>

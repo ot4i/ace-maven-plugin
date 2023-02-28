@@ -3,4 +3,5 @@ bin
 .metadata
 .tpignore
 .travis.yml
+.settings
 

@@ -1,6 +1,69 @@
+
+** under construction ** 
+# About 
+This plugin can be used to build IBM App Connect Enterprise projects and create BAR files for deployment. 
+- supports to create the bar: mqsicreatebar and ibmint 
+- main capability: 
+	- create bar file 
+	- overwride properties 
+All code is provided as-is without any support. Feel free to fork the code and do your own adjustments. #
+Also contributions are always welcome. 
+
+1.) About 
+- when to use it 
+- advantages 
+- major update to the ACE V11 maven plugin version from 2021 
+- main capabilities 
+- how to contribute 
+- tested with ACE 12.0.6.0 
+
+2.) Changes compared to the "old ACE V11 version" 
+- add here the magic changes 
+
+
+3.) How to build the plugin 
+4.) How to use the plugin 
+- see primary samples 
+- mavenize your projects - if not done yet 
+
+- mqsicreatebar or ibmint package 
+mqsicreatebar 
+	uses headless eclipse under the cover 
+	advantages: 
+		- build as done by the ACE toolkit 
+		- automatic handling of maven mechanismen based on m2e Eclipse project
+		- full support for mqsireadbar 
+		- interpretes .project file - might be required for more complex scenario 
+	disadvantages: 
+		- requires all related project - check by Eclipse 
+		
+ibmint 
+	direct 
+	advantages: 
+		- faster than mqsicreatebar 
+		- does not require projects from .project file 
+		- inbuild support for simple use cases 
+		- java projects directly referenced by the library 
+	disadvantages: 
+		- some limitations related to mqsireadbar 
+
+--> sample poms for mqsicreatebar and ibmint 
+4.) What you should know on top 
+--> Section about relevant content  
+--> link to Setup on Liniux --> LinuxSetup.md
+--> build-with-ibmint.md 
+	- MQSI_WORKPATH 
+	- MQSI --> additional classpath - automatic handling for ibmint 
+	
+
+5.) Additional Thoughts 
+How to improve the plugin: 
+--> see ChangeList.md 
+
 # ace-maven-plugin
 ## About
-This plugin can be used to build IBM App Connect Enterprise projects and create BAR files for deployment. You may install the plugin locally or can deploy it on the Enterprise repository server, which can be pulled during maven build of the ACE projects. We have included a sample 'settings.xml' file for maven instance, which makes use of Nexus as repository server. You should update the 'settings.xml' with the values appropriate for your environment.
+This plugin can be used to build IBM App Connect Enterprise projects and create BAR files for deployment. 
+You may install the plugin locally or can deploy it on the Enterprise repository server, which can be pulled during maven build of the ACE projects. We have included a sample 'settings.xml' file for maven instance, which makes use of Nexus as repository server. You should update the 'settings.xml' with the values appropriate for your environment.
 The plugin also contains a 'pom.xml'. Ensure to update the repository server url and other values appropriate to environment before building the plugin.
 
 ## Steps to build the plugin
