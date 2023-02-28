@@ -1,27 +1,70 @@
 
-** under construction ** 
+** this Readme is under construction ** 
+
 # About 
-This plugin can be used to build IBM App Connect Enterprise projects and create BAR files for deployment. 
-- supports to create the bar: mqsicreatebar and ibmint 
-- main capability: 
-	- create bar file 
-	- overwride properties 
-All code is provided as-is without any support. Feel free to fork the code and do your own adjustments. #
-Also contributions are always welcome. 
-
-1.) About 
-- when to use it 
-- advantages 
-- major update to the ACE V11 maven plugin version from 2021 
-- main capabilities 
-- how to contribute 
-- tested with ACE 12.0.6.0 
-
-2.) Changes compared to the "old ACE V11 version" 
-- add here the magic changes 
+This plugin can be used to build IBM App Connect Enterprise projects. Result is typically a bar file which can be deployed to an IBM Integration Server.
+The project itself can be build based on 'mqsicreatebar' or 'ibmint'. Details see the section "How to use the plugin". 
+The current version of the plugin was tested with IBM App Connect 12.0.6.  
+*Important*: the code is provided in 'good faith' and AS-IS. There is no warranty or further service implied or committed. Any supplied sample code is not supported via IBM product service channels.
+Feel free to fork the code and do your own adjustments. Of course contributions are always welcome (e.g. via merge requests). 
 
 
-3.) How to build the plugin 
+# Changes
+Current version of the plugin is "12.0.6 [-SNAPSHOT]". 
+Following changes (compared to the last major update in 2022): 
+
+- support for alternative build via ibmint 
+- updated samples (for ibmint and mqsicreatebar) 
+- fixes for maven dependencies handling 
+- additional source packaging (configurable via pom) 
+- updated bar override handling (allows multiple properties, keeps original file)
+- harmonized  mqsi commands (incl logging)
+- update of used maven dependencies (to latest possible version) 
+- general code cleanup and optimization 
+
+# How to build the plugin 
+You have to build the plugin on our own. There is no version available on Maven central. 
+However the steps to build the plugin are quite simple - so no worries. 
+
+Here the sample instructions for a build on Linux (Ubuntu 18.04) with a Nexus repository. Changes to other environments should be quite easy:   
+
+## 1) Install maven on build server
+Ensure that you have JDK8 installed
+
+`sudo apt-get install openjdk-8-jdk`
+
+Install Maven by typing the following command:
+
+`sudo apt install maven`
+
+## 2) Update your maven settings
+Edit the settings.xml located in 'conf' folder under maven home directory. You can copy the sample 'setting.xml' included here and make necessary changes.
+* Update the 'localRepository' if not using the default location
+* Enter the credentials for nexus repository that has access to deploy artifacts to the repository
+`<server>
+    <id>releases</id>
+    <username>nexus-deployer</username>
+    <password>Passw0rd</password>
+ </server>`
+* Update the profile properties and repository locations
+* Update the 'eclipse.workspace' and 'perform.workspace' values as per your environment. You may keep these values if you are using Jenkins with home directory '/var/lib/jenkins'. Also if you are using jenkins, you may need to update {JENKINS_HOME_DIR}/config.xml to have below values:
+`<workspaceDir>${ITEM_ROOTDIR}/workspace</workspaceDir>
+ <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>`
+
+
+
+## 3) Build the plugin
+If you are not doing maven release steps to release a version of the plugin, you can directly deploy the plugin locally on the build server or on to the repository. If doing so, make sure the remove '-SNAPSHOT' from 'version' in the pom.xml. 
+Navigate to the ace-maven-plugin directory under which pom.xml is present.
+
+* To deploy the plugin to repository: `mvn clean deploy`
+* To install the plugin locally: `mvn clean install`
+
+
+# How to use the plugin 
+
+
+ 
 4.) How to use the plugin 
 - see primary samples 
 - mavenize your projects - if not done yet 
@@ -60,48 +103,9 @@ ibmint
 How to improve the plugin: 
 --> see ChangeList.md 
 
-# ace-maven-plugin
-## About
-This plugin can be used to build IBM App Connect Enterprise projects and create BAR files for deployment. 
-You may install the plugin locally or can deploy it on the Enterprise repository server, which can be pulled during maven build of the ACE projects. We have included a sample 'settings.xml' file for maven instance, which makes use of Nexus as repository server. You should update the 'settings.xml' with the values appropriate for your environment.
-The plugin also contains a 'pom.xml'. Ensure to update the repository server url and other values appropriate to environment before building the plugin.
+# Further Ideas 
 
 ## Steps to build the plugin
-Below are the steps to build the plugin. The provided instructions have been tested in Linux (Ubuntu 18.04) with Nexus repository. You can make necessary changes if using a different repository server.
-
-### 1) Install maven on build server
-Ensure that you have JDK8 installed
-
-`sudo apt-get install openjdk-8-jdk`
-
-Install Maven by typing the following command:
-
-`sudo apt install maven`
-### 2) Update the maven settings.xml
-Edit the settings.xml located in 'conf' folder under maven home directory. You can copy the sample 'setting.xml' included here and make necessary changes.
-* Update the 'localRepository' if not using the default location
-* Enter the credentials for nexus repository that has access to deploy artifacts to the repository
-`<server>
-    <id>releases</id>
-    <username>nexus-deployer</username>
-    <password>Passw0rd</password>
- </server>`
-* Update the profile properties and repository locations
-* Update the 'eclipse.workspace' and 'perform.workspace' values as per your environment. You may keep these values if you are using Jenkins with home directory '/var/lib/jenkins'. Also if you are using jenkins, you may need to update {JENKINS_HOME_DIR}/config.xml to have below values:
-`<workspaceDir>${ITEM_ROOTDIR}/workspace</workspaceDir>
- <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>`
-
-### 3) Update the pom.xml
-Clone this repository.
-* Update the repository urls
-* Update the 'connection' string in 'scm' section
-
-### 4) Build the plugin
-If you are not doing maven release steps to release a version of the plugin, you can directly deploy the plugin locally on the build server or on to the repsotory. If doing so, make sure the remove '-SNAPSHOT' from 'version' in the pom.xml. 
-Navigate to the ace-maven-plugin directory under which pom.xml is present.
-
-* To deploy the plugin to repository: `mvn clean deploy`
-* To install the plugin locally: `mvn clean install`
 
 ### 5) Using the plugin
 If your run on Linux you have to install the xvfb package and open a display. Run e.g. the following commands on unbuntu (make sure to select the correct bashrc file depending on the 'build user'): 

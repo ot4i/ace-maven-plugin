@@ -4,6 +4,8 @@
 	<comment></comment>
 	<projects>
 		<project>Java_LIB</project>
+		<!--dummy project reference; added to test plugin --> 
+		<project>unknown_project</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
