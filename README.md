@@ -1,11 +1,11 @@
 
-** this Readme is under construction ** 
+**THIS README IS UNDER CONSTRUCTION** 
 
 # About 
 This plugin can be used to build IBM App Connect Enterprise projects. Result is typically a bar file which can be deployed to an IBM Integration Server.
 The project itself can be build based on 'mqsicreatebar' or 'ibmint'. Details see the section "How to use the plugin". 
-The current version of the plugin was tested with IBM App Connect 12.0.6.  
-*Important*: the code is provided in 'good faith' and AS-IS. There is no warranty or further service implied or committed. Any supplied sample code is not supported via IBM product service channels.
+The current version of the plugin was tested with IBM App Connect Enterprise 12.0.6.  
+**Important**: the code is provided in 'good faith' and AS-IS. There is no warranty or further service implied or committed. Any supplied sample code is not supported via IBM product service channels.
 Feel free to fork the code and do your own adjustments. Of course contributions are always welcome (e.g. via merge requests). 
 
 
@@ -28,7 +28,7 @@ However the steps to build the plugin are quite simple - so no worries.
 
 Here the sample instructions for a build on Linux (Ubuntu 18.04) with a Nexus repository. Changes to other environments should be quite easy:   
 
-## 1) Install maven on build server
+**1) Install maven on build server**   
 Ensure that you have JDK8 installed
 
 `sudo apt-get install openjdk-8-jdk`
@@ -37,7 +37,7 @@ Install Maven by typing the following command:
 
 `sudo apt install maven`
 
-## 2) Update your maven settings
+**2) Update your maven settings**   
 Edit the settings.xml located in 'conf' folder under maven home directory. You can copy the sample 'setting.xml' included here and make necessary changes.
 * Update the 'localRepository' if not using the default location
 * Enter the credentials for nexus repository that has access to deploy artifacts to the repository
@@ -51,9 +51,7 @@ Edit the settings.xml located in 'conf' folder under maven home directory. You c
 `<workspaceDir>${ITEM_ROOTDIR}/workspace</workspaceDir>
  <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>`
 
-
-
-## 3) Build the plugin
+**3) Build the plugin**   
 If you are not doing maven release steps to release a version of the plugin, you can directly deploy the plugin locally on the build server or on to the repository. If doing so, make sure the remove '-SNAPSHOT' from 'version' in the pom.xml. 
 Navigate to the ace-maven-plugin directory under which pom.xml is present.
 
@@ -62,36 +60,43 @@ Navigate to the ace-maven-plugin directory under which pom.xml is present.
 
 
 # How to use the plugin 
+- see primary sample SumAPI and Readme 
+- link: https://github.com/ChrWeissDe/ace-maven-plugin/blob/main/samples/README.md 
+
+- to 'build options' 
+a) mqsicreatbar 
+b) ibmint 
+
+Differences: 
+
+**mqsicreatebar**
+* uses headless eclipse under the cover (includinge maven e2 plugin) 
+* same behaviour as build via ACE toolkit 
+
+advantages:    
+* build as done by the ACE toolkit 
+*  automatic handling of maven mechanismen based on m2e Eclipse project
+* full support for mqsireadbar 
+* automatic handling of .project  - might be required for more complex scenario 
+
+disadvantages:    
+* requires that all related project are 'available' - check by Eclipse 
+* build quite slow - as the Eclipse need to be started up 
+
+**ibmint**
+* new packaging / build command 
+advantages:    
+* faster than mqsicreatebar 
+* does not require projects from .project file 
+* inbuild support for simple use cases 
+* java projects directly referenced by the library 
+
+disadvantages: 
+* requires specific pom for related Java Projects - see https://github.com/ChrWeissDe/ace-maven-plugin/blob/main/samples/README.md  
+* some limitations related to mqsireadbar 
 
 
- 
-4.) How to use the plugin 
-- see primary samples 
-- mavenize your projects - if not done yet 
-
-- mqsicreatebar or ibmint package 
-mqsicreatebar 
-	uses headless eclipse under the cover 
-	advantages: 
-		- build as done by the ACE toolkit 
-		- automatic handling of maven mechanismen based on m2e Eclipse project
-		- full support for mqsireadbar 
-		- interpretes .project file - might be required for more complex scenario 
-	disadvantages: 
-		- requires all related project - check by Eclipse 
-		
-ibmint 
-	direct 
-	advantages: 
-		- faster than mqsicreatebar 
-		- does not require projects from .project file 
-		- inbuild support for simple use cases 
-		- java projects directly referenced by the library 
-	disadvantages: 
-		- some limitations related to mqsireadbar 
-
---> sample poms for mqsicreatebar and ibmint 
-4.) What you should know on top 
+# What you should know 
 --> Section about relevant content  
 --> link to Setup on Liniux --> LinuxSetup.md
 --> build-with-ibmint.md 
@@ -99,11 +104,11 @@ ibmint
 	- MQSI --> additional classpath - automatic handling for ibmint 
 	
 
-5.) Additional Thoughts 
-How to improve the plugin: 
---> see ChangeList.md 
-
 # Further Ideas 
+- add here the list of further ideas 
+
+# UNSORTED CHANGES 
+## How to Setup Linux Jenkins Environment 
 
 ## Steps to build the plugin
 
