@@ -3,18 +3,20 @@
 
 # Overview 
 The sample demonstrates how a typical App Connect Enterprise application could be build using the ace-maven-plugin. 
-It consists of three components:  
+It consists of four parts:  
  
 - Sum_API: a simple REST application 
 - Calculator_LIB: a Shared Library 
-- Java_LIB: set of Java classes 
+- Java_LIB: set of Java classes
+- PolicyProject: set of simple ACE policies
 
 From a dependency perspective the Sum_API requires the Calculator_LIB. In addition the Calculator_LIB itself 
 uses some classes and methods from the Java_LIB project. On top the JAVA_LIB itself has got a dependency to the Apache Common Math package. 
 
-From a deployment perpective two bar files are build and deployed to the ACE Server: 
+From a deployment perpective three bar files are build and deployed to the ACE Server: 
 (1) Calculator_LIB 
 (2) Sum_API 
+(3) PolicyProject
 
 
 # Maven Builds 
