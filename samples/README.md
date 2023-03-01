@@ -39,48 +39,47 @@ required changes for the Java pom.xml:
  
 <build>
   <sourceDirectory>src</sourceDirectory>
-		<outputDirectory>bin</outputDirectory>
-		<plugins>
-			<!-- maven-dependency-plugin to resolve the defined
-dependencies and to copy them to the main project   --> 
-			<plugin>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<configuration>
-					<excludeScope>provided</excludeScope>
-					<excludeTransitive>false</excludeTransitive>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>install</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${sharedLibProject.path}</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-   <!-- skipping the creation of the jar --> 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>default-compile</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>compile</goal>
-						</goals>
-						<configuration>
-							<skipMain>true</skipMain> <!-- used to avoid 
-       that any jar is created --> 
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+  <outputDirectory>bin</outputDirectory>
+  <plugins>
+    <!-- maven-dependency-plugin to resolve the defined
+    dependencies and to copy them to the main project   --> 
+    <plugin>
+      <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <excludeScope>provided</excludeScope>
+          <excludeTransitive>false</excludeTransitive>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>install</phase>
+              <goals>
+                <goal>copy-dependencies</goal>
+              </goals>
+              <configuration>
+                <outputDirectory>${sharedLibProject.path}</outputDirectory>
+              </configuration>
+           </execution>
+        </executions>
+      </plugin>
+      <!-- skipping the creation of the jar; as not required --> 
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-compiler-plugin</artifactId>
+	<executions>
+	  <execution>
+	    <id>default-compile</id>
+	    <phase>compile</phase>
+	    <goals>
+	      <goal>compile</goal>
+	    </goals>
+	    <configuration>
+	      <skipMain>true</skipMain> 
+	    </configuration>
+	  </execution>
+	</executions>
+      </plugin>
+  </plugins>
+</build>
 ```
     
 **Step 2: adding java project to the build process** 
@@ -91,7 +90,7 @@ Example for a maven multi build for the SumAPI project:
   <module>./Java_LIB</module>
   <module>./Calculator_LIB</module>
   <module>./Sum_API</module>
-   <module>./PolicyProject</module>
+  <module>./PolicyProject</module>
 </modules>
 ```
 
