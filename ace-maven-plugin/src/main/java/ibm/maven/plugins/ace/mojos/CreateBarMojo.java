@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
@@ -23,14 +25,21 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
-import dev.jeka.core.api.depmanagement.JkDependencySet;
-import dev.jeka.core.api.depmanagement.JkRepo;
-import dev.jeka.core.api.depmanagement.resolution.JkDependencyResolver;
 import ibm.maven.plugins.ace.generated.maven_pom.Model;
 import ibm.maven.plugins.ace.utils.CommandExecutionUtil;
 import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
 import ibm.maven.plugins.ace.utils.PomXmlUtils;
 import ibm.maven.plugins.ace.utils.ZipUtils;
+
+import org.eclipse.aether.RepositorySystem;
+/* and on for maven resolver */
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.resolution.ArtifactRequest;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
+import org.eclipse.aether.resolution.ArtifactResult;
+import org.eclipse.aether.RepositorySystemSession;
 
 /**
  * Creates a .bar file from a ace-bar Project.
@@ -188,14 +197,12 @@ public class CreateBarMojo extends AbstractMojo {
 	 */
 	@Parameter(property = "session", required = true, readonly = true)
 	protected MavenSession session;
-	
-	
+
 	/**
 	 * Whether additional debug information should be printed out
 	 */
 	@Parameter(property = "ace.debug", defaultValue = "false", required = true, readonly = true)
 	protected Boolean debug;
-	
 
 	/**
 	 * ibmint parameter section; added by C.Weiss, IBM 02/2022
@@ -206,7 +213,6 @@ public class CreateBarMojo extends AbstractMojo {
 	 */
 	@Parameter(property = "ace.ibmint", defaultValue = "false", required = false)
 	protected Boolean ibmint;
-
 
 	/**
 	 * filepath for overrides-file; set if overrides-file parameter should be used
@@ -235,16 +241,37 @@ public class CreateBarMojo extends AbstractMojo {
 	protected Boolean compileMapsAndSchemas;
 
 	/*
-	 * added temporary mqsiWorkDir - only used in context of ibmint 
+	 * added temporary mqsiWorkDir - only used in context of ibmint
 	 */
 	@Parameter(property = "ace.mqsiTempWorkDir", defaultValue = "${project.build.directory}/tmp-work-dir", required = true, readonly = true)
 	protected File mqsiTempWorkDir;
+
+
+	/**
+	 * The current repository/network configuration of Maven.
+	 */
+	@Parameter(defaultValue = "${repositorySystemSession}", readonly = true)
+	private RepositorySystemSession repoSession;
 
 	/**
 	 * The Maven PluginManager Object
 	 */
 	@Component
 	protected BuildPluginManager buildPluginManager;
+	
+    /**
+     * The project's remote repositories to use for the resolution.
+     */
+    @Parameter(defaultValue = "${project.remoteProjectRepositories}", readonly = true)
+    private List<RemoteRepository> remoteRepos;
+    
+    /**
+     * The entry point to Maven Artifact Resolver, i.e. the component doing all the work.
+     */
+    @Component
+    private RepositorySystem repoSystem;
+
+    
 
 	private List<String> addObjectsAppsLibs() throws MojoFailureException {
 		List<String> params = new ArrayList<String>();
@@ -324,8 +351,6 @@ public class CreateBarMojo extends AbstractMojo {
 
 		params.add("-b");
 		params.add(barName.getAbsolutePath());
-		
-		
 
 		// cleanBuild - optional
 		if (cleanBuild) {
@@ -343,7 +368,7 @@ public class CreateBarMojo extends AbstractMojo {
 		}
 
 		params.addAll(addObjectsAppsLibs());
-		
+
 		// skipWSErrorCheck - option
 		if (skipWSErrorCheck) {
 			params.add("-skipWSErrorCheck");
@@ -417,34 +442,32 @@ public class CreateBarMojo extends AbstractMojo {
 
 		// create the workspace
 		createWorkspaceDirectory();
-		
-		//set System specific settings
-		String osName = System.getProperty("os.name").toLowerCase();
-		String exportCommand=new String(); 
-		String pathDelimiter = new String(); 
-		String cmdJoinOperator = new String(); 
-		StringBuffer ibmintCommand = new StringBuffer("");
-		
-        
-        if (osName.contains("windows")){
-        	exportCommand="SET"; 
-        	pathDelimiter=";";
-        	cmdJoinOperator="&"; 
-        } else if(osName.contains("linux") || osName.contains("mac os x")){	
-        	exportCommand="export";
-        	pathDelimiter=":";
-        	cmdJoinOperator="&&"; 
-        } else {
-            throw new MojoFailureException("Unexpected OS: " + osName);
-        }
-        
 
-		// find Java Project dependencies
-		List<String> javaDependencies = new ArrayList<String>();
+		// set System specific settings
+		String osName = System.getProperty("os.name").toLowerCase();
+		String exportCommand = new String();
+		String pathDelimiter = new String();
+		String cmdJoinOperator = new String();
+		StringBuffer ibmintCommand = new StringBuffer("");
+
+		/* step 1: set system operating specific parameter */
+
+		if (osName.contains("windows")) {
+			exportCommand = "SET";
+			pathDelimiter = ";";
+			cmdJoinOperator = "&";
+		} else if (osName.contains("linux") || osName.contains("mac os x")) {
+			exportCommand = "export";
+			pathDelimiter = ":";
+			cmdJoinOperator = "&&";
+		} else {
+			throw new MojoFailureException("Unexpected OS: " + osName);
+		}
+
+		/* step 2: find all Java project dependencies */
+		List<String> javaProjects = new ArrayList<String>();
 		List<String> projectDependencies = EclipseProjectUtils
 				.getProjectsDependencies(new File(workspace, applicationName));
-		JkDependencySet deps = JkDependencySet.of();
-		List<Dependency> additionalJavaDependencies = new ArrayList<Dependency>();
 
 		for (String projectDependency : projectDependencies) {
 
@@ -452,61 +475,89 @@ public class CreateBarMojo extends AbstractMojo {
 			File dependencyDirectory = new File(workspace, projectDependency);
 
 			try {
-
 				if (EclipseProjectUtils.isJavaProject(dependencyDirectory, getLog())) {
-
 					// adding project to list
-					javaDependencies.add(projectDependency);
+					javaProjects.add(projectDependency);
 					getLog().debug("added as javaDependencies: " + projectDependency);
-
-					// lookup dependencies
-					File pomFile = new File(dependencyDirectory, "pom.xml");
-					Model model;
-
-					model = PomXmlUtils.unmarshallPomFile(pomFile);
-
-					// iterate over dependencies
-					for (ibm.maven.plugins.ace.generated.maven_pom.Dependency dependency : model.getDependencies()
-							.getDependency()) {
-						getLog().debug("found dependency: " + dependency);
-						// format for jk: and("org.apache.poi:poi-ooxml:5.1.0")
-
-						if ((dependency.getScope() == null) || (dependency.getScope().equalsIgnoreCase("compile"))) {
-							String mavenCoordinate = new String(dependency.getGroupId() + ":"
-									+ dependency.getArtifactId() + ":" + dependency.getVersion());
-							deps = deps.and(mavenCoordinate);
-						}
-
-					}
 				}
-
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 				getLog().warn("handling for dependency project [" + projectDependency
 						+ "] failed; project might likely not exist");
 			}
 		}
 
 		/*
-		 * resolve all additional dependencies TODO: handling maven repository TODO:
-		 * handling local 'download' repo
+		 * step 3: iterate over java projects and collect all dependencies
+		 * artifactCoordinate (as String)
+		 * <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>}
+		 * 
 		 */
-		JkDependencyResolver resolver = JkDependencyResolver.of();
-		resolver.addRepos(JkRepo.ofMavenCentral());
-		
-		
-		List<Path> libs = resolver.resolve(deps).getFiles().getEntries(); // local download
-		StringBuffer classpathExt = new StringBuffer("");
-		int count = 0;
 
-		for (Path originPath : libs) {
-			getLog().debug("handling downloaded depenendency: " + originPath.getFileName());
+		List<Artifact> artifactList = new ArrayList<Artifact>();
+		for (String javaProject : javaProjects) {
+			File javaProjectDir = new File(workspace, javaProject);
+			File pomFile = new File(javaProjectDir, "pom.xml");
+			Model model = null;
+			try {
+				model = PomXmlUtils.unmarshallPomFile(pomFile);
+			} catch (JAXBException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			for (ibm.maven.plugins.ace.generated.maven_pom.Dependency dependency : model.getDependencies()
+					.getDependency()) {
+				getLog().debug("found dependency: " + dependency);
+
+				if ((dependency.getScope() == null) || (dependency.getScope().equalsIgnoreCase("compile"))) {
+					String mavenCoordinate = new String(
+							dependency.getGroupId() + ":" + dependency.getArtifactId() + ":" + dependency.getVersion());
+					Artifact artifact = new DefaultArtifact(mavenCoordinate);
+					artifactList.add(artifact);
+				}
+			}
+		}
+
+		/*
+		 * step 4 resolve all dependencies at this point we have a list of dependencies
+		 * - with maven coordinates TODO: model objects TODO: set respositories
+		 * 
+		 */
+		
+		List<File> files = new ArrayList<File>(); 
+		
+
+		ArtifactRequest request = new ArtifactRequest();
+		for (Artifact artifact : artifactList) {
+			request.setArtifact(artifact);
+			request.setRepositories(remoteRepos);
+			ArtifactResult result;
+
+			try {
+				result = repoSystem.resolveArtifact(repoSession, request);
+				files.add(result.getArtifact().getFile()); 
+				System.out.println("- 1 -");
+				System.out.println("result file: "+result.getArtifact().getFile());
+				System.out.println("result path: "+result.getArtifact().getFile().getPath());
+                
+			} catch (ArtifactResolutionException e) {
+				System.out.println("issue when resolving artefact: " + e.getMessage());
+				e.printStackTrace();
+			}
+
+		}
+
+		/* copy jars to the project */
+		int count = 0; 
+		StringBuffer classpathExt = new StringBuffer("");
+		for (File dependencyFile : files) {
+			getLog().debug("handling downloaded depenendency: " + dependencyFile.getName()); 
 			String targetFileName = new String(
-					workspace.toString() + "/" + applicationName + "/" + originPath.getFileName().toString());
+					workspace.toString() + "/" + applicationName + "/" + dependencyFile.getName());
 			Path targetPath = Paths.get(targetFileName);
 			try {
-				Files.copy(originPath, targetPath, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(Paths.get(dependencyFile.getAbsolutePath()), targetPath, StandardCopyOption.REPLACE_EXISTING);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -520,19 +571,19 @@ public class CreateBarMojo extends AbstractMojo {
 			classpathExt.append(targetPath.toString());
 			count++;
 		}
+		
 
 		// assembling params
 		ibmintCommand.append("ibmint package ");
-		ibmintCommand.append("--input-path "+"\""+workspace.toString()+"\" ");
-		ibmintCommand.append("--output-bar-file \""+barName.getAbsolutePath()+"\" "); 
-		
-		
+		ibmintCommand.append("--input-path " + "\"" + workspace.toString() + "\" ");
+		ibmintCommand.append("--output-bar-file \"" + barName.getAbsolutePath() + "\" ");
+
 		if ((overridesFile != null) && (overridesFile.length() > 0)) {
-			ibmintCommand.append("--overrides-file "+overridesFile+" ");
+			ibmintCommand.append("--overrides-file " + overridesFile + " ");
 		}
 
 		if ((keywordsFile != null) && (keywordsFile.length() > 0)) {
-			ibmintCommand.append("--keywords-file "+keywordsFile+" ");
+			ibmintCommand.append("--keywords-file " + keywordsFile + " ");
 		}
 
 		if (doNotCompileJava) {
@@ -544,35 +595,35 @@ public class CreateBarMojo extends AbstractMojo {
 		}
 
 		// adding project
-		ibmintCommand.append("--project "+applicationName+" ");
+		ibmintCommand.append("--project " + applicationName + " ");
 
-		for (String javaProjectDependency : javaDependencies) {
-			ibmintCommand.append("--project "+javaProjectDependency+" ");
+		for (String javaProject : javaProjects) {
+			ibmintCommand.append("--project " + javaProject + " ");
 		}
 
 		// adding trace
-		ibmintCommand.append("--trace " + "\""+createBarTraceFile.getAbsolutePath()+"\" ");
+		ibmintCommand.append("--trace " + "\"" + createBarTraceFile.getAbsolutePath() + "\" ");
 
-		//building up required command list 
-		commands.add(exportCommand+" MQSI_REGISTRY=\""+mqsiTempWorkDir+"/config\"");
-		commands.add("mqsicreateworkdir \""+mqsiTempWorkDir+"\"");
-		commands.add(exportCommand+" MQSI_WORKPATH=\""+mqsiTempWorkDir+"/config\""); 
-		
-		 
+		// building up required command list
+		commands.add(exportCommand + " MQSI_REGISTRY=\"" + mqsiTempWorkDir + "/config\"");
+		commands.add("mqsicreateworkdir \"" + mqsiTempWorkDir + "\"");
+		commands.add(exportCommand + " MQSI_WORKPATH=\"" + mqsiTempWorkDir + "/config\"");
+
 		// handle MQSI_EXTRA_BUILD_CLASSPATH
-		if ((classpathExt != null) && (classpathExt.length() > 0)) {			
-			commands.add(exportCommand+" MQSI_EXTRA_BUILD_CLASSPATH="+classpathExt+" "); 
+	
+		if ((classpathExt != null) && (classpathExt.length() > 0)) {
+			commands.add(exportCommand + " MQSI_EXTRA_BUILD_CLASSPATH=" + classpathExt + " ");
 		}
-		
+	
 		commands.add(ibmintCommand.toString());
-		
+
 		if (debug) {
-			 Map<String, String> env = System.getenv();
-			 getLog().info("**** start debug environment");
-		     env.forEach((k, v) -> getLog().info(k + ":" + v));
-		     getLog().info("**** end debug environment");
+			Map<String, String> env = System.getenv();
+			getLog().info("**** start debug environment");
+			env.forEach((k, v) -> getLog().info(k + ":" + v));
+			getLog().info("**** end debug environment");
 		}
-		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, commands, getLog());
+		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, commands,getLog());
 
 	}
 
@@ -585,14 +636,14 @@ public class CreateBarMojo extends AbstractMojo {
 	private void executeMqsiCreateBar(List<String> params) throws MojoFailureException {
 
 		getLog().info("running mqsicreatebar");
-		
+
 		if (debug) {
-			 Map<String, String> env = System.getenv();
-			 getLog().info("**** start debug environment");
-		     env.forEach((k, v) -> getLog().info(k + ":" + v));
-		     getLog().info("**** end debug environment");
+			Map<String, String> env = System.getenv();
+			getLog().info("**** start debug environment");
+			env.forEach((k, v) -> getLog().info(k + ":" + v));
+			getLog().info("**** end debug environment");
 		}
-		
+
 		String cmd = new String("mqsicreatebar");
 		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, cmd, params, getLog());
 
