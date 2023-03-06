@@ -143,7 +143,7 @@ following use cases were tested with ibmint:
 
 * try to avoid any system or provided scope dependencies. This typically result in issues when handling the project within the ACE toolkit or the mqsicreatebar build. 
 * for any further development:
-	* in some cases I had the need to extend the standard maven build classpath. But there is NO way to manipulate it via a pom / plugin config. 
+	* in some cases I had the need to extend the standard maven build classpath. But there is NO way to manipulate it via a pom / plugin config. So save (use) your time for other stuff .... ; ) 
 
 
 
