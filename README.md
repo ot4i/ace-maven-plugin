@@ -2,6 +2,7 @@
 This plugin can be used to build IBM App Connect Enterprise projects. Result is typically a bar file which can be deployed to an IBM Integration Server.
 The project itself can be build based on 'mqsicreatebar' or 'ibmint'. Details see the section "How to use the plugin". 
 The current version of the plugin was tested with IBM App Connect Enterprise 12.0.6.  
+    
 **Important**: the code is provided in 'good faith' and AS-IS. There is no warranty or further service implied or committed. Any supplied sample code is not supported via IBM product service channels.
 Feel free to fork the code and do your own adjustments. Of course contributions are always welcome (e.g. via merge requests). 
 
@@ -64,7 +65,7 @@ Navigate to the ace-maven-plugin directory under which pom.xml is present.
 a) mqsicreatbar 
 b) ibmint 
 
-Differences: 
+## Comparison between mqsicreatebar and ibmint 
 
 **mqsicreatebar**
 * uses headless eclipse under the cover (includinge maven e2 plugin) 
@@ -101,7 +102,7 @@ following use cases were tested with ibmint:
 
 
 # What you should know and Lessons Learned 
-* following [Readme](LinuxSetup.md) Readme explains how to setup a Jenkins based build job with the ace-maven-plugin on Linux: 
+* following [Readme](LinuxSetup.md) explains how to setup a Jenkins based build job with the ace-maven-plugin on Linux: 
 * because of historical reasons the plugin itself supports further build modes like ace-par, ace-classloader and ace-src. However those build modes were NOT tested in the current release. 
 * for ibmint the ace-maven-plugin performs for ibmint the following additional steps to ensure a proper build: 
 	* to scan the project for dependent Java projects. If found:  
