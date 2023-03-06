@@ -1,6 +1,3 @@
-
-**THIS README IS UNDER CONSTRUCTION** 
-
 # About 
 This plugin can be used to build IBM App Connect Enterprise projects. Result is typically a bar file which can be deployed to an IBM Integration Server.
 The project itself can be build based on 'mqsicreatebar' or 'ibmint'. Details see the section "How to use the plugin". 
@@ -75,13 +72,15 @@ Differences:
 
 advantages:    
 * build as done by the ACE toolkit 
-*  automatic handling of maven mechanismen based on m2e Eclipse project
+* can be used for any IIB or ACE version 
+* automatic handling of maven mechanismen based on m2e Eclipse project (including dependent projects!) 
 * full support for mqsireadbar 
 * automatic handling of .project  - might be required for more complex scenario 
 
 disadvantages:    
-* requires that all related project are 'available' - check by Eclipse 
-* build quite slow - as the Eclipse need to be started up 
+* requires that all related project are 'available' (checked by Eclipse)  
+* requires an X-window on linux (to startup the headless Eclipse) 
+* build quite slow 
 
 **ibmint**
 * new packaging / build command 
@@ -92,21 +91,64 @@ advantages:
 * java projects directly referenced by the library 
 
 disadvantages: 
-* requires specific pom for related Java Projects - see https://github.com/ChrWeissDe/ace-maven-plugin/blob/main/samples/README.md  
-* some limitations related to mqsireadbar 
+* only supported for ACE > version 12.0.6 
+* some limitations related to mqsireadbar
+
+following use cases were tested with ibmint: 
+* SharedLib with related Java project 
+* Standard and REST applications   
+* Policy Projects 
 
 
-# What you should know 
---> TODO: Section about relevant content  
---> link to Setup on Liniux --> LinuxSetup.md
---> build-with-ibmint.md 
-	- MQSI_WORKPATH 
-	- MQSI --> additional classpath - automatic handling for ibmint 
+# What you should know and Lessons Learned 
+* following [Readme](LinuxSetup.md) Readme explains how to setup a Jenkins based build job with the ace-maven-plugin on Linux: 
+* because of historical reasons the plugin itself supports further build modes like ace-par, ace-classloader and ace-src. However those build modes were NOT tested in the current release. 
+* for ibmint the ace-maven-plugin performs for ibmint the following additional steps to ensure a proper build: 
+	* to scan the project for dependent Java projects. If found:  
+		* the java project is added to the build (via additional --project entry) 
+		* additional maven dependencies of the java project are copied to the main project and added to the compile classpath (via MQSI_EXTRA_BUILD_CLASSPATH) 
+* ibmint requires a folder / file access and use therefore the MQSI_WORKPATH. To avoid any issues on the build serve the ace-maven-plugin creates a temporay Workpath unter {project.build.directory}/tmp-work-dir. The folder can be changed by adding the config parameter mqsiTempWorkDir to the pom.xml. 
+
+
+* in general the environment variable "MQSI_EXTRA_BUILD_CLASSPATH" can be used to add additional jars to the ibmint build process (for ACE > version 12.0.6)
+* Be careful and do not list (refer) "maven dependencies" as additional jar files in the .classpath files. This will break the maven dependency mechanism. Example for a wrong setup with commons-math3-3.5.jar: 
+```
+	.classpath Datei 
+	<!-- zusätzliche classapth Entry -- die common-maths wird nicht in die Shared Lib übernommen --> 
+	<classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-math3/3.5/commons-math3-3.5.jar"/>
+	 
+	<classpathentry kind="con" path="com.ibm.etools.mft.uri.classpath.MBProjectReference"/>
+	<classpathentry kind="lib" path="C:/Program Files/IBM/ACE/12.0.6.0/server/classes/javacompute.jar"/>
+	<classpathentry kind="lib" path="C:/Program Files/IBM/ACE/12.0.6.0/server/classes/jplugin2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
+		<attributes>
+			<attribute name="maven.pomderived" value="true"/>
+		</attributes>
+	</classpathentry>
 	
+	.pom Datei 
+	
+	<dependency>
+		<groupId>org.apache.commons</groupId>
+		<artifactId>commons-math3</artifactId>
+		<version>3.5</version>
+	</dependency>
+		<dependency>
+    	<groupId>commons-io</groupId>
+    	<artifactId>commons-io</artifactId>
+    	<version>2.10.0</version> <!-- latest version 2.11.0 by 31/03/2022; added -->
+	</dependency>
+```
+
+* try to avoid any system or provided scope dependencies. This typically result in issues when handling the project within the ACE toolkit or the mqsicreatebar build. 
+* for any further development:
+	* in some cases I had the need to extend the standard maven build classpath. But there is NO way to manipulate it via a pom / plugin config. 
+
+
 
 # Further Ideas 
-* update/rewrite validate bar workspace logic (e.g. ensure that only the required projects are in place)
 * incooperate TestApplication changes from Thomas Mattsson (https://github.com/thomas-mattsson)
-* optimize CommandExecutionUtil / ProcessOutputCatcher / ProcessOutputLogger 
 * include parameter to define if 'tmp files' should be kept 
+* optimize CommandExecutionUtil / ProcessOutputCatcher / ProcessOutputLogger 
+* update/rewrite validate bar workspace logic (e.g. ensure that only the required projects are in place)
 

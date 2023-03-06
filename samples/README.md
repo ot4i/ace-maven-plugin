@@ -1,5 +1,6 @@
-**THIS README IS UNDER CONSTRCUTION** 
-
+TODO: 
+- build steps for ibmint 
+- build steps for mqsicreatebar 
 
 # Overview 
 The sample demonstrates how a typical App Connect Enterprise application could be build using the ace-maven-plugin. 
