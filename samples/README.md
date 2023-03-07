@@ -1,10 +1,5 @@
-TODO: 
-- build steps for ibmint 
-- build steps for mqsicreatebar 
-
 # Overview 
-The sample demonstrates how a typical App Connect Enterprise application could be build using the ace-maven-plugin. 
-It consists of four parts:  
+The sample  demonstrate how to build a typical ACE application. It consists of four componente:  
  
 - Sum_API: a simple REST application 
 - Calculator_LIB: a Shared Library 
@@ -19,81 +14,46 @@ From a deployment perpective three bar files are build and deployed to the ACE S
 (2) Sum_API 
 (3) PolicyProject
 
-**Important**: depending on the used build approach (meaning `mqsicreatebar` or `ibmint`) the build itself differs in some parts. 
-See the following sections. 
+**Important**: 
+* depending on the used build approach (meaning `mqsicreatebar` or `ibmint`) the build itself differs in some aspects. See the following sections for details. In general the Java project is build together with the SharedLib. Thus it does not required a dedicated build.    
+* each project contains a **pom example** for `mqsicreatebar` or `ibmint`.   
+* typical build order for both approaches is Calculator_LIB (Shared Library), Sum_API (Rest Application), PolicyProject 
 
 # ibmint 
-Building with `ibmint` has got currently* the liimtation that third party libraries defined in Java projects are not taken automatically into account (*there is another [branch](https://github.com/ChrWeissDe/ace-maven-plugin/tree/jeka) which tries to address this limitation, but still under development).
-Based on this the Java projects needs to be explicitly build upfront and requires some specific extensions.      
-Let's go trough it step by step: 
-
-**Step1 : pom extension for the Java project**     
-The 'trick' is that the dependencies are copied by a simple maven mechanism (maven-dependency-plugin) to the main project. From there they are then 'picked up' (automatically) by the ace-maven-plugin when building the main project.    
-required changes for the Java pom.xml: 
-
-```xml
-<properties>
-  <!-- relativ path to the main project--> 
-  <sharedLibProject.path>../Calculator_LIB</sharedLibProject.path>
-  .... 
-</properties>
- 
-<build>
-  <sourceDirectory>src</sourceDirectory>
-  <outputDirectory>bin</outputDirectory>
-  <plugins>
-    <!-- maven-dependency-plugin to resolve the defined
-    dependencies and to copy them to the main project   --> 
-    <plugin>
-      <artifactId>maven-dependency-plugin</artifactId>
-        <configuration>
-          <excludeScope>provided</excludeScope>
-          <excludeTransitive>false</excludeTransitive>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>install</phase>
-              <goals>
-                <goal>copy-dependencies</goal>
-              </goals>
-              <configuration>
-                <outputDirectory>${sharedLibProject.path}</outputDirectory>
-              </configuration>
-           </execution>
-        </executions>
-      </plugin>
-      <!-- skipping the creation of the jar; as not required --> 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-compiler-plugin</artifactId>
-	<executions>
-	  <execution>
-	    <id>default-compile</id>
-	    <phase>compile</phase>
-	    <goals>
-	      <goal>compile</goal>
-	    </goals>
-	    <configuration>
-	      <skipMain>true</skipMain> 
-	    </configuration>
-	  </execution>
-	</executions>
-      </plugin>
-  </plugins>
-</build>
+Building with `ibmint` is quite straight forward. As outlined in the pom you just have to set the parameter "ibmint" to "true". 
 ```
-    
-**Step 2: adding java project to the build process** 
-Example for a maven multi build for the SumAPI project: 
-
-```xml
-<modules>
-  <module>./Java_LIB</module>
-  <module>./Calculator_LIB</module>
-  <module>./Sum_API</module>
-  <module>./PolicyProject</module>
-</modules>
+<ibmint>true</ibmint>
 ```
+In addition you can set all additional ibmint parameters as `doNotCompileJava` or `compileMapsAndSchemas` (see also https://www.ibm.com/docs/en/app-connect/12.0?topic=commands-ibmint-package-command). However easiest way is to go with the defaults. 
+
+Under the cover the ace-maven-plugin does some magic as it 
+* resolves the required Java projects, and add them to the build (via additional --project flag)    
+* adds the maven dependencies defined in the Java projects to the resulting bar file 
+
+However ibmint is only supported for  ACE runtimes > version 12.0.6. In addition it only covers typical "project setups" at the moment. There might be special cases where ibmint might fail.   
+
+# mqsicreatebar  
+Building with mqsicreatebar is also straight forward. However mqsicreatebar has some drawbacks as it 
+* runs a headless Eclipse under the cover - and thus requires a X-Window on Linux  
+* requires that all related project are 'available' (checked by Eclipse) 
+* is quite slow - due the Eclipse startup 
+
+However it takes care about all your project and maven dependencies. Thus it might work better for complex or 'unusual' project setups. Further it is the only supported build mode for legacy IIB runtimes (from a perspective of this plugin).   
+
+As described above mqsicreatebar requires that all dependent project are "available in the workspace". For this reason the Sum_API project defines a dedicated maven dependency for the Calculator_LIB: 
+
+```
+<dependencies>
+   <dependency>
+      <groupId>com.ibm.ace</groupId>
+      <artifactId>Calculator_LIB</artifactId>
+      <version>1.0.0</version>
+      <scope>compile</scope>
+      <type>zip</type> 
+    </dependency>
+</dependencies>
+```
+Important scope needs to be set to compile and type to zip. Based on this dependency the ace-maven-plugin downloads and extracts the shared lib into the workspace. Without this dependency the build will fail, as the project is not available. 
 
 
 
