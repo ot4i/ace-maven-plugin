@@ -12,7 +12,7 @@ Current version of the plugin is "12.0.6 [-SNAPSHOT]".
 Following changes (compared to the last major update in 2022): 
 
 - support for alternative build via ibmint 
-- updated samples (for ibmint and mqsicreatebar) 
+- updated sample (for ibmint and mqsicreatebar) 
 - fixes for maven dependencies handling 
 - additional source packaging (configurable via pom) 
 - updated bar override handling (allows multiple properties, keeps original file)
@@ -58,10 +58,27 @@ Navigate to the ace-maven-plugin directory under which pom.xml is present.
 
 
 # How to use the plugin 
-- see primary sample SumAPI and Readme 
-- link: https://github.com/ChrWeissDe/ace-maven-plugin/blob/main/samples/README.md 
+* In order to use the plugin your projects need to be "mavenized". Easiest way is to add a pom to your project and add the following buildCommand and nature to your project: 
+```
+<buildSpec>
+  ...
+  <buildCommand>
+     <name>org.eclipse.m2e.core.maven2Builder</name>
+     <arguments>
+     </arguments>
+  </buildCommand>
+</buildSpec>
+... 
+<natures>
+  ...
+  <nature>org.eclipse.m2e.core.maven2Nature</nature>
+</natures>
+```   	
+* for pom templates see the sample (there are different poms for ibmint or mqsicreatebar) 
+* there is also an old - but good - article how to mavenize your toolkit and projects. See https://developer.ibm.com/integration/blog/2019/04/10/ibm-ace-v11-continuous-integration-maven-jenkins/ 
 
-- to 'build options' 
+
+In general there are **two 'build options'**
 a) mqsicreatbar 
 b) ibmint 
 
@@ -109,9 +126,8 @@ following use cases were tested with ibmint:
 		* the java project is added to the build (via additional --project entry) 
 		* additional maven dependencies of the java project are copied to the main project and added to the compile classpath (via MQSI_EXTRA_BUILD_CLASSPATH) 
 * ibmint requires a folder / file access and use therefore the MQSI_WORKPATH. To avoid any issues on the build serve the ace-maven-plugin creates a temporay Workpath unter {project.build.directory}/tmp-work-dir. The folder can be changed by adding the config parameter mqsiTempWorkDir to the pom.xml. 
-
-
 * in general the environment variable "MQSI_EXTRA_BUILD_CLASSPATH" can be used to add additional jars to the ibmint build process (for ACE > version 12.0.6)
+* both build modes also provide the **feature to override the properties** of the bar file. The 'properties' folder (can be configured within the pom - see samples) can contain any number of properties files.  Corresponding to each properties file, an overridden BAR file will be created.    
 * Be careful and do not list (refer) "maven dependencies" as additional jar files in the .classpath files. This will break the maven dependency mechanism. Example for a wrong setup with commons-math3-3.5.jar: 
 ```
 	.classpath Datei 
