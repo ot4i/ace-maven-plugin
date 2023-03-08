@@ -84,6 +84,44 @@ public class EclipseProjectUtils {
         
     }
     
+    /**
+     * returns a list of java project defined in the .project file 
+     * 
+     * @param projectDirectory the (workspace) directory containing the project
+     * @return the name of the project out of the .project file
+     * @throws MojoFailureException if something goes wrong
+     */
+   
+    public static List<String> getJavaProjectsDependencies(File projectDirectory, File workspace, Log log) throws MojoFailureException {
+    	
+    	List<String> projectDependencies = EclipseProjectUtils
+				.getProjectsDependencies(projectDirectory);
+		
+    	List<String> javaProjects = new ArrayList<String>();
+
+		for (String projectDependency : projectDependencies) {
+
+			log.debug("found project dependency: " + projectDependency);
+			File dependencyDirectory = new File(workspace, projectDependency);
+
+			try {
+				if (EclipseProjectUtils.isJavaProject(dependencyDirectory, log)) {
+					// adding project to list
+					javaProjects.add(projectDependency);
+					log.debug("added as javaDependencies: " + projectDependency);
+				}
+			} catch (Exception e) {
+				log.warn("handling for dependency project [" + projectDependency
+						+ "] failed; project might likely not exist");
+			}
+		}
+		
+		return javaProjects; 
+        
+    }
+    
+    
+    
 
     /**
      * @param projectDirectory the (workspace) directory containing the project

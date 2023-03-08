@@ -3,6 +3,12 @@
 - sample: mqsicreate --> false for ibmint 
 - check if toolkit contains maven by default 
 - source code packaging --> samples 
+- compile with java 1.17 
+- issue jaxb --> 
+[WARNING] Parameter 'args' is unknown for plugin 'jaxb2-maven-plugin:1.6:xjc (eclipseProject)'
+[WARNING] Parameter 'args' is unknown for plugin 'jaxb2-maven-plugin:1.6:xjc (pom)'
+--> https://github.com/mojohaus/jaxb2-maven-plugin/issues/43 
+--> [ERROR] Failed to execute goal org.codehaus.mojo:jaxb2-maven-plugin:1.6:xjc (eclipseProject) on project ace-maven-plugin: Execution eclipseProject of goal org.codehaus.mojo:jaxb2-maven-plugin:1.6:xjc failed: A required class was missing while executing org.codehaus.mojo:jaxb2-maven-plugin:1.6:xjc: javax/activation/DataSource
 
 
 ### 5) Using the plugin
