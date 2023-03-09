@@ -101,7 +101,8 @@ following use cases were tested with ibmint:
 
 
 # What you should know and Lessons Learned 
-* following [Readme](LinuxSetup.md) explains how to setup a Jenkin build job with the ace-maven-plugin on Linux: 
+* following [Readme](LinuxSetup.md) explains how to setup a Jenkin build job with the ace-maven-plugin on Linux
+* If you use mqsicreatebar on RHEL you have to install further packages. Follow the instructions here: https://www.ibm.com/support/pages/node/6823669
 * because of historical reasons the plugin itself supports further build modes like ace-par, ace-classloader and ace-src. However those build modes were NOT tested in the current release. However they will likely work.     
 * for ibmint the ace-maven-plugin performs for ibmint the following additional steps to ensure a proper build: 
 	* to scan the project for dependent Java projects. If found:  
