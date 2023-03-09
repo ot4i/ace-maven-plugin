@@ -53,7 +53,7 @@ As described above mqsicreatebar requires that all dependent project are "availa
     </dependency>
 </dependencies>
 ```
-Important scope needs to be set to compile and type to zip. Based on this dependency the ace-maven-plugin downloads and extracts the shared lib into the workspace. Without this dependency the build will fail, as the project is not available. 
+**Important**:  scope needs to be set to compile and type to zip. Based on this dependency the ace-maven-plugin downloads and extracts the shared lib into the workspace. Without this dependency the build will fail, as the project is not available. 
 
 
 
