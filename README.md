@@ -1,6 +1,6 @@
 # About 
 This plugin can be used to build IBM App Connect Enterprise projects. Result is typically a bar file which can be deployed to an IBM Integration Server.
-The project itself can be build based on 'mqsicreatebar' or 'ibmint'. Details see the section "How to use the plugin". 
+The project supports two build modes: 'mqsicreatebar' or 'ibmint'. Details see the section "How to use the plugin". 
 The current version of the plugin was tested with IBM App Connect Enterprise 12.0.6.  
     
 **Important**: the code is provided in 'good faith' and AS-IS. There is no warranty or further service implied or committed. Any supplied sample code is not supported via IBM product service channels.
@@ -11,51 +11,31 @@ Feel free to fork the code and do your own adjustments. Of course contributions 
 Current version of the plugin is "12.0.6 [-SNAPSHOT]". 
 Following changes (compared to the last major update in 2022): 
 
-- support for alternative build via ibmint 
-- updated sample (for ibmint and mqsicreatebar) 
-- fixes for maven dependencies handling 
-- additional source packaging (configurable via pom) 
-- updated bar override handling (allows multiple properties, keeps original file)
-- harmonized  mqsi commands (incl logging)
+- support for additional buildmode "ibmint" 
+- updated sample (incl pom templates for ibmint and mqsicreatebar) 
+- support for additional source packaging (configurable via pom) 
+- update for bar override handling (allows multiple properties, keeps original file)
 - update of used maven dependencies (to latest possible version) 
-- general code cleanup and optimization 
+- general code fixes, cleanup and optimization 
 
 # How to build the plugin 
-You have to build the plugin on our own. There is no version available on Maven central. 
+You have to build the plugin on our own. There is no version available on Maven central or any other repository. 
 However the steps to build the plugin are quite simple - so no worries. 
 
-Here the sample instructions for a build on Linux (Ubuntu 18.04) with a Nexus repository. Changes to other environments should be quite easy:   
+First thing is of course to install maven and java if not done already. E.g. on Linux via 
+* `sudo apt-get install openjdk-8-jdk`   
+* `sudo apt install maven`   
 
-**1) Install maven on build server**   
-Ensure that you have JDK8 installed
+For Java it is important to use  **JDK version 8**. Reason is that the JAXB libraries were "reorganized" for Java 9 and higher. Thus building with Java 9 and above will result in errors.      
 
-`sudo apt-get install openjdk-8-jdk`
+Next steps it to update the  maven settings.xml files to your needs (e.g. repositories etc.). 
 
-Install Maven by typing the following command:
-
-`sudo apt install maven`
-
-**2) Update your maven settings**   
-Edit the settings.xml located in 'conf' folder under maven home directory. You can copy the sample 'setting.xml' included here and make necessary changes.
-* Update the 'localRepository' if not using the default location
-* Enter the credentials for nexus repository that has access to deploy artifacts to the repository
-`<server>
-    <id>releases</id>
-    <username>nexus-deployer</username>
-    <password>Passw0rd</password>
- </server>`
-* Update the profile properties and repository locations
-* Update the 'eclipse.workspace' and 'perform.workspace' values as per your environment. You may keep these values if you are using Jenkins with home directory '/var/lib/jenkins'. Also if you are using jenkins, you may need to update {JENKINS_HOME_DIR}/config.xml to have below values:
-`<workspaceDir>${ITEM_ROOTDIR}/workspace</workspaceDir>
- <buildsDir>${ITEM_ROOTDIR}/builds</buildsDir>`
-
-**3) Build the plugin**   
 If you are not doing maven release steps to release a version of the plugin, you can directly deploy the plugin locally on the build server or on to the repository. If doing so, make sure the remove '-SNAPSHOT' from 'version' in the pom.xml. 
 Navigate to the ace-maven-plugin directory under which pom.xml is present.
 
 * To deploy the plugin to repository: `mvn clean deploy`
 * To install the plugin locally: `mvn clean install`
-
+ 
 
 # How to use the plugin 
 * In order to use the plugin your projects need to be "mavenized". Easiest way is to add a pom to your project and add the following buildCommand and nature to your project: 
@@ -75,14 +55,15 @@ Navigate to the ace-maven-plugin directory under which pom.xml is present.
 </natures>
 ```   	
 * for pom templates see the sample (there are different poms for ibmint or mqsicreatebar) 
-* there is also an old - but good - article how to mavenize your toolkit and projects. See https://developer.ibm.com/integration/blog/2019/04/10/ibm-ace-v11-continuous-integration-maven-jenkins/ 
+* When using an "old toolkit" - meaning ACE version 11 or still IIB -  you have to install maven in the toolkit (Eclipse) manually. Following article provides detailed instructions: see https://developer.ibm.com/integration/blog/2019/04/10/ibm-ace-v11-continuous-integration-maven-jenkins/ 
 
 
-In general there are **two 'build options'**
-a) mqsicreatbar 
-b) ibmint 
+As mentioned before there are **two 'build options'**     
+a) mqsicreatbar    
+b) ibmint    
 
-## Comparison between mqsicreatebar and ibmint 
+
+## Differences between mqsicreatebar and ibmint 
 
 **mqsicreatebar**
 * uses headless eclipse under the cover (includinge maven e2 plugin) 
@@ -102,11 +83,12 @@ disadvantages:
 
 **ibmint**
 * new packaging / build command 
+* basic depency management / project discovery provided by ace-maven plugin      
+   
 advantages:    
 * faster than mqsicreatebar 
 * does not require projects from .project file 
-* inbuild support for simple use cases 
-* java projects directly referenced by the library 
+* no X-window required     
 
 disadvantages: 
 * only supported for ACE > version 12.0.6 
@@ -119,15 +101,15 @@ following use cases were tested with ibmint:
 
 
 # What you should know and Lessons Learned 
-* following [Readme](LinuxSetup.md) explains how to setup a Jenkins based build job with the ace-maven-plugin on Linux: 
-* because of historical reasons the plugin itself supports further build modes like ace-par, ace-classloader and ace-src. However those build modes were NOT tested in the current release. 
+* following [Readme](LinuxSetup.md) explains how to setup a Jenkin build job with the ace-maven-plugin on Linux: 
+* because of historical reasons the plugin itself supports further build modes like ace-par, ace-classloader and ace-src. However those build modes were NOT tested in the current release. However they will likely work.     
 * for ibmint the ace-maven-plugin performs for ibmint the following additional steps to ensure a proper build: 
 	* to scan the project for dependent Java projects. If found:  
-		* the java project is added to the build (via additional --project entry) 
-		* additional maven dependencies of the java project are copied to the main project and added to the compile classpath (via MQSI_EXTRA_BUILD_CLASSPATH) 
-* ibmint requires a folder / file access and use therefore the MQSI_WORKPATH. To avoid any issues on the build serve the ace-maven-plugin creates a temporay Workpath unter {project.build.directory}/tmp-work-dir. The folder can be changed by adding the config parameter mqsiTempWorkDir to the pom.xml. 
+		* add the java project to the build (via additional --project entry) 
+		* copy additional maven dependencies to the main project and update the compile classpath (via MQSI_EXTRA_BUILD_CLASSPATH) 
+* ibmint requires a folder / file access and uses therefore the MQSI_WORKPATH. To avoid any issues on the build server the ace-maven-plugin creates a temporay Workpath under {project.build.directory}/tmp-work-dir. The folder can be changed by adding the config parameter mqsiTempWorkDir to the pom.xml. 
 * in general the environment variable "MQSI_EXTRA_BUILD_CLASSPATH" can be used to add additional jars to the ibmint build process (for ACE > version 12.0.6)
-* both build modes also provide the **feature to override the properties** of the bar file. The 'properties' folder (can be configured within the pom - see samples) can contain any number of properties files.  Corresponding to each properties file, an overridden BAR file will be created.    
+* both build modes could be also used to **verride the properties** of the bar file. The 'properties' folder (can be configured within the pom - see samples) can contain any number of properties files.  Corresponding to each properties file, an overridden BAR file will be created.    
 * Be careful and do not list (refer) "maven dependencies" as additional jar files in the .classpath files. This will break the maven dependency mechanism. Example for a wrong setup with commons-math3-3.5.jar: 
 ```
 	.classpath Datei 
