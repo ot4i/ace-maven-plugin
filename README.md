@@ -110,6 +110,7 @@ following use cases were tested with ibmint:
 		* copy additional maven dependencies to the main project and update the compile classpath (via MQSI_EXTRA_BUILD_CLASSPATH) 
 * ibmint requires a folder / file access and uses therefore the MQSI_WORKPATH. To avoid any issues on the build server the ace-maven-plugin creates a temporay Workpath under {project.build.directory}/tmp-work-dir. The folder can be changed by adding the config parameter mqsiTempWorkDir to the pom.xml. 
 * in general the environment variable "MQSI_EXTRA_BUILD_CLASSPATH" can be used to add additional jars to the ibmint build process (for ACE > version 12.0.6)
+* Per default the source code is packaged with the artefact. This can be changed by adding the config property "packageSource = false" to the pom.xml file. 
 * both build modes could be also used to **verride the properties** of the bar file. The 'properties' folder (can be configured within the pom - see samples) can contain any number of properties files.  Corresponding to each properties file, an overridden BAR file will be created.    
 * Be careful and do not list (refer) "maven dependencies" as additional jar files in the .classpath files. This will break the maven dependency mechanism. Example for a wrong setup with commons-math3-3.5.jar: 
 ```
@@ -143,7 +144,6 @@ following use cases were tested with ibmint:
 * try to avoid any system or provided scope dependencies. This typically result in issues when handling the project within the ACE toolkit or the mqsicreatebar build. 
 * for any further development:
 	* in some cases I had the need to extend the standard maven build classpath. But there is NO way to manipulate it via a pom / plugin config. So save (use) your time for other stuff .... ; ) 
-
 
 
 # Further Ideas 
