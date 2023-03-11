@@ -11,19 +11,12 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
 
-import ibm.maven.plugins.ace.utils.CommandExecutionUtil;
-import ibm.maven.plugins.ace.utils.ConfigurablePropertiesUtil;
-import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
-import ibm.maven.plugins.ace.utils.ProcessOutputCatcher;
-import ibm.maven.plugins.ace.utils.ProcessOutputLogger;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.artifact.Artifact;
@@ -39,6 +32,10 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
+
+import ibm.maven.plugins.ace.utils.CommandExecutionUtil;
+import ibm.maven.plugins.ace.utils.ConfigurablePropertiesUtil;
+import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
 
 /**
  * Goal which reads the a bar file, including creating a list of configurable
@@ -230,12 +227,7 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 				if (ibmint) { 
 					//handling for ibmint 
 					
-					//override command
-					
-					/*ensure that always a temporary workdir is used*/ 
-					//command is prefixed with '/mqsiprofile&&'
-					//command is prefixed with '/mqsiprofile&&'
-					; 
+					 
 					String osName = System.getProperty("os.name").toLowerCase();
 			        
 			        if (osName.contains("windows")){
@@ -448,7 +440,7 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 	protected List<String> getConfigurableProperties(List<String> output) {
 		// extract the configurable properties
 
-		// output format changed for ace9...
+		// output format changed for ace...
 
 		// 1. search the output for a line indented with spaces followed by "Deployment
 		// descriptor:"

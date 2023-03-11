@@ -9,12 +9,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-
-import javax.xml.bind.JAXBException;
 
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -24,23 +20,16 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+/* and on for maven resolver */
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.repository.RemoteRepository;
 
-import ibm.maven.plugins.ace.generated.maven_pom.Model;
 import ibm.maven.plugins.ace.utils.CommandExecutionUtil;
 import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
 import ibm.maven.plugins.ace.utils.MavenUtils;
-import ibm.maven.plugins.ace.utils.PomXmlUtils;
 import ibm.maven.plugins.ace.utils.ZipUtils;
-
-import org.eclipse.aether.RepositorySystem;
-/* and on for maven resolver */
-import org.eclipse.aether.artifact.Artifact;
-import org.eclipse.aether.artifact.DefaultArtifact;
-import org.eclipse.aether.repository.RemoteRepository;
-import org.eclipse.aether.resolution.ArtifactRequest;
-import org.eclipse.aether.resolution.ArtifactResolutionException;
-import org.eclipse.aether.resolution.ArtifactResult;
-import org.eclipse.aether.RepositorySystemSession;
 
 /**
  * Creates a .bar file from a ace-bar Project.

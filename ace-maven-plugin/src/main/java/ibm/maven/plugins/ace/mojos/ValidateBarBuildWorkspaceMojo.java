@@ -1,8 +1,5 @@
 package ibm.maven.plugins.ace.mojos;
 
-import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
-import ibm.maven.plugins.ace.utils.PomXmlUtils;
-
 import java.io.File;
 
 import javax.xml.bind.JAXBException;
@@ -19,9 +16,10 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import ibm.maven.plugins.ace.generated.maven_pom.Model;
+import ibm.maven.plugins.ace.utils.PomXmlUtils;
 
 /**
- * Unpacks the dependent WebSphere Message Broker Projects.
+ * Unpacks the dependent App Connect Enterprise Projects.
  * 
  * Implemented with help from: https://github.com/TimMoore/mojo-executor/blob/master/README.md
  * 

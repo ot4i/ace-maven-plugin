@@ -10,29 +10,14 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
-import ibm.maven.plugins.ace.utils.PomXmlUtils;
-import net.lingala.zip4j.ZipFile;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import javax.xml.bind.JAXBException;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
@@ -45,7 +30,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 
-import ibm.maven.plugins.ace.generated.maven_pom.Model;
+import net.lingala.zip4j.ZipFile;
 
 /**
  * Two tasks: - unpacks any project dependencies - writes
@@ -166,36 +151,7 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 			} else {
 				getLog().info("unpack dependency directory does not exist");
 			}
-			/*
-			 * // step 3: unpack all sharedlibs - and unpack them directly to the workspace
-			 * if (unpackBarDirectory.exists()) { List<File> sharedLibs =
-			 * FileUtils.getFiles(unpackBarDirectory, "*.shlibzip", "default.shlibzip"); for
-			 * (File sharedLib : sharedLibs) { String projectName =
-			 * FileUtils.removeExtension(sharedLib.getName());
-			 * 
-			 * // determine the targetDirectory String targetDirectory =
-			 * workspace.getAbsolutePath().toString() + "/" + projectName; File
-			 * projectDirectory = new File(targetDirectory);
-			 * 
-			 * new ZipFile(sharedLib).extractAll(projectDirectory.getAbsolutePath());
-			 * getLog().info("unpacking " + sharedLib.getName() + " to " +
-			 * projectDirectory.getAbsolutePath().toString());
-			 * 
-			 * ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-			 * InputStream inStream =
-			 * classloader.getResourceAsStream("templates/project.txt");
-			 * 
-			 * String projectFile = IOUtils.toString(inStream); projectFile =
-			 * projectFile.replace("projectname", projectName);
-			 * 
-			 * String targetFileName = workspace.getAbsolutePath().toString() + "/" +
-			 * projectName + "/.project"; File targetFile = new File(targetFileName);
-			 * 
-			 * Files.write(Paths.get(targetFile.getAbsolutePath()),
-			 * projectFile.getBytes(StandardCharsets.UTF_8));
-			 * 
-			 * } } else { getLog().info("unpack bar directory does not exist"); }
-			 */
+	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -248,14 +204,6 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 			bw.write("eclipse.preferences.version=1");
 			bw.close();
 			
-			
-			/* 
-			projectFile = projectFile.replace("settingsPath", customMavenSettings);
-
-			File targetFile = new File(targetFileName);
-
-			Files.write(Paths.get(targetFile.getAbsolutePath()), projectFile.getBytes(StandardCharsets.UTF_8));
-			*/
 
 		} else {
 			getLog().info("using standard maven settings"); 

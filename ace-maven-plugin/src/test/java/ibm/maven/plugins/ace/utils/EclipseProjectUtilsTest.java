@@ -25,13 +25,5 @@ public class EclipseProjectUtilsTest {
         }
     }
 
-    /**
-     * Hier sollten vor allem:
-     * - isApplication
-     * - isLibrary
-     * getestet werden.
-     * 
-     * Ein solcher Test ist aber sehr aufwendig.
-     */
 
 }

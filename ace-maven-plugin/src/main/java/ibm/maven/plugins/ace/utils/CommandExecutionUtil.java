@@ -31,10 +31,9 @@ public final class CommandExecutionUtil {
         List<String> command = new ArrayList<String>();
 
         if (osName.contains("windows")){
-            //cmdFile = new File(fileTmpDir + File.separator + cmd + "Command-" + UUID.randomUUID() + ".cmd");
-        	cmdFile = new File(fileTmpDir + File.separator  + "Command-" + UUID.randomUUID() + ".cmd");
-        	//TODO: add variable to control behaviour 
-            // cmdFile.deleteOnExit();
+           cmdFile = new File(fileTmpDir + File.separator  + "Command-" + UUID.randomUUID() + ".cmd");
+           //TODO: add variable to control behaviour for delete
+           // cmdFile.deleteOnExit();
             executable = aceRunDir + "/mqsiprofile &" + cmd;
         } else if(osName.contains("linux") || osName.contains("mac os x")){	
             cmdFile = new File(fileTmpDir + File.separator  + "Command-" + UUID.randomUUID() + ".sh");
@@ -86,7 +85,6 @@ public final class CommandExecutionUtil {
         }
 
         if (process.exitValue() != 0) {
-            // logOutputFile(outFile, "error");
             throw new MojoFailureException(cmd + " finished with exit code: " + process.exitValue());
         }
 
@@ -174,7 +172,6 @@ public final class CommandExecutionUtil {
         }
 
         if (process.exitValue() != 0) {
-            // logOutputFile(outFile, "error");
             throw new MojoFailureException(cmd + " finished with exit code: " + process.exitValue());
         }
 
