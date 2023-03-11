@@ -77,7 +77,8 @@ advantages:
 * automatic handling of .project  - might be required for more complex scenario 
 
 disadvantages:    
-* requires that all related project are 'available' (checked by Eclipse)  
+* requires that all related project are 'available' (checked by Eclipse) 
+   * however in this case it's ensured that the different projects works together 
 * requires an X-window on linux (to startup the headless Eclipse) 
 * build quite slow 
 
@@ -88,6 +89,7 @@ disadvantages:
 advantages:    
 * faster than mqsicreatebar 
 * does not require projects from .project file 
+   * however impact is that you need to manage the dependencies seperately 
 * no X-window required     
 
 disadvantages: 
