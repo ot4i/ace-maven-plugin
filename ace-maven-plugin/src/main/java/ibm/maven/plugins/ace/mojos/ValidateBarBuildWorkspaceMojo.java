@@ -1,8 +1,5 @@
 package ibm.maven.plugins.ace.mojos;
 
-import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
-import ibm.maven.plugins.ace.utils.PomXmlUtils;
-
 import java.io.File;
 
 import javax.xml.bind.JAXBException;
@@ -19,9 +16,10 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import ibm.maven.plugins.ace.generated.maven_pom.Model;
+import ibm.maven.plugins.ace.utils.PomXmlUtils;
 
 /**
- * Unpacks the dependent WebSphere Message Broker Projects.
+ * Unpacks the dependent App Connect Enterprise Projects.
  * 
  * Implemented with help from: https://github.com/TimMoore/mojo-executor/blob/master/README.md
  * 
@@ -51,7 +49,7 @@ public class ValidateBarBuildWorkspaceMojo extends AbstractMojo {
     /**
      * The path of the workspace in which the projects are extracted to be built.
      */
-    @Parameter(property = "ace.workspace", defaultValue = "${project.build.directory}/ace/workspace", required = true)
+    @Parameter(property = "ace.workspace", defaultValue = "${project.basedir}/..", required = true)
     protected File workspace;
 
     /**
@@ -62,7 +60,9 @@ public class ValidateBarBuildWorkspaceMojo extends AbstractMojo {
 
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        // the following code would be a nicer implementation, but breaks the Integration Tests
+        // Comment Christoph Weiss, IBM 14.03.22: below commented block is from a previous code committer 
+    	
+    	// the following code would be a nicer implementation, but breaks the Integration Tests
         //
         // Set<String> unpackaceDependencyTypes = PrepareBarBuildWorkspaceMojo.getUnpackaceDependencyTypes();
         //
@@ -76,7 +76,11 @@ public class ValidateBarBuildWorkspaceMojo extends AbstractMojo {
         //
         // String projectDirectoryName = dependency.getArtifactId();
 
-
+    	/*Comment Christoph Weiss, IBM 14.03.22: this is the original code -what does not make direkt sense 
+    	/* additional thougts: it would only make sense to check that all dependent projects are in place before we proceed. 
+    	 * this would be all projects defined in the .project file of the main application 
+    	 */
+    	/* 
         // loop through the project directories
         File[] projects = workspace.listFiles();
         //
@@ -98,15 +102,19 @@ public class ValidateBarBuildWorkspaceMojo extends AbstractMojo {
             // checks that the directory name is the same as the name in the .project file
             String eclipseProjectName = EclipseProjectUtils.getProjectName(projectDirectory);
             if (!projectDirectoryName.equals(eclipseProjectName)) {
-                throw new MojoFailureException("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Project Name (in .project file) ('" + eclipseProjectName + "')");
+                // throw new MojoFailureException("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Project Name (in .project file) ('" + eclipseProjectName + "')");
+            	getLog().debug("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Project Name (in .project file) ('" + eclipseProjectName + "')");
             }
 
             // checks that the directory name is the same as the artifactId from the pom.xml file
             String artifactId = getProjectArtifactId(projectDirectory);
             if (artifactId != null && !projectDirectoryName.equals(artifactId)) {
-                throw new MojoFailureException("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Maven artifactId (in pom.xml): " + artifactId);
+                // throw new MojoFailureException("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Maven artifactId (in pom.xml): " + artifactId);
+            	getLog().debug("The Project Directory Name ('" + projectDirectoryName + "') is not the same as the Maven artifactId (in pom.xml): " + artifactId);
             }
+
         }
+        */ 
     }
 
     /**

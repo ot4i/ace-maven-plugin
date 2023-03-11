@@ -74,7 +74,8 @@ public class PrepareaceClassloaderPackagingMojo extends AbstractMojo {
 
         executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version("2.8")), goal("copy-dependencies"), configuration(element(name("outputDirectory"),
                 classloaderPath.getAbsolutePath()), element(name("includeScope"), "runtime"), element(name("includeTypes"), "jar")), executionEnvironment(project, session, buildPluginManager));
-
+        
+       
         // delete the dependency-maven-plugin-markers directory
         try {
             FileUtils.deleteDirectory(new File(project.getBuild().getDirectory(), "dependency-maven-plugin-markers"));

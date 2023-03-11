@@ -33,6 +33,5 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="logback-classic-1.0.13.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

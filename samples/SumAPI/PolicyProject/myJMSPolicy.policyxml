@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<policies>
+  <policy policyType="JMSProviders" policyName="myJMSPolicy" policyTemplate="OpenJMS">
+    <jarsURL>default_Path</jarsURL>
+    <nativeLibs>default_Path</nativeLibs>
+    <proprietaryAPIHandler>default_none</proprietaryAPIHandler>
+    <proprietaryAPIAttr1>default_none</proprietaryAPIAttr1>
+    <proprietaryAPIAttr2>default_none</proprietaryAPIAttr2>
+    <proprietaryAPIAttr3>default_none</proprietaryAPIAttr3>
+    <proprietaryAPIAttr4>default_none</proprietaryAPIAttr4>
+    <proprietaryAPIAttr5>default_none</proprietaryAPIAttr5>
+    <jndiEnvironmentParms>default_none</jndiEnvironmentParms>
+    <clientAckBatchSize>0</clientAckBatchSize>
+    <clientAckBatchTime>0</clientAckBatchTime>
+    <jndiBindingsLocation></jndiBindingsLocation>
+    <initialContextFactory></initialContextFactory>
+    <jmsAsyncExceptionHandling>false</jmsAsyncExceptionHandling>
+    <connectionFactoryName></connectionFactoryName>
+    <jmsProviderXASupport>true</jmsProviderXASupport>
+    <jndiEnvironmentObject></jndiEnvironmentObject>
+    <jndiEnvironmentObjectParm1></jndiEnvironmentObjectParm1>
+    <jndiEnvironmentObjectParm2></jndiEnvironmentObjectParm2>
+    <jndiEnvironmentObjectParm3></jndiEnvironmentObjectParm3>
+    <jndiEnvironmentObjectParm4></jndiEnvironmentObjectParm4>
+    <jndiEnvironmentObjectParm5></jndiEnvironmentObjectParm5>
+  </policy>
+</policies>

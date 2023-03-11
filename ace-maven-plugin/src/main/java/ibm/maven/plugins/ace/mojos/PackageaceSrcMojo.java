@@ -31,7 +31,7 @@ import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
 
 /**
- * Packages a WebSphere Message Broker Project.
+ * Packages an App Connect Enterprise Project.
  * 
  * Implemented with help from: https://github.com/TimMoore/mojo-executor/blob/master/README.md
  */

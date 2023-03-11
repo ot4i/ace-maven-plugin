@@ -10,22 +10,19 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
-import ibm.maven.plugins.ace.utils.PomXmlUtils;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.HashSet;
+import java.io.OutputStreamWriter;
 import java.util.List;
-import java.util.Set;
-
-import javax.xml.bind.JAXBException;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.dependency.utils.DependencyUtil;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -33,154 +30,185 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 
-import ibm.maven.plugins.ace.generated.maven_pom.Model;
+import net.lingala.zip4j.ZipFile;
 
 /**
- * Unpacks the dependent WebSphere Message Broker Projects.
+ * Two tasks: - unpacks any project dependencies - writes
+ * org.eclipse.m2e.core.prefs if "custom maven settings.xml" should be used
  * 
- * Implemented with help from: https://github.com/TimMoore/mojo-executor/blob/master/README.md
+ * Implemented with help from:
+ * https://github.com/TimMoore/mojo-executor/blob/master/README.md
  * 
- * requiresDependencyResolution below is required for the unpack-dependencies goal to work correctly. See https://github.com/TimMoore/mojo-executor/issues/3
+ * requiresDependencyResolution below is required for the unpack-dependencies
+ * goal to work correctly. See
+ * https://github.com/TimMoore/mojo-executor/issues/3
  */
+
 @Mojo(name = "prepare-bar-build-workspace", requiresDependencyResolution = ResolutionScope.TEST)
 public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 
-    /**
-     * a comma separated list of dependency types to be unpacked
-     */
-    private static final String UNPACK_ace_DEPENDENCY_TYPES = "zip";
+	/**
+	 * a comma separated list of dependency types to be unpacked
+	 */
+	private static final String UNPACK_ace_DEPENDENCY_TYPES = "zip";
+	private static final String UNPACK_ace_DEPENDENCY_SCOPE = "compile";
 
-    private static final String UNPACK_ace_DEPENDENCY_SCOPE = "compile";
+	/**
+	 * The Maven Project Object
+	 */
+	@Parameter(property = "project", required = true, readonly = true)
+	protected MavenProject project;
 
-    /**
-     * The Maven Project Object
-     */
-    @Parameter(property = "project", required = true, readonly = true)
-    protected MavenProject project;
+	/**
+	 * The Maven Session Object
+	 */
+	@Parameter(property = "session", required = true, readonly = true)
+	protected MavenSession session;
 
-    /**
-     * The Maven Session Object
-     */
-    @Parameter(property = "session", required = true, readonly = true)
-    protected MavenSession session;
+	/**
+	 * The Maven PluginManager Object
+	 */
+	@Component
+	protected BuildPluginManager buildPluginManager;
 
-    /**
-     * The Maven PluginManager Object
-     */
-    @Component
-    protected BuildPluginManager buildPluginManager;
+	/**
+	 * The path of the workspace in which the projects are extracted to be built.
+	 */
+	@Parameter(property = "ace.workspace", defaultValue = "${project.basedir}/..", required = true)
+	protected File workspace;
 
-    /**
-     * The path of the workspace in which the projects are extracted to be built.
-     */
-    @Parameter(property = "ace.workspace", defaultValue = "${project.build.directory}/ace/workspace", required = true)
-    protected File workspace;
+	/**
+	 * directory to unpack all dependencies
+	 */
+	@Parameter(property = "ace.unpackDependenciesDirectory", defaultValue = "${project.basedir}/../dependencies/${project.artifact.artifactId}", required = true, readonly = true)
+	protected File unpackDependenciesDirectory;
 
-    /**
-     * The path of the workspace in which the projects will be unpacked.
-     */
-    @Parameter(property = "ace.unpackDependenciesDirectory", defaultValue = "${project.build.directory}/ace/dependencies", required = true, readonly = true)
-    protected File unpackDependenciesDirectory;
+	/**
+	 * custom maven settings.xml
+	 */
+	@Parameter(property = "ace.customMavenSettings", defaultValue = "")
+	protected String customMavenSettings;
 
-    public void execute() throws MojoExecutionException, MojoFailureException {
+	public void execute() throws MojoExecutionException, MojoFailureException {
 
-        unpackaceDependencies();
+		unpackaceDependencies();
 
-        deleteUnquiredPoms();
-    }
+		try {
+			handleCustomMavenSettings();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-    /**
-     * deletes the unrequired pom.xml files. pom.xml's appear in all projects, but are only really required for java projects for .bar packaging
-     * 
-     * @throws MojoExecutionException If an exception occurs
-     */
-    @SuppressWarnings("unchecked")
-    private void deleteUnquiredPoms() throws MojoExecutionException {
-        /*try {
-            getLog().debug("Deleting pom.xml from Applications and Libraries...");
-            List<String> appAndLibProjects = FileUtils.getDirectoryNames(workspace, "*", ".*", false);
-            for (String project : appAndLibProjects) {
-                getLog().debug("  Found " + project);
+	}
 
-                // find the pom file
-                File pomFile = new File(new File(workspace, project), "pom.xml");
-                if (!pomFile.exists()) {
-                    getLog().warn("Trying to delete pom.xml, but couldn't find it: " + pomFile.getAbsolutePath());
-                } else {
+	
 
-                    // pom's from java Projects won't be deleted
-                    if (isJarPackaging(pomFile)) {
-                        getLog().debug(pomFile.getAbsolutePath() + " is a packaging type jar, so will not be deleted.");
-                    } else {
-                        boolean deleted = pomFile.delete();
-                        if (deleted) {
-                            getLog().debug("    Deleted " + pomFile.getAbsolutePath());
-                        } else {
-                            getLog().warn("Trying to delete pom.xml, but couldn't: " + pomFile.getAbsolutePath());
-                        }
-                    }
+	/**
+	 * goal of the method is to create sharedLibs projects defined by Maven
+	 * dependencies for this purpose the method performs the following tasks: -
+	 * unpacks dependencies of scope "compile" and type "zip" to
+	 * unpackDependencyDirectory - filter dependencies for bar files - and unpack
+	 * them to unpackBarDirectory - filter unpacked bar files for sharedLibs and
+	 * unpack them to the workspace directory - create a .project file for the
+	 * sharedLibs projects
+	 * 
+	 * @throws MojoExecutionException If an exception occurs
+	 */
+	private void unpackaceDependencies() throws MojoExecutionException {
 
-                }
-            }
-        } catch (IOException e) {
-            // FIXME handle exception
-            throw new RuntimeException(e);
-        }*/
+		// define the directory to be unpacked into and create it
+		workspace.mkdirs();
 
-    }
+		// step 1:
+		// unpack all dependencies that match the given scope; target:
+		// unpackDependencyDirectory
+		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version("2.8")),
+				goal("unpack-dependencies"),
+				configuration(element(name("outputDirectory"), unpackDependenciesDirectory.getAbsolutePath()),
+						element(name("includeTypes"), UNPACK_ace_DEPENDENCY_TYPES),
+						element(name("includeScope"), UNPACK_ace_DEPENDENCY_SCOPE)),
+				executionEnvironment(project, session, buildPluginManager));
 
-    /**
-     * @param pomFile
-     * @return dummy comment
-     */
-    private boolean isJarPackaging(File pomFile) {
-        try {
-            Model model = PomXmlUtils.unmarshallPomFile(pomFile);
+		try {
 
-            // packaging "jar" is the default and may not be defined
-            if (model.getPackaging() == null || model.getPackaging().equals("") || model.getPackaging().equals("jar")) {
-                return true;
-            }
-        } catch (JAXBException e) {
-            getLog().debug("Exception unmarshalling ('" + pomFile.getAbsolutePath() + "')", e);
-        }
+			// step 2: unpack all source files
+			if (unpackDependenciesDirectory.exists()) {
+				List<File> sourceFiles = FileUtils.getFiles(unpackDependenciesDirectory, "*sources.jar", "default.jar");
+				for (File sourceFile : sourceFiles) {
+					String[] fileParts = (FileUtils.removeExtension(sourceFile.getName())).split("-");
+					String projectName = fileParts[0];
+					getLog().info("found source for project: " + projectName);
 
-        // this should really never happen
-        return false;
-    }
+					// define target environment and unpack sources
+					String targetDirectory = workspace.getAbsolutePath().toString() + "/" + projectName;
+					File projectDirectory = new File(targetDirectory);
 
-    /**
-     * unpacks dependencies of a given scope to the specified directory
-     * 
-     * @throws MojoExecutionException If an exception occurs
-     */
-    private void unpackaceDependencies() throws MojoExecutionException {
+					new ZipFile(sourceFile).extractAll(projectDirectory.getAbsolutePath());
+					getLog().info("unpacking " + sourceFile.getName() + " to "
+							+ projectDirectory.getAbsolutePath().toString());
+				}
+			} else {
+				getLog().info("unpack dependency directory does not exist");
+			}
+	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
-        // define the directory to be unpacked into and create it
-        workspace.mkdirs();
+	}
 
-        // unpack all dependencies that match the given scope
-        executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version("2.8")), goal("unpack-dependencies"), configuration(element(name("outputDirectory"),
-                workspace.getAbsolutePath()), element(name("includeTypes"), UNPACK_ace_DEPENDENCY_TYPES), element(name("includeScope"), UNPACK_ace_DEPENDENCY_SCOPE)),
-                executionEnvironment(project, session, buildPluginManager));
+	/**
+	 * goal of the method is create the org.eclipse.m2e.core.prefs file - in the
+	 * case that a "custom maven settings.xml file" is set this is required as
+	 * mqsicreatebar - using Eclipse under the cover - is not aware of theses
+	 * settings
+	 * 
+	 * @throws MojoExecutionException If an exception occurs
+	 * @throws IOException
+	 */
+	private void handleCustomMavenSettings() throws MojoExecutionException, IOException {
 
-        // delete the dependency-maven-plugin-markers directory
-        try {
-            FileUtils.deleteDirectory(new File(project.getBuild().getDirectory(), "dependency-maven-plugin-markers"));
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-    }
+		if ((customMavenSettings!=null) && (!(customMavenSettings.equalsIgnoreCase("")))) {
 
-    /**
-     * @return the types that will be unpacked when preparing the Bar Build Workspace
-     */
-    public static Set<String> getUnpackaceDependencyTypes() {
-        HashSet<String> types = new HashSet<String>();
-        for (String type : DependencyUtil.tokenizer(UNPACK_ace_DEPENDENCY_TYPES)) {
-            types.add(type);
-        }
-        return types;
-    }
+			getLog().info("create org.eclipse.m2e.core.prefs for custom maven settings: " + customMavenSettings);
+			// customMavenSettings is set
+			String targetDirectory = workspace.getAbsolutePath().toString()
+					+ "/.metadata/.plugins/org.eclipse.core.runtime/.settings";
+			String targetFileName = targetDirectory + "/org.eclipse.m2e.core.prefs";
+
+			//note this would work as well 
+			//however not working with templates/org.eclipse.m2e.core2.prefs
+			// ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+			//InputStream inStream4 = classloader.getResourceAsStream("templates/project.txt");
+
+			
+			File fdir = new File(targetDirectory);
+			File fout = new File (targetFileName);
+			getLog().info("creating new prefs file directory structure:"+ fdir.mkdirs());
+			
+			
+		 
+			getLog().info("creating new prefs file:"+ fout.createNewFile());
+			getLog().info("start writing to file ...");
+			
+			FileOutputStream fos = new FileOutputStream(fout);
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
+			
+			bw.write("eclipse.m2.defaultRuntime=EMBEDDED"); 
+			bw.newLine();
+			bw.write("eclipse.m2.runtimes=");
+			bw.newLine();
+			bw.write("eclipse.m2.userSettingsFile="+customMavenSettings); 
+			bw.newLine();
+			bw.write("eclipse.preferences.version=1");
+			bw.close();
+			
+
+		} else {
+			getLog().info("using standard maven settings"); 
+		}
+
+	}
+
 }
