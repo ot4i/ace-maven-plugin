@@ -30,13 +30,20 @@ public class MavenUtils {
 			File javaProjectDir = new File(workspace, project);
 			File pomFile = new File(javaProjectDir, "pom.xml");
 			Model model = null;
+			
 			try {
 				model = PomXmlUtils.unmarshallPomFile(pomFile);
 			} catch (JAXBException e) {
-				log.error("could not find pom file: "+e.getMessage()); 
-				e.printStackTrace();
+				log.warn("could not find pom file; returning empty dependency list"); 
+				return artifactList; 
 			}
-
+			
+			//validate that model contains dependency entries 
+			if (model.getDependencies() == null) { 
+				log.warn("pom file does not include any dependency definition; returning empty dependency list");
+				return artifactList; 
+			}
+			
 			for (ibm.maven.plugins.ace.generated.maven_pom.Dependency dependency : model.getDependencies()
 					.getDependency()) {
 				log.debug("found dependency: " + dependency);
