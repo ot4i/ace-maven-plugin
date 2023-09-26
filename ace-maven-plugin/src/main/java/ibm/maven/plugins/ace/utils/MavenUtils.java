@@ -81,12 +81,10 @@ public class MavenUtils {
 		ArtifactRequest request = new ArtifactRequest();
 
 		// create a CollectRequest - for all first level dependencies 
-		CollectRequest collectRequest = new CollectRequest();
-
-		for (Artifact artifact : artifacts) {
-			request.setArtifact(artifact);
-			request.setRepositories(remoteRepos);
-
+		CollectRequest collectRequest = new CollectRequest(); 
+		collectRequest.setRepositories(remoteRepos);
+		
+		 for (Artifact artifact : artifacts) {
 			collectRequest.addDependency(new Dependency(artifact, "compile"));
 		}
 
