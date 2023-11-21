@@ -6,8 +6,28 @@ maven-jaxb2-plugin to generate classes from xsd
 <version>3.3.2</version>
 
 
+# Warnings during build 
+(mvn clean install) 
 
-# Check on versions 
+## ValidateConfigurablePropertiesMojo - deprecated API 
+[WARNING] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojo.java: c:\dev\ace-maven-plugin\jdk17\src\main\java\ibm\maven\plugins\ace\mojos\ValidateConfigurablePropertiesMojo.java uses or overrides a deprecated API.
+[WARNING] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojo.java: Recompile with -Xlint:deprecation for details.
+
+##  maven-plugin-plugin - wrong scope 
+--> issue mit dem Plugin? 
+
+[INFO] --- maven-plugin-plugin:3.10.2:descriptor (default-descriptor) @ ace-maven-plugin ---
+[WARNING]
+
+Some dependencies of Maven Plugins are expected to be in provided scope.
+Please make sure that dependencies listed below declared in POM
+have set '<scope>provided</scope>' as well.
+
+## ValidateConfigurablePropertiesMojoUnitTest - same as above 
+[WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java: c:\dev\ace-maven-plugin\jdk17\src\test\java\ibm\maven\plugins\ace\mojos\ValidateConfigurablePropertiesMojoUnitTest.java uses or overrides a deprecated API.
+[WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java: Recompile with -Xlint:deprecation for details.
+
+# Comments von Version 
 ## mojo-executor
 - - - - - - 
 	<dependency>
@@ -40,4 +60,17 @@ Upgrade to 4.0.0 leads to following issues (classes deprecated)
 			<version>4.0.4</version><!-- 2.3.2 --> 
 			<scope>runtime</scope>
 		</dependency>
+
+## cxf-xjc-plugin
+
+<plugin>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-xjc-plugin</artifactId>
+				<version>3.3.2</version>
+using new version 4.0.0 leads to: 
+  package jakarta.xml.bind.annotation does not exist
+  
 java.lang.ClassNotFoundException: com.sun.xml.internal.bind.v2.ContextFactory
+
+
+
