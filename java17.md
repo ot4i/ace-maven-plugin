@@ -12,6 +12,10 @@ maven-jaxb2-plugin to generate classes from xsd
 ## ValidateConfigurablePropertiesMojo - deprecated API 
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojo.java: c:\dev\ace-maven-plugin\jdk17\src\main\java\ibm\maven\plugins\ace\mojos\ValidateConfigurablePropertiesMojo.java uses or overrides a deprecated API.
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojo.java: Recompile with -Xlint:deprecation for details.
+--> root cause: 
+[WARNING] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojo.java:[323,49] getDependencyArtifacts() in org.apache.maven.project.MavenProject has been deprecated
+
+
 
 ##  maven-plugin-plugin - wrong scope 
 --> issue mit dem Plugin? 
@@ -23,9 +27,12 @@ Some dependencies of Maven Plugins are expected to be in provided scope.
 Please make sure that dependencies listed below declared in POM
 have set '<scope>provided</scope>' as well.
 
-## ValidateConfigurablePropertiesMojoUnitTest - same as above 
+## ValidateConfigurablePropertiesMojoUnitTest - same as above ? nope 
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java: c:\dev\ace-maven-plugin\jdk17\src\test\java\ibm\maven\plugins\ace\mojos\ValidateConfigurablePropertiesMojoUnitTest.java uses or overrides a deprecated API.
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java: Recompile with -Xlint:deprecation for details.
+--> root cause: 
+[WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java:[46,34] readLines(java.io.InputStream) in org.apache.commons.io.IOUtils has been deprecated
+[WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java:[47,78] readLines(java.io.InputStream) in org.apache.commons.io.IOUtils has been deprecated 
 
 # Comments von Version 
 ## mojo-executor
