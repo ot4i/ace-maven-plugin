@@ -31,3 +31,13 @@ Upgrade to 4.0.0 leads to following issues (classes deprecated)
 [ERROR] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/PackageaceSrcMojo.java:[84,148] cannot access org.codehaus.plexus.util.xml.Xpp3Dom
 [ERROR]   class file for org.codehaus.plexus.util.xml.Xpp3Dom not found
 [ERROR] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/PackageaceSrcMojo.java:[84,9] cannot access org.codehaus.plexus.util.xml.Xpp3Dom
+
+
+## jaxb-runtime
+<dependency>
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>4.0.4</version><!-- 2.3.2 --> 
+			<scope>runtime</scope>
+		</dependency>
+java.lang.ClassNotFoundException: com.sun.xml.internal.bind.v2.ContextFactory
