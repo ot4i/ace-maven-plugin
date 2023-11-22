@@ -8,6 +8,14 @@ maven-jaxb2-plugin to generate classes from xsd
 Tested with Maven 3.9.5 
 Java ibm-semeru-jdk_x64_17.0.8.1_1 
 
+# Cleanups
+Following plugin definitons were removed from the ace-maven-plugin: 
+- removed usage of maven-scm-plugin
+- removed usage of maven-release-plugin
+
+TODO: to check if the sample projects can be still build. 
+
+
 
 # Warnings during build 
 (mvn clean install) 
