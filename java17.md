@@ -5,6 +5,9 @@ maven-jaxb2-plugin to generate classes from xsd
 <artifactId>cxf-xjc-plugin</artifactId>
 <version>3.3.2</version>
 
+Tested with Maven 3.9.5 
+Java ibm-semeru-jdk_x64_17.0.8.1_1 
+
 
 # Warnings during build 
 (mvn clean install) 
