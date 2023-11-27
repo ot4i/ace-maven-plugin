@@ -1,46 +1,47 @@
-Change from 
+# Overview
+The plugin was updated to Java 17. This means that the plugin itself can be now now compiled and used with Java 17.  
 
-maven-jaxb2-plugin to generate classes from xsd 
-<groupId>org.apache.cxf</groupId>
-<artifactId>cxf-xjc-plugin</artifactId>
-<version>3.3.2</version>
+The plugin  was tested with: 
+- Maven 3.9.5
+- IBM Semeru JDK 17.0.8.1 
 
-Tested with Maven 3.9.5 
-Java ibm-semeru-jdk_x64_17.0.8.1_1 
+Important: the Java 17 upgrade does NOT affect the build of the ACE java application. Here you are still bound to either Java 8 (default) or Java 11 as supported runtimes. A good article how to handle the Java runtimes for the ACE application build can be found here: 
+- https://github.com/trevor-dolby-at-ibm-com/ace-java11-qpid-demo
 
-# Cleanups
-Following plugin definitons were removed from the ace-maven-plugin: 
-- removed usage of maven-scm-plugin
-- removed usage of maven-release-plugin
+# Major changes 
+- move from the maven-jaxb2-plugin to the org.apache.cxf to autogenerate the classes for Eclipse project and Maven pom handling. 
+- update to the latest/stable dependencies and plugins (when possible). See the main pom for comments. 
+- removed of the maven-scm-plugin and maven-release-plugin as they are not used
 
-TODO: to check if the sample projects can be still build. 
+# Comments regarding used versions
 
+## org.twdata.maven:mojo-executor
+- using 2.3.3, latest: 2.4.1-m2
+- the latest version results in compilation issue, because of deprecated/changed classed and method. 
 
+## org.codehaus.plexus:plexus-utils
+- using: 3.3.1, latest 4.0.0
+- the latest version results in compilation issue, because of removed classes (e.g. org.codehaus.plexus.util.xml.Xpp3Dom) 
+	
+## org.glassfish.jaxb:jaxb-runtime
+- using 2.3.2, latest: 4.0.4 
+- the latest version results in compilation issue, because of deprecated/changed classed and method.
 
-# Warnings during build 
-(mvn clean install) 
-
-## Javadoc generation 
-[INFO] --- maven-javadoc-plugin:2.10.4:jar (attach-javadocs) @ ace-maven-plugin ---
-[WARNING] Javadoc Warnings
-[WARNING] Loading source files for package ibm.maven.plugins.ace.mojos...
-[WARNING] Loading source files for package ibm.maven.plugins.ace.utils...
-[WARNING] Loading source files for package ibm.maven.plugins.ace.generated.eclipse_project...
-[WARNING] Loading source files for package ibm.maven.plugins.ace.generated.maven_pom...
-[WARNING] Loading source files for package ibm.maven.plugins.ace_maven_plugin...
-[WARNING] Constructing Javadoc information...
-[WARNING] warning: The code being documented uses modules but the packages defined in http://docs.oracle.com/javase/8/docs/api/ are in the unnamed module.
-[WARNING] Building index for all the packages and classes...
-[WARNING] Standard Doclet version 17.0.8.1+1
-[WARNING] Building tree for all the packages and classes...
-
+## org.apache.cxf:cxf-xjc-plugin
+- using 3.3.2, latest: 4.0.0 
+- the latest version results in compilation issue; as
+    - package jakarta.xml.bind.annotation was reoved
+    - class com.sun.xml.internal.bind.v2.ContextFactory was removed (java.lang.ClassNotFoundException) 
+ 
+# Open points 
+Following topics requires an update/cleanup  
 
 ## ValidateConfigurablePropertiesMojo - deprecated API 
+reported during build (mvn clean install) 
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojo.java: c:\dev\ace-maven-plugin\jdk17\src\main\java\ibm\maven\plugins\ace\mojos\ValidateConfigurablePropertiesMojo.java uses or overrides a deprecated API.
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojo.java: Recompile with -Xlint:deprecation for details.
 --> root cause: 
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojo.java:[323,49] getDependencyArtifacts() in org.apache.maven.project.MavenProject has been deprecated
-
 
 
 ##  maven-plugin-plugin - wrong scope 
@@ -53,57 +54,10 @@ Some dependencies of Maven Plugins are expected to be in provided scope.
 Please make sure that dependencies listed below declared in POM
 have set '<scope>provided</scope>' as well.
 
-## ValidateConfigurablePropertiesMojoUnitTest - same as above ? nope 
+## ValidateConfigurablePropertiesMojoUnitTest  
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java: c:\dev\ace-maven-plugin\jdk17\src\test\java\ibm\maven\plugins\ace\mojos\ValidateConfigurablePropertiesMojoUnitTest.java uses or overrides a deprecated API.
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java: Recompile with -Xlint:deprecation for details.
 --> root cause: 
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java:[46,34] readLines(java.io.InputStream) in org.apache.commons.io.IOUtils has been deprecated
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java:[47,78] readLines(java.io.InputStream) in org.apache.commons.io.IOUtils has been deprecated 
-
-# Comments von Version 
-## mojo-executor
-- - - - - - 
-	<dependency>
-			<groupId>org.twdata.maven</groupId>
-			<artifactId>mojo-executor</artifactId>
-			<version>2.3.3</version><!-- latest version 2.4.1-m2 by 21/11/2023; using 2.3.3 because of implementation dependencies -->
-			<scope>compile</scope>
-		</dependency>
-
-  --> update to 2.4.0 / 2.4.1-m leads to compilation issues; not ciritical 
-
-## plexus-utils
-<dependency>
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-utils</artifactId>
-			<version>3.3.1</version><!-- latest version 4.0.0 by 21/11/2023; old: 2.0.6; using 3.3.1 because of  compatibility reasons  -->
-		</dependency>
-
-Upgrade to 4.0.0 leads to following issues (classes deprecated) 
-[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.1:compile (default-compile) on project ace-maven-plugin: Compilation failure: Compilation failure:
-[ERROR] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/PackageaceSrcMojo.java:[84,148] cannot access org.codehaus.plexus.util.xml.Xpp3Dom
-[ERROR]   class file for org.codehaus.plexus.util.xml.Xpp3Dom not found
-[ERROR] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/PackageaceSrcMojo.java:[84,9] cannot access org.codehaus.plexus.util.xml.Xpp3Dom
-
-
-## jaxb-runtime
-<dependency>
-			<groupId>org.glassfish.jaxb</groupId>
-			<artifactId>jaxb-runtime</artifactId>
-			<version>4.0.4</version><!-- 2.3.2 --> 
-			<scope>runtime</scope>
-		</dependency>
-
-## cxf-xjc-plugin
-
-<plugin>
-				<groupId>org.apache.cxf</groupId>
-				<artifactId>cxf-xjc-plugin</artifactId>
-				<version>3.3.2</version>
-using new version 4.0.0 leads to: 
-  package jakarta.xml.bind.annotation does not exist
-  
-java.lang.ClassNotFoundException: com.sun.xml.internal.bind.v2.ContextFactory
-
-
 
