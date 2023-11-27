@@ -1,68 +1,89 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ibm.maven.plugins</groupId>
 	<artifactId>ace-maven-plugin</artifactId>
-	<version>12.0.6-SNAPSHOT</version>
-	
+	<version>12.0.10-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 	<name>ace-maven-plugin</name>
 	<url>http://maven.apache.org</url>
-	
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
- 	</properties>
-	<dependencies>	
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+	</properties>
+	<dependencies>
+		<!-- inital dependencies from ace-maven-plugin java 8 -->
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.8.5</version><!-- latest version 3.8.5 by 31/03/2022; old: 3.3.3 -->
+			<version>3.9.5</version>
+			<!-- latest stable version 3.9.5 by 21/11/2023; old: 3.8.5 (version 4.0 only in alpha state)-->
 		</dependency>
 		<dependency>
 			<!-- annotations are needed only to build the plugin -->
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.6.4</version><!-- latest version 3.6.4 by 31/03/2022; old: 3.4 -->
+			<version>3.10.2</version>
+			<!-- latest version 3.10.2 by 21/11/2023; old: 3.6.4 -->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.twdata.maven</groupId>
 			<artifactId>mojo-executor</artifactId>
-			<version>2.3.3</version><!-- latest version 2.4.0 by 31/03/2022; old 2.2.0; using 2.3.3 because of implementation dependencies -->
+			<version>2.3.3</version>
+			<!-- latest version 2.4.1-m2 by 21/11/2023; using 2.3.3 because of implementation / compatibility reasons -->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-utils</artifactId>
-			<version>3.3.1</version><!-- latest version 3.4.1 by 31/03/2022; old: 2.0.6; using 3.3.1 because of  compatibility reasons  -->
-		</dependency>
-		<dependency>
-			<groupId>org.apache.ant</groupId>
-			<artifactId>ant</artifactId>
-			<version>1.10.12</version><!-- latest version 1.10.12 by 31/03/2022; old: 1.9.1 -->
-		</dependency>
-		<dependency>
-			<!-- jaxb for sources generated from xsd -->
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.2.12</version><!-- latest version 2.4.0-b180830.0359 by 31/03/2022; still using  2.2.12 because of compatibility reasons -->
+			<version>3.3.1</version>
+			<!-- latest version 4.0.0 by 21/11/2023; using 3.3.1 because of implementation / compatibility reasons   -->
 		</dependency>
 		<!--  for zip file handling -->
 		<dependency>
-    		<groupId>net.lingala.zip4j</groupId>
-    		<artifactId>zip4j</artifactId>
-    		<version>2.10.0</version><!-- latest version 2.10 by 31/03/2022; old: 2.9.1 -->
+			<!-- used in plugins/ace/utils/ZipUtils.java only -->
+			<groupId>org.apache.ant</groupId>
+			<artifactId>ant</artifactId>
+			<version>1.10.14</version>
+			<!-- latest version 1.10.14 by 21/11/2023; old: 1.10.12 -->
 		</dependency>
+		<dependency>
+			<!-- used in ace/mojos/PrepareBarBuildWorkspaceMojo.java only -->
+			<groupId>net.lingala.zip4j</groupId>
+			<artifactId>zip4j</artifactId>
+			<version>2.11.5</version>
+			<!-- latest version 2.11.5 by 21/11/2023; old: 2.10 -->
+		</dependency>
+		<!-- for junit tests -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.13.2</version>
+			<!-- latest version 4.13.2 by 21/11/2023; old: 4.11 -->
+		</dependency>
+		<!-- new dependencies; required for cxf-xjc-plugin -->
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.1</version>
+			<!-- latest version 2.4.0-b180830.0359 by 21/11/2023; using 2.3.1 as latest stable-->
 		</dependency>
 		<dependency>
-    		<groupId>commons-io</groupId>
-    		<artifactId>commons-io</artifactId>
-    		<version>2.11.0</version> <!-- latest version 2.11.0 by 31/03/2022; added -->
+			<groupId>org.glassfish.jaxb</groupId>
+			<artifactId>jaxb-runtime</artifactId>
+			<version>2.3.9</version>
+			<!-- latest version 4.0.4 by 21/11/2023; using 2.3.9 because of compatibility issues -->
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.sun.activation</groupId>
+			<artifactId>jakarta.activation</artifactId>
+			<version>2.0.1</version>
+			<!-- latest version 2.0.1 by 21/11/2023 -->
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 	<reporting>
@@ -71,83 +92,64 @@
 				<!-- required for plugin site generation -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.6.4</version> <!-- latest version 3.6.4 by 31/03/2022; old: 3.4 -->
+				<version>3.10.2</version>
 			</plugin>
 		</plugins>
 	</reporting>
+	
 	<build>
 		<plugins>
+			<!--
+			https://central.sonatype.com/artifact/org.apache.cxf/cxf-xjc-plugin/versions
+			latest version 4.0.0; using 3.3.2 because of compatibility topics
+			-->
+			<!-- used to generate the classes based on given xsds -->
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-xjc-plugin</artifactId>
+				<version>3.3.2</version>
 				<executions>
 					<execution>
-						<id>attach-sources</id>
+						<id>eclipse-xjc</id>
+						<phase>generate-sources</phase>
 						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration> <!-- add this to disable checking -->
-							<additionalparam>-Xdoclint:none</additionalparam>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>jaxb2-maven-plugin</artifactId>
-				<version>1.6</version>
-				<executions>
-					<execution>
-						<id>eclipseProject</id>
-						<goals>
-							<goal>xjc</goal>
+							<goal>xsdtojava</goal>
 						</goals>
 						<configuration>
-							<packageName>${project.groupId}.ace.generated.eclipse_project</packageName>
-							<clearOutputDir>false</clearOutputDir>
-							<includes>
-								<include>EclipseProject.xsd</include>
-							</includes>
-							<args>
-								<arg>-no-header</arg>
-							</args>
+							<xsdOptions>
+								<xsdOption>
+									<xsd>${basedir}/src/main/xsd/EclipseProject.xsd</xsd>
+									<packagename>${project.groupId}.ace.generated.eclipse_project</packagename>
+								</xsdOption>
+							</xsdOptions>
 						</configuration>
 					</execution>
 					<execution>
-						<id>pom</id>
+						<id>maven-xjc</id>
+						<phase>generate-sources</phase>
 						<goals>
-							<goal>xjc</goal>
+							<goal>xsdtojava</goal>
 						</goals>
 						<configuration>
-							<packageName>${project.groupId}.ace.generated.maven_pom</packageName>
-							<clearOutputDir>false</clearOutputDir>
-							<includes>
-								<include>maven-v4_0_0.xsd</include>
-							</includes>
-							<args>
-								<arg>-no-header</arg>
-							</args>
+							<xsdOptions>
+								<xsdOption>
+									<xsd>${basedir}/src/main/xsd/maven-v4_0_0.xsd</xsd>
+									<packagename>${project.groupId}.ace.generated.maven_pom</packagename>
+								</xsdOption>
+							</xsdOptions>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
+			<!--
+			https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-plugin-plugin/versions
+			latest version 3.10.2; previous version: 3.4 
+			-->
+			<!-- plugin to generate the mojo plugin information -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.4</version>
+				<version>3.10.2</version>
 				<executions>
 					<execution>
 						<id>default-descriptor</id>
@@ -162,33 +164,45 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- plugin to attach the source to the final jar file -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.8.1</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.scm</groupId>
-						<artifactId>maven-scm-provider-tfs</artifactId>
-						<version>1.8.1</version>
-					</dependency>
-				</dependencies>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>3.3.0</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
+			<!-- plugin to create the javadoc  -->
+			<!--
+			https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin/versions
+			latest version 3.6.2; using 2.10.4 because of compatibility reason 
+			upgrade would required changes to the source code 
+			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.2</version>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.scm</groupId>
-						<artifactId>maven-scm-provider-tfs</artifactId>
-						<version>1.8.1</version>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<workingDirectory>/opt/releases/ace-maven-plugin</workingDirectory>
-				</configuration>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.10.4</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<!-- add this to disable checking -->
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
+			<!-- plugin to create a "maven site" (documentation root) --> 
+			<!-- --> 
 			<plugin>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.3</version>
@@ -196,23 +210,14 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.1</version>
-				</plugin>
+			<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
 					<version>2.8</version>
 				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>2.4</version>
-				</plugin>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
+				
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -237,7 +242,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<execute />
+										<execute/>
 									</action>
 								</pluginExecution>
 								<pluginExecution>
@@ -257,14 +262,15 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+				
 			</plugins>
 		</pluginManagement>
 	</build>
-</project> 
+</project>
