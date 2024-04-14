@@ -110,6 +110,7 @@ following use cases were tested with ibmint:
 	* to scan the project for dependent Java projects. If found:  
 		* add the java project to the build (via additional --project entry) 
 		* copy additional maven dependencies to the main project and update the compile classpath (via MQSI_EXTRA_BUILD_CLASSPATH) 
+		* of ibmintResources is set: add src/main/resources to the java jar file 
 * ibmint requires a folder / file access and uses therefore the MQSI_WORKPATH. To avoid any issues on the build server the ace-maven-plugin creates a temporay Workpath under {project.build.directory}/tmp-work-dir. The folder can be changed by adding the config parameter mqsiTempWorkDir to the pom.xml. 
 * in general the environment variable "MQSI_EXTRA_BUILD_CLASSPATH" can be used to add additional jars to the ibmint build process (for ACE > version 12.0.6)
 * Per default the source code is packaged with the artefact. This can be changed by adding the config property "packageSource = false" to the pom.xml file. 
