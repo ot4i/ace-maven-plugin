@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -20,6 +21,7 @@ import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.utils.io.FileUtils;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 /* and on for maven resolver */
@@ -230,12 +232,11 @@ public class CreateBarMojo extends AbstractMojo {
 	@Parameter(property = "ace.compileMapsAndSchemas", defaultValue = "false", required = false)
 	protected Boolean compileMapsAndSchemas;
 
-	/*
+	/**
 	 * added temporary mqsiWorkDir - only used in context of ibmint
 	 */
 	@Parameter(property = "ace.mqsiTempWorkDir", defaultValue = "${project.build.directory}/tmp-work-dir", required = true, readonly = true)
 	protected File mqsiTempWorkDir;
-
 
 	/**
 	 * The current repository/network configuration of Maven.
@@ -248,20 +249,26 @@ public class CreateBarMojo extends AbstractMojo {
 	 */
 	@Component
 	protected BuildPluginManager buildPluginManager;
-	
-    /**
-     * The project's remote repositories to use for the resolution.
-     */
-    @Parameter(defaultValue = "${project.remoteProjectRepositories}", readonly = true)
-    private List<RemoteRepository> remoteRepos;
-    
-    /**
-     * The entry point to Maven Artifact Resolver, i.e. the component doing all the work.
-     */
-    @Component
-    private RepositorySystem repoSystem;
 
-    
+	/**
+	 * The project's remote repositories to use for the resolution.
+	 */
+	@Parameter(defaultValue = "${project.remoteProjectRepositories}", readonly = true)
+	private List<RemoteRepository> remoteRepos;
+
+	/**
+	 * The entry point to Maven Artifact Resolver, i.e. the component doing all the
+	 * work.
+	 */
+	@Component
+	private RepositorySystem repoSystem;
+
+	/**
+	 * Flag for using of ibmint add java project resources java project
+	 * /src/main/resources
+	 */
+	@Parameter(property = "ace.ibmintResources", defaultValue = "false", required = false)
+	protected Boolean ibmintResources;
 
 	private List<String> addObjectsAppsLibs() throws MojoFailureException {
 		List<String> params = new ArrayList<String>();
@@ -445,7 +452,7 @@ public class CreateBarMojo extends AbstractMojo {
 		if (osName.contains("windows")) {
 			exportCommand = "SET";
 			pathDelimiter = ";";
-		
+
 		} else if (osName.contains("linux") || osName.contains("mac os x")) {
 			exportCommand = "export";
 			pathDelimiter = ":";
@@ -454,31 +461,32 @@ public class CreateBarMojo extends AbstractMojo {
 		}
 
 		/* step 2: get all java used projects */
-		List<String> javaProjects = EclipseProjectUtils.getJavaProjectsDependencies(new File(workspace, applicationName), workspace, getLog());
-		
-		/* step 3: get all maven dependencies from the java project 
+		List<String> javaProjects = EclipseProjectUtils
+				.getJavaProjectsDependencies(new File(workspace, applicationName), workspace, getLog());
+
+		/*
+		 * step 3: get all maven dependencies from the java project
 		 * 
 		 * artifactCoordinate (as String)
 		 * <groupId>:<artifactId>[:<extension>[:<classifier>]]:<version>}
 		 * 
 		 */
-		List<Artifact> dependencies = MavenUtils.getDependencies(workspace, javaProjects, "compile", getLog()); 
-		
-		/* step 4: resolve (and thus download) all dependencies */  
-		List<File> files = MavenUtils.resolveArtifacts(dependencies, remoteRepos, repoSystem, repoSession, getLog()); 
-		
-		
+		List<Artifact> dependencies = MavenUtils.getDependencies(workspace, javaProjects, "compile", getLog());
+
+		/* step 4: resolve (and thus download) all dependencies */
+		List<File> files = MavenUtils.resolveArtifacts(dependencies, remoteRepos, repoSystem, repoSession, getLog());
 
 		/* copy jars to the project */
-		int count = 0; 
+		int count = 0;
 		StringBuffer classpathExt = new StringBuffer("");
 		for (File dependencyFile : files) {
-			getLog().debug("handling downloaded depenendency: " + dependencyFile.getName()); 
+			getLog().debug("handling downloaded depenendency: " + dependencyFile.getName());
 			String targetFileName = new String(
 					workspace.toString() + "/" + applicationName + "/" + dependencyFile.getName());
 			Path targetPath = Paths.get(targetFileName);
 			try {
-				Files.copy(Paths.get(dependencyFile.getAbsolutePath()), targetPath, StandardCopyOption.REPLACE_EXISTING);
+				Files.copy(Paths.get(dependencyFile.getAbsolutePath()), targetPath,
+						StandardCopyOption.REPLACE_EXISTING);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -492,7 +500,7 @@ public class CreateBarMojo extends AbstractMojo {
 			classpathExt.append(targetPath.toString());
 			count++;
 		}
-		
+
 		// assembling params
 		ibmintCommand.append("ibmint package ");
 		ibmintCommand.append("--input-path " + "\"" + workspace.toString() + "\" ");
@@ -530,11 +538,11 @@ public class CreateBarMojo extends AbstractMojo {
 		commands.add(exportCommand + " MQSI_WORKPATH=\"" + mqsiTempWorkDir + "/config\"");
 
 		// handle MQSI_EXTRA_BUILD_CLASSPATH
-	
+
 		if ((classpathExt != null) && (classpathExt.length() > 0)) {
 			commands.add(exportCommand + " MQSI_EXTRA_BUILD_CLASSPATH=" + classpathExt + " ");
 		}
-	
+
 		commands.add(ibmintCommand.toString());
 
 		if (debug) {
@@ -543,8 +551,12 @@ public class CreateBarMojo extends AbstractMojo {
 			env.forEach((k, v) -> getLog().info(k + ":" + v));
 			getLog().info("**** end debug environment");
 		}
-		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, commands,getLog());
+		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, commands, getLog());
 
+		// Fix attach resource from java projects
+		if (ibmintResources) {
+			attacheResourcesInJavaProjects(barName, javaProjects);
+		}
 	}
 
 	/**
@@ -567,6 +579,73 @@ public class CreateBarMojo extends AbstractMojo {
 		String cmd = new String("mqsicreatebar");
 		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, cmd, params, getLog());
 
+	}
+
+	/**
+	 * Fix for attach Resources in java Projects
+	 */
+	private void attacheResourcesInJavaProjects(File _barName, List<String> _javaProjects) throws MojoFailureException {
+		String sep = System.getProperty("file.separator");
+		String tmpDir = mqsiTempWorkDir + sep + UUID.randomUUID();
+		String javaResource = "";
+		getLog().info("Apply resources Fix");
+		try {
+			Files.createDirectories(Paths.get(tmpDir));
+			// extract bar to /temp/bar
+			ZipUtils.unpack(_barName, tmpDir + sep + "bar");
+			// extract /temp/bar/applicationName.shlibzip to /tmp/shlibzip
+			ZipUtils.unpack(new File(tmpDir + sep + "bar" + sep + applicationName + ".shlibzip"),
+					tmpDir + sep + "shlibzip");
+			// extract java projects to /tmp/jar/javaproject
+			for (String javaProject : _javaProjects) {
+				// get path to workspace of java projects
+				javaResource = workspace + sep + javaProject + sep + "src" + sep + "main" + sep + "resources";
+				// Patch only java projects with resources
+				if (new File(javaResource).isDirectory()) {
+					ZipUtils.unpack(new File(tmpDir + sep + "shlibzip" + sep + javaProject + ".jar"),
+							tmpDir + sep + "jar" + sep + javaProject);
+					// get path to workspace of java projects
+					javaResource = workspace + sep + javaProject + sep + "src" + sep + "main" + sep + "resources";
+					getLog().info("Copy java resources:" + javaResource);
+					getLog().info("Copy java resources to:" + tmpDir + sep + "jar" + sep + javaProject);
+					// add /src/main/resources
+					FileUtils.copyDirectoryStructure(new File(javaResource), new File(tmpDir + sep + "jar" + sep + javaProject));
+				}
+			}
+			// pack java projects to /tmp/jar
+			for (String javaProject : _javaProjects) {
+				// get path to workspace of java projects
+				javaResource = workspace + sep + javaProject + sep + "src" + sep + "main" + sep + "resources";
+				// Pack only projects with resources
+				if (new File(javaResource).isDirectory()) {
+					ZipUtils.pack(tmpDir + sep + "jar" + sep + javaProject,
+							tmpDir + sep + "jar" + sep + javaProject + ".jar");
+					getLog().info("Jar created:" + tmpDir + sep + "jar" + sep + javaProject + ".jar");
+					// copy (delete old and move new one)
+					new File(tmpDir + sep + "shlibzip" + sep + javaProject + ".jar").delete();
+					Files.move(Paths.get(tmpDir + sep + "jar" + sep + javaProject + ".jar"),
+							Paths.get(tmpDir + sep + "shlibzip" + sep + javaProject + ".jar"),
+							StandardCopyOption.REPLACE_EXISTING);
+				}
+			}
+			// pack shlibzip to /tmp
+			ZipUtils.pack(tmpDir + sep + "shlibzip", tmpDir + sep + applicationName + ".shlibzip");
+			getLog().info("Shlibzip created:" + tmpDir + sep + applicationName + ".shlibzip");
+			// copy
+			new File(tmpDir + sep + "bar" + sep + applicationName + ".shlibzip").delete();
+			Files.move(Paths.get(tmpDir + sep + applicationName + ".shlibzip"),
+					Paths.get(tmpDir + sep + "bar" + sep + applicationName + ".shlibzip"),
+					StandardCopyOption.REPLACE_EXISTING);
+			// pack bar to /tmp
+			ZipUtils.pack(tmpDir + sep + "bar", tmpDir + sep + _barName.getName());
+			getLog().info("Bar created:" + tmpDir + sep + _barName.getName());
+			// copy and cleanup
+			Files.move(Paths.get(tmpDir + sep + _barName.getName()),Paths.get(_barName.getPath()),StandardCopyOption.REPLACE_EXISTING);
+			// Files.delete(Paths.get(tmpDir));
+			getLog().info("Bar overwritten:" + _barName.getPath());
+		} catch (IOException ioe) {
+			throw new MojoFailureException("Fix faulure:" + ioe.getMessage());
+		}
 	}
 
 }

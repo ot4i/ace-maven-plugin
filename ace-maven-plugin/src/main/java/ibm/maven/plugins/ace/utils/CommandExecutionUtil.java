@@ -141,7 +141,7 @@ public final class CommandExecutionUtil {
             pb = new ProcessBuilder(cmdFile.getAbsolutePath());
         } else if (osName.contains("linux") || osName.contains("mac os x")){
             pb = new ProcessBuilder();
-            pb.command("bash", "-c", getCommandLine(command));
+            pb.command("bash","-c", getCommandLine(command));
         } else {
             throw new MojoFailureException("Unexpected OS: " + osName);
         }
@@ -189,7 +189,7 @@ public final class CommandExecutionUtil {
         String initialCommand = new String(); 
 
         List<String> command = new ArrayList<String>();
-
+        // this should be in CreateBarMojo
         if (osName.contains("windows")){
             //cmdFile = new File(fileTmpDir + File.separator + cmd + "Command-" + UUID.randomUUID() + ".cmd");
         	cmdFile = new File(fileTmpDir + File.separator  + "compileCommand-" + UUID.randomUUID() + ".bat");
@@ -198,7 +198,9 @@ public final class CommandExecutionUtil {
         } else if(osName.contains("linux") || osName.contains("mac os x")){	
             cmdFile = new File(fileTmpDir + File.separator  + "compileCommand-" + UUID.randomUUID() + ".sh");
             //note: requires a ';' to ensure that all succeeding commands will be called 
-            initialCommand = ". " + aceRunDir + "/mqsiprofile"; 
+            // Add "#!/bin/bash -i" for clean source mqsiprofile include.
+            initialCommand = "#!/bin/bash -i"+System.getProperty("line.separator")+"source " + aceRunDir + "/mqsiprofile"; 
+            //initialCommand = ". " + aceRunDir + "/mqsiprofile";
         } else {
             throw new MojoFailureException("Unexpected OS: " + osName);
         }
