@@ -28,6 +28,8 @@ import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.repository.RemoteRepository;
 
+import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
+
 import ibm.maven.plugins.ace.utils.CommandExecutionUtil;
 import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
 import ibm.maven.plugins.ace.utils.MavenUtils;
@@ -554,8 +556,9 @@ public class CreateBarMojo extends AbstractMojo {
 		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, commands, getLog());
 
 		// Fix attach resource from java projects
+		getLog().info("evaluate ibmintResources: "+ibmintResources);
 		if (ibmintResources) {
-			attacheResourcesInJavaProjects(barName, javaProjects);
+			attachResourcesInJavaProjects(barName, javaProjects, workspace, applicationName);
 		}
 	}
 
@@ -584,25 +587,39 @@ public class CreateBarMojo extends AbstractMojo {
 	/**
 	 * Fix for attach Resources in java Projects
 	 */
-	private void attacheResourcesInJavaProjects(File _barName, List<String> _javaProjects) throws MojoFailureException {
+	private void attachResourcesInJavaProjects(File _barName, List<String> _javaProjects, File workspace, String applicationName) throws MojoFailureException {
 		String sep = System.getProperty("file.separator");
 		String tmpDir = mqsiTempWorkDir + sep + UUID.randomUUID();
 		String javaResource = "";
-		getLog().info("Apply resources Fix");
+		getLog().info("adding java resource files");
+		
+		//determine file extension 
+		String fileExtension  = new String(""); 
+		
+		if (EclipseProjectUtils.isApplication(new File (workspace,applicationName), getLog())) {
+			fileExtension="appzip"; 
+		} else if (EclipseProjectUtils.isSharedLibrary(new File (workspace,applicationName), getLog())) {
+			fileExtension="shlibzip";
+		} else if (EclipseProjectUtils.isLibrary(new File (workspace,applicationName), getLog())) {
+			fileExtension="libzip"; 
+		} else { 
+			throw  new MojoFailureException("unsupported ACE application project type"); 
+		}
+		
 		try {
 			Files.createDirectories(Paths.get(tmpDir));
 			// extract bar to /temp/bar
 			ZipUtils.unpack(_barName, tmpDir + sep + "bar");
-			// extract /temp/bar/applicationName.shlibzip to /tmp/shlibzip
-			ZipUtils.unpack(new File(tmpDir + sep + "bar" + sep + applicationName + ".shlibzip"),
-					tmpDir + sep + "shlibzip");
+			// extract /temp/bar/applicationName.type (e.g.shlibzip) to /tmp/type
+			ZipUtils.unpack(new File(tmpDir + sep + "bar" + sep + applicationName + "."+fileExtension),
+					tmpDir + sep + fileExtension);
 			// extract java projects to /tmp/jar/javaproject
 			for (String javaProject : _javaProjects) {
 				// get path to workspace of java projects
 				javaResource = workspace + sep + javaProject + sep + "src" + sep + "main" + sep + "resources";
 				// Patch only java projects with resources
 				if (new File(javaResource).isDirectory()) {
-					ZipUtils.unpack(new File(tmpDir + sep + "shlibzip" + sep + javaProject + ".jar"),
+					ZipUtils.unpack(new File(tmpDir + sep + fileExtension + sep + javaProject + ".jar"),
 							tmpDir + sep + "jar" + sep + javaProject);
 					// get path to workspace of java projects
 					javaResource = workspace + sep + javaProject + sep + "src" + sep + "main" + sep + "resources";
@@ -622,19 +639,19 @@ public class CreateBarMojo extends AbstractMojo {
 							tmpDir + sep + "jar" + sep + javaProject + ".jar");
 					getLog().info("Jar created:" + tmpDir + sep + "jar" + sep + javaProject + ".jar");
 					// copy (delete old and move new one)
-					new File(tmpDir + sep + "shlibzip" + sep + javaProject + ".jar").delete();
+					new File(tmpDir + sep + fileExtension + sep + javaProject + ".jar").delete();
 					Files.move(Paths.get(tmpDir + sep + "jar" + sep + javaProject + ".jar"),
-							Paths.get(tmpDir + sep + "shlibzip" + sep + javaProject + ".jar"),
+							Paths.get(tmpDir + sep + fileExtension + sep + javaProject + ".jar"),
 							StandardCopyOption.REPLACE_EXISTING);
 				}
 			}
-			// pack shlibzip to /tmp
-			ZipUtils.pack(tmpDir + sep + "shlibzip", tmpDir + sep + applicationName + ".shlibzip");
-			getLog().info("Shlibzip created:" + tmpDir + sep + applicationName + ".shlibzip");
+			// pack 'zip' to /tmp
+			ZipUtils.pack(tmpDir + sep + fileExtension, tmpDir + sep + applicationName + "."+fileExtension);
+			getLog().info("new file created:" + tmpDir + sep + applicationName + "."+fileExtension);
 			// copy
-			new File(tmpDir + sep + "bar" + sep + applicationName + ".shlibzip").delete();
-			Files.move(Paths.get(tmpDir + sep + applicationName + ".shlibzip"),
-					Paths.get(tmpDir + sep + "bar" + sep + applicationName + ".shlibzip"),
+			new File(tmpDir + sep + "bar" + sep + applicationName + "."+fileExtension).delete();
+			Files.move(Paths.get(tmpDir + sep + applicationName + "."+fileExtension),
+					Paths.get(tmpDir + sep + "bar" + sep + applicationName + "."+fileExtension),
 					StandardCopyOption.REPLACE_EXISTING);
 			// pack bar to /tmp
 			ZipUtils.pack(tmpDir + sep + "bar", tmpDir + sep + _barName.getName());
@@ -644,7 +661,7 @@ public class CreateBarMojo extends AbstractMojo {
 			// Files.delete(Paths.get(tmpDir));
 			getLog().info("Bar overwritten:" + _barName.getPath());
 		} catch (IOException ioe) {
-			throw new MojoFailureException("Fix faulure:" + ioe.getMessage());
+			throw new MojoFailureException("failure updating file:" + ioe.getMessage());
 		}
 	}
 
