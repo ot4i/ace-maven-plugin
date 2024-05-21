@@ -28,7 +28,6 @@ import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.repository.RemoteRepository;
 
-import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
 
 import ibm.maven.plugins.ace.utils.CommandExecutionUtil;
 import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
