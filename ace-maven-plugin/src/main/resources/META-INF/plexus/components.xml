@@ -18,9 +18,9 @@
 					</process-classes>
 					<package>ibm.maven.plugins:ace-maven-plugin:package-ace-bar
 					</package>
-					<install>org.apache.maven.plugins:maven-install-plugin:2.4:install
+					<install>org.apache.maven.plugins:maven-install-plugin:install
 					</install>
-					<deploy>org.apache.maven.plugins:maven-deploy-plugin:2.7:deploy
+					<deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy
 					</deploy>
 				</phases>
 			</configuration>
@@ -36,9 +36,9 @@
 					</generate-sources>
 					<package>ibm.maven.plugins:ace-maven-plugin:package-classloader
 					</package>
-					<install>org.apache.maven.plugins:maven-install-plugin:2.4:install
+					<install>org.apache.maven.plugins:maven-install-plugin:install
 					</install>
-					<deploy>org.apache.maven.plugins:maven-deploy-plugin:2.7:deploy
+					<deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy
 					</deploy>
 				</phases>
 			</configuration>
@@ -63,9 +63,9 @@
 					<test>org.apache.maven.plugins:maven-surefire-plugin:test</test>
 					<package>ibm.maven.plugins:ace-maven-plugin:package-par
 					</package>
-					<install>org.apache.maven.plugins:maven-install-plugin:2.4:install
+					<install>org.apache.maven.plugins:maven-install-plugin:install
 					</install>
-					<deploy>org.apache.maven.plugins:maven-deploy-plugin:2.7:deploy
+					<deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy
 					</deploy>
 				</phases>
 			</configuration>
@@ -88,9 +88,9 @@
 					<test>org.apache.maven.plugins:maven-surefire-plugin:test</test>
 					<package>org.apache.maven.plugins:maven-jar-plugin:jar,ibm.maven.plugins:ace-maven-plugin:package-src
 					</package>
-					<install>org.apache.maven.plugins:maven-install-plugin:2.4:install
+					<install>org.apache.maven.plugins:maven-install-plugin:install
 					</install>
-					<deploy>org.apache.maven.plugins:maven-deploy-plugin:2.7:deploy
+					<deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy
 					</deploy>
 				</phases>
 			</configuration>
@@ -106,9 +106,9 @@
 					</validate>
 					<package>ibm.maven.plugins:ace-maven-plugin:package-src
 					</package>
-					<install>org.apache.maven.plugins:maven-install-plugin:2.4:install
+					<install>org.apache.maven.plugins:maven-install-plugin:install
 					</install>
-					<deploy>org.apache.maven.plugins:maven-deploy-plugin:2.7:deploy
+					<deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy
 					</deploy>
 				</phases>
 			</configuration>
