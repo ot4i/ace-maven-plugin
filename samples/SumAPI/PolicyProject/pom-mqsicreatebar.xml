@@ -127,6 +127,8 @@
 					<mqsiTempWorkDir>/tmp/tmp-work-dir</mqsiTempWorkDir>
 					ibmintResources; optional; if set to true resources files (stored under src/main/java) of dependent java projects are added to the java jar file
 					<ibmintResources>true</ibmintResources>	
+					failOnBIPWarnings: optional; default false; if set to true the 'compile' will be checked for BIP Warnings (caused e.g.  by missing depedencies), which will then fail the build
+					<failOnBIPWarnings>true</failOnBIPWarnings>
 					--> 				
 					
 				</configuration>

@@ -1,12 +1,16 @@
 package ibm.maven.plugins.ace.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -180,13 +184,14 @@ public final class CommandExecutionUtil {
         
     }
 
-    public static void runCommand(File aceRunDir, String fileTmpDir, List<String> commands, Log log) throws MojoFailureException {
+    public static void runCommand(File aceRunDir, String fileTmpDir, List<String> commands, boolean failOnBIPWarnings,  Log log) throws MojoFailureException {
         // Check underlying operating system
         String osName = System.getProperty("os.name").toLowerCase();
         String cmdAddOn = new String(""); 
         File cmdFile = null;
         ProcessBuilder pb = null;
-        String initialCommand = new String(); 
+        String initialCommand = new String();
+        StringBuilder outputConsole = new StringBuilder();
 
         List<String> command = new ArrayList<String>();
         // this should be in CreateBarMojo
@@ -236,8 +241,21 @@ public final class CommandExecutionUtil {
         	log.info("start executing command..");
         	pb.redirectErrorStream(true);
             process = pb.start();
+            /*
             stdOutHandler = new ProcessOutputLogger(process.getInputStream(), log);
             stdOutHandler.start();
+            */ 
+            
+    		BufferedReader reader = new BufferedReader(
+    				new InputStreamReader(process.getInputStream()));
+
+    		String line;
+    		while ((line = reader.readLine()) != null) {
+    			outputConsole.append(line + "\n");
+    			log.info(line);
+    		}
+    		
+            
             process.waitFor();
 
         } catch (IOException e) {
@@ -259,7 +277,16 @@ public final class CommandExecutionUtil {
             // logOutputFile(outFile, "error");
             throw new MojoFailureException("running command finished with exit code: " + process.exitValue());
         }
-
+        
+        //check console output for BIP Warnings 
+        if (failOnBIPWarnings) {
+        	Matcher matcher = Pattern.compile("(B)(I)(P)[0-9]{4}(W)").matcher(outputConsole);
+    		if(matcher.find()){
+    			throw new MojoFailureException("process includes BIP Warnings; see logs above - thus aborting build (can be overwritten by parameter failOnBipWarnings)"); 
+    		} else { 
+    			//no match; do nothing
+    		}
+        }
         log.debug("running command complete");
     }
     

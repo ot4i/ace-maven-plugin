@@ -121,10 +121,16 @@ public class CreateBarMojo extends AbstractMojo {
 	protected String applicationName;
 
 	/**
-	 * Whether classloaders are in use with this bar
+	 * Whether workspace check should be skipped (mqsicreatebar only) 
 	 */
 	@Parameter(property = "ace.skipWSErrorCheck", defaultValue = "false")
 	protected Boolean skipWSErrorCheck;
+	
+	/**
+	 * Fail on BIP warning(s)   
+	 */
+	@Parameter(property = "ace.failOnBIPWarnings", defaultValue = "false")
+	protected Boolean failOnBIPWarnings;
 
 	/**
 	 * Name of the directory to create the tmp files; required to build the project
@@ -552,7 +558,7 @@ public class CreateBarMojo extends AbstractMojo {
 			env.forEach((k, v) -> getLog().info(k + ":" + v));
 			getLog().info("**** end debug environment");
 		}
-		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, commands, getLog());
+		CommandExecutionUtil.runCommand(aceRunDir, fileTmpDir, commands, failOnBIPWarnings, getLog());
 
 		// Fix attach resource from java projects
 		getLog().info("evaluate ibmintResources: "+ibmintResources);

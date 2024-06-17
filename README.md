@@ -8,8 +8,14 @@ Feel free to fork the code and do your own adjustments. Of course contributions 
 
 
 # Changes
-Current version of the plugin is "12.0.6 [-SNAPSHOT]". 
-Following changes (compared to the last major update in 2022): 
+Current changes - part of the latest code; but not bundled to a 'release' set 
+- additional build parameter "failOnBIPWarnings" 
+default 'false'; If set to true the build will fail, if the compile reports a BIP Warning; 
+- update of used Maven plugin version 
+- ibmint: support to add resources of Java project into the final bar (done automatically when using mqsicreatebar - by the Eclipse Maven plugin)
+
+
+General changes - part of the last release: 
 
 - support for additional buildmode "ibmint" 
 - updated sample (incl pom templates for ibmint and mqsicreatebar) 
