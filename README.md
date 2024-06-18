@@ -8,12 +8,12 @@ Feel free to fork the code and do your own adjustments. Of course contributions 
 
 
 # Changes
-Current changes - part of the latest code; but not bundled to a 'release' set 
+Current changes - part of the latest code; but not bundled to a 'release' (yet): 
 - additional build parameter "failOnBIPWarnings" 
 default 'false'; If set to true the build will fail, if the compile reports a BIP Warning; 
 - update of used Maven plugin version 
 - ibmint: support to add resources of Java project into the final bar (done automatically when using mqsicreatebar - by the Eclipse Maven plugin)
-
+- changed error handling for packaging; throwing MojoException in any case
 
 General changes - part of the last release: 
 
