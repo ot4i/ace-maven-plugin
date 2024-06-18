@@ -109,20 +109,16 @@ public class PackageaceBarMojo extends CreateBarMojo {
 		}
 
 		/* attach bar to deploy */
-		getLog().info("try to attach bar file");
+		
 		try {
-
+			
+			getLog().info("try to attach bar file");
 			if (barName.exists()) {
 
 				getLog().info("found bar file: " + barName.getAbsolutePath());
 				executeMojo(
 						plugin(groupId("org.codehaus.mojo"), artifactId("build-helper-maven-plugin"), version("3.3.0")),
 						goal("attach-artifact"),
-						/*
-						configuration(element("artifacts",
-								element("artifact", element("file", barName.getAbsolutePath()), element("type", "bar"),
-										element("classifier", "bar")))),
-										*/ 
 						configuration(element("artifacts",
 								element("artifact", element("file", barName.getAbsolutePath()), element("type", "bar")
 										))),
@@ -131,7 +127,7 @@ public class PackageaceBarMojo extends CreateBarMojo {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new MojoFailureException("Error attaching the bar file via the build-helper-maven-plugin: " + e.getMessage());
 		}
 
 		/*
@@ -167,8 +163,7 @@ public class PackageaceBarMojo extends CreateBarMojo {
 		try {
 			FileUtils.deleteDirectory(new File(project.getBuild().getDirectory(), "archive-tmp"));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new MojoFailureException("Error deleting the archive-tmp directory: "+e.getMessage());
 		}
 	}
 
