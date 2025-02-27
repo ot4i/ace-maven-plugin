@@ -1,6 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ibm.maven.plugins</groupId>
 	<artifactId>ace-maven-plugin</artifactId>
@@ -19,13 +17,13 @@
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
 			<version>3.9.9</version>
-			<scope>provided</scope> 
+			<scope>provided</scope>
 			<!-- update 23/01/2025: 
 			latest stable version: 3.9.9; released: Aug 17, 2024
 			previous used version: 3.9.5
 			tested with 4.0.0-rc-2 but not chosen as it's still a "release candidate" 
 			vulnerabitis: 0; source: https://mvnrepository.com
-			--> 
+			-->
 		</dependency>
 		<dependency>
 			<!-- annotations are needed only to build the plugin -->
@@ -36,25 +34,17 @@
 			latest stable version: 3.15.1; released: Oct 25, 2024; 
 			previous used version: 3.10.2
 			vulnerabitis: 0; source: https://mvnrepository.com
-			--> 
+			-->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<!-- TODO --> 
+			<!-- TODO -->
 			<groupId>org.twdata.maven</groupId>
 			<artifactId>mojo-executor</artifactId>
 			<version>2.3.3</version>
 			<!-- latest version 2.4.1-m2 by 21/11/2023; using 2.3.3 because of implementation / compatibility reasons -->
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
-			<!-- TODO --> 
-			<groupId>org.codehaus.plexus</groupId>
-			<artifactId>plexus-utils</artifactId>
-			<version>3.3.1</version>
-			<!-- latest version 4.0.0 by 21/11/2023; using 3.3.1 because of implementation / compatibility reasons   -->
-		</dependency>
-		<!--  for zip file handling -->
 		<dependency>
 			<!-- used in plugins/ace/utils/ZipUtils.java only -->
 			<groupId>org.apache.ant</groupId>
@@ -79,8 +69,7 @@
 		</dependency>
 		<!-- for junit tests -->
 		<dependency>
-			<!-- TODO - moving to org.junit.jupiter fails --> 
-			
+			<!-- TODO - moving to org.junit.jupiter fails -->
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.13.2</version>
@@ -88,11 +77,6 @@
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
 			<version>5.12.0</version>
-			--> 
-			<!-- update 26/02/2025: 
-			latest stable version: 2.11.5; released: Feb 22, 2023; 
-			previous used version: 2.11.5 (same one) 
-			vulnerabitis: 0; source: https://mvnrepository.com
 			-->
 		</dependency>
 		<!-- new dependencies; required for cxf-xjc-plugin -->
@@ -100,17 +84,17 @@
 			<groupId>jakarta.xml.bind</groupId>
 			<artifactId>jakarta.xml.bind-api</artifactId>
 			<version>3.0.1</version>
-			<!-- to review --> 
+			<!-- to review -->
 			<!-- update 26/02/2025:
 				 latest version 2.4.0-b180830.0359 by 21/11/2023; using 2.3.1 as latest stable
-				 TODO: moved to jakarta.xml.bind » jakarta.xml.bind-api --> 
+				 TODO: moved to jakarta.xml.bind » jakarta.xml.bind-api -->
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
 			<version>3.0.2</version>
 			<scope>runtime</scope>
-			<!-- to review --> 
+			<!-- to review -->
 			<!-- update 26/02/2025:
 			     latest version 4.0.5 by Mar 07, 2024; using 2.3.9 because of compatibility issues 
 			-->
@@ -121,7 +105,7 @@
 			<version>3.2.0</version>
 			<!-- update 26/02/2025:
 				 latest version 2.0.1 by 21/11/2023; no changes -->
-		</dependency>		
+		</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>
@@ -134,17 +118,27 @@
 					 latest stable version: 3.15.1; released: Oct 25, 2024 
 					 previous used version: 3.10.2 
 					 vulnerabitis: 0; source: https://mvnrepository.com
-				--> 
-				</plugin>
+				-->
+			</plugin>
 		</plugins>
 	</reporting>
-	
 	<build>
 		<plugins>
 			<!--
 			https://central.sonatype.com/artifact/org.apache.cxf/cxf-xjc-plugin/versions
 			latest version 4.0.0; using 3.3.2 because of compatibility topics
 			-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.14.0</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+			</plugin>
+			
 			<!-- used to generate the classes based on given xsds -->
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
@@ -199,7 +193,7 @@
 					 latest stable version: 3.15.1; released: Oct 25, 2024 
 					 previous used version: 3.10.2 
 					 vulnerabitis: 0; source: https://mvnrepository.com
-				--> 
+				-->
 				<executions>
 					<execution>
 						<id>default-descriptor</id>
@@ -223,7 +217,7 @@
 					 latest stable version: 3.3.1; Jul 01, 2024
 					 previous used version: 3.3.0 
 					 vulnerabitis: 0; source: https://mvnrepository.com
-				--> 
+				-->
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -240,7 +234,7 @@
 				<version>3.11.1</version>
 				<!-- update 26/02/2025: 
 					 latest stable version: 3.11.1; Dec 04, 2024
-				--> 
+				-->
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -253,8 +247,8 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- plugin to create a "maven site" (documentation root) --> 
-			<!-- --> 
+			<!-- plugin to create a "maven site" (documentation root) -->
+			<!-- -->
 			<plugin>
 				<artifactId>maven-site-plugin</artifactId>
 				<version>4.0.0-M16</version>
@@ -262,8 +256,7 @@
 					 latest stable version: 4.0.0-M16; Jul 20, 2024
 					 previous used version: 3.3
 					 vulnerabitis: 0; source: https://mvnrepository.com
-				--> 
-				
+				-->
 			</plugin>
 		</plugins>
 		<pluginManagement>
@@ -281,16 +274,14 @@
 					<!-- update 26/02/2025: 
 					 latest stable version: 3.8.0; Oct 21, 2024
 					 previous used version: 2.8
-				    --> 
+				    -->
 				</plugin>
-				
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
 					<version>1.0.0</version>
 					<!-- update 26/02/2025: 
-						 no changes as no new package available --> 
-						 
+						 no changes as no new package available -->
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>
@@ -322,16 +313,22 @@
 										<artifactId>
 											maven-compiler-plugin
 										</artifactId>
-										<!--27.02.2024: 3.14.0 is latest  --> 
+										<!--27.02.2024: 3.14.0 is latest  -->
 										<!-- 
 										<versionRange>
 											[2.5.1,)
-										</versionRange> --> 
+										</versionRange> -->
 										<version>3.14.0</version>
 										<goals>
 											<goal>testCompile</goal>
 											<goal>compile</goal>
 										</goals>
+										<configuration>
+											<compilerArgs>
+												<arg>-verbose</arg>
+												<arg>-Xlint:all,-options,-path</arg>
+											</compilerArgs>
+										</configuration>
 									</pluginExecutionFilter>
 									<action>
 										<ignore/>
@@ -341,7 +338,6 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
-				
 			</plugins>
 		</pluginManagement>
 	</build>
