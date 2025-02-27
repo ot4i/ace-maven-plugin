@@ -6,6 +6,16 @@
 	<version>1.0.0</version>
 	<packaging>ace-bar</packaging>
 	<name>${project.artifactId}</name>
+	
+	<properties>
+		<!-- 
+		required for maven-install-plugin > 3.x 
+		otherwise the custom package as "ace-bar" will fail 
+		see also: 
+		https://maven.apache.org/plugins/maven-install-plugin/install-mojo.html#allowIncompleteProjects
+		--> 
+		<allowIncompleteProjects>true</allowIncompleteProjects>
+	</properties>
 
 	<build>
 		<defaultGoal>package</defaultGoal>
@@ -15,10 +25,11 @@
 			</resource>
 		</resources>
 		<plugins>
+			
 			<plugin>
 				<groupId>ibm.maven.plugins</groupId>
 				<artifactId>ace-maven-plugin</artifactId>
-				<version>12.0.6-SNAPSHOT</version>
+				<version>12.0.11-SNAPSHOT</version>
 
 				<configuration>
 					<!-- *************************************  
@@ -26,8 +37,8 @@
 					     ************************************* --> 
 					
 					<!-- installation directories for toolkit and server (runtime) -->
-					<toolkitInstallDir>C:\PROGRA~1\IBM\ACE\12.0.6.0\tools</toolkitInstallDir>
-					<aceRunDir>C:\PROGRA~1\IBM\ACE\12.0.6.0\server\bin</aceRunDir>
+					<toolkitInstallDir>C:\PROGRA~1\IBM\ACE\12.0.12.7\tools</toolkitInstallDir>
+					<aceRunDir>C:\PROGRA~1\IBM\ACE\12.0.12.7\server\bin</aceRunDir>
 					
 					<!--  additional properties with default values  -->
 					<!-- (1) name of the resulting bar file 

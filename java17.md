@@ -33,6 +33,28 @@ Important: the Java 17 upgrade does NOT affect the build of the ACE java applica
     - package jakarta.xml.bind.annotation was reoved
     - class com.sun.xml.internal.bind.v2.ContextFactory was removed (java.lang.ClassNotFoundException) 
  
+# Plugin Validation Issues 
+
+At the moment the maven builds reports following "plugin validation issues":
+(when e.g. run with 'mvn clean install -Dmaven.plugin.validation=VERBOSE') 
+
+(1) org.apache.maven.plugins:maven-compiler-plugin:3.10.1 with following issues: 
+- Plugin should declare these Maven artifacts in `provided` scope: .. list of plugins ...  
+
+Comments/Reason: the automatic code generation - part of the build - generates some pom files which does not list any 
+scopes for the listed plugins. Unfortunately this could not be changed at the moment. 
+
+
+(2) org.apache.maven.plugins:maven-resources-plugin:3.3.0 with following issues: 
+-  Mojo resources:resources (org.apache.maven.plugins.resources.ResourcesMojo)
+Implements `Contextualizable` interface from Plexus Container, which is EOL.
+- Mojo resources:testResources (org.apache.maven.plugins.resources.TestResourcesMojo)
+Implements `Contextualizable` interface from Plexus Container, which is EOL.
+
+Comments/Reason: the maven-resources-plugin needs to be updated; 
+
+(3) 
+
 # Open points 
 Following topics requires an update/cleanup  
 
