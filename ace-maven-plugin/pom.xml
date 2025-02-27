@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>ibm.maven.plugins</groupId>
 	<artifactId>ace-maven-plugin</artifactId>
-	<version>12.0.10-SNAPSHOT</version>
+	<version>12.0.11-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 	<name>ace-maven-plugin</name>
 	<url>http://maven.apache.org</url>
@@ -18,18 +18,29 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.9.5</version>
-			<!-- latest stable version 3.9.5 by 21/11/2023; old: 3.8.5 (version 4.0 only in alpha state)-->
+			<version>3.9.9</version>
+			<scope>provided</scope> 
+			<!-- update 23/01/2025: 
+			latest stable version: 3.9.9; released: Aug 17, 2024
+			previous used version: 3.9.5
+			tested with 4.0.0-rc-2 but not chosen as it's still a "release candidate" 
+			vulnerabitis: 0; source: https://mvnrepository.com
+			--> 
 		</dependency>
 		<dependency>
 			<!-- annotations are needed only to build the plugin -->
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.10.2</version>
-			<!-- latest version 3.10.2 by 21/11/2023; old: 3.6.4 -->
+			<version>3.15.1</version>
+			<!-- update 23/01/2025: 
+			latest stable version: 3.15.1; released: Oct 25, 2024; 
+			previous used version: 3.10.2
+			vulnerabitis: 0; source: https://mvnrepository.com
+			--> 
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<!-- TODO --> 
 			<groupId>org.twdata.maven</groupId>
 			<artifactId>mojo-executor</artifactId>
 			<version>2.3.3</version>
@@ -37,6 +48,7 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<!-- TODO --> 
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-utils</artifactId>
 			<version>3.3.1</version>
@@ -47,43 +59,67 @@
 			<!-- used in plugins/ace/utils/ZipUtils.java only -->
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
-			<version>1.10.14</version>
-			<!-- latest version 1.10.14 by 21/11/2023; old: 1.10.12 -->
+			<version>1.10.15</version>
+			<!-- update 23/01/2025: 
+			latest stable version: 1.10.15; released: Aug 29, 2024; 
+			previous used version: 1.10.14
+			vulnerabitis: 0; source: https://mvnrepository.com
+			-->
 		</dependency>
 		<dependency>
 			<!-- used in ace/mojos/PrepareBarBuildWorkspaceMojo.java only -->
 			<groupId>net.lingala.zip4j</groupId>
 			<artifactId>zip4j</artifactId>
 			<version>2.11.5</version>
-			<!-- latest version 2.11.5 by 21/11/2023; old: 2.10 -->
+			<!-- update 23/01/2025: 
+			latest stable version: 2.11.5; released: Feb 22, 2023; 
+			previous used version: 2.11.5 (same one) 
+			vulnerabitis: 0; source: https://mvnrepository.com
+			-->
 		</dependency>
 		<!-- for junit tests -->
 		<dependency>
+			<!-- TODO - moving to org.junit.jupiter fails --> 
+			
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.13.2</version>
-			<!-- latest version 4.13.2 by 21/11/2023; old: 4.11 -->
+			<!-- 
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.12.0</version>
+			--> 
+			<!-- update 26/02/2025: 
+			latest stable version: 2.11.5; released: Feb 22, 2023; 
+			previous used version: 2.11.5 (same one) 
+			vulnerabitis: 0; source: https://mvnrepository.com
+			-->
 		</dependency>
 		<!-- new dependencies; required for cxf-xjc-plugin -->
 		<dependency>
 			<groupId>javax.xml.bind</groupId>
 			<artifactId>jaxb-api</artifactId>
 			<version>2.3.1</version>
-			<!-- latest version 2.4.0-b180830.0359 by 21/11/2023; using 2.3.1 as latest stable-->
+			<!-- update 26/02/2025:
+				 latest version 2.4.0-b180830.0359 by 21/11/2023; using 2.3.1 as latest stable
+				 TODO: moved to jakarta.xml.bind » jakarta.xml.bind-api --> 
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
 			<version>2.3.9</version>
-			<!-- latest version 4.0.4 by 21/11/2023; using 2.3.9 because of compatibility issues -->
 			<scope>runtime</scope>
+			<!-- update 26/02/2025:
+			     latest version 4.0.5 by Mar 07, 2024; using 2.3.9 because of compatibility issues 
+			-->
 		</dependency>
 		<dependency>
 			<groupId>com.sun.activation</groupId>
 			<artifactId>jakarta.activation</artifactId>
 			<version>2.0.1</version>
-			<!-- latest version 2.0.1 by 21/11/2023 -->
 			<scope>runtime</scope>
+			<!-- update 26/02/2025:
+				 latest version 2.0.1 by 21/11/2023; no changes -->
 		</dependency>
 	</dependencies>
 	<reporting>
@@ -92,8 +128,13 @@
 				<!-- required for plugin site generation -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.10.2</version>
-			</plugin>
+				<version>3.15.1</version>
+				<!-- update 26/02/2025: 
+					 latest stable version: 3.15.1; released: Oct 25, 2024 
+					 previous used version: 3.10.2 
+					 vulnerabitis: 0; source: https://mvnrepository.com
+				--> 
+				</plugin>
 		</plugins>
 	</reporting>
 	
@@ -107,7 +148,14 @@
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-xjc-plugin</artifactId>
-				<version>3.3.2</version>
+				<version>3.3.4</version>
+				<!-- update 26/02/2025: 
+					 latest stable version: 4.1.0; released: Dec 06, 2024
+					 not used because of compatibility issues 
+					 using instead: 3.3.4; released: Aug 27, 2024
+					 previous used version: 3.3.2
+					 vulnerabitis: 0; source: https://mvnrepository.com
+				-->
 				<executions>
 					<execution>
 						<id>eclipse-xjc</id>
@@ -141,15 +189,16 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--
-			https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-plugin-plugin/versions
-			latest version 3.10.2; previous version: 3.4 
-			-->
 			<!-- plugin to generate the mojo plugin information -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.10.2</version>
+				<version>3.15.1</version>
+				<!-- update 26/02/2025: 
+					 latest stable version: 3.15.1; released: Oct 25, 2024 
+					 previous used version: 3.10.2 
+					 vulnerabitis: 0; source: https://mvnrepository.com
+				--> 
 				<executions>
 					<execution>
 						<id>default-descriptor</id>
@@ -168,7 +217,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.3.1</version>
+				<!-- update 26/02/2025: 
+					 latest stable version: 3.3.1; Jul 01, 2024
+					 previous used version: 3.3.0 
+					 vulnerabitis: 0; source: https://mvnrepository.com
+				--> 
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -179,15 +233,13 @@
 				</executions>
 			</plugin>
 			<!-- plugin to create the javadoc  -->
-			<!--
-			https://central.sonatype.com/artifact/org.apache.maven.plugins/maven-javadoc-plugin/versions
-			latest version 3.6.2; using 2.10.4 because of compatibility reason 
-			upgrade would required changes to the source code 
-			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
+				<version>3.11.1</version>
+				<!-- update 26/02/2025: 
+					 latest stable version: 3.11.1; Dec 04, 2024
+				--> 
 				<executions>
 					<execution>
 						<id>attach-javadocs</id>
@@ -195,8 +247,7 @@
 							<goal>jar</goal>
 						</goals>
 						<configuration>
-							<!-- add this to disable checking -->
-							<additionalparam>-Xdoclint:none</additionalparam>
+							<doclint>none</doclint>
 						</configuration>
 					</execution>
 				</executions>
@@ -205,23 +256,40 @@
 			<!-- --> 
 			<plugin>
 				<artifactId>maven-site-plugin</artifactId>
-				<version>3.3</version>
+				<version>4.0.0-M16</version>
+				<!-- update 26/02/2025: 
+					 latest stable version: 4.0.0-M16; Jul 20, 2024
+					 previous used version: 3.3
+					 vulnerabitis: 0; source: https://mvnrepository.com
+				--> 
+				
 			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
-			<!--This plugin's configuration is used to store Eclipse m2e settings 
+				<plugin>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>3.5.0</version>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>2.8</version>
+					<version>3.8.0</version>
+					<!-- update 26/02/2025: 
+					 latest stable version: 3.8.0; Oct 21, 2024
+					 previous used version: 2.8
+				    --> 
 				</plugin>
 				
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
 					<version>1.0.0</version>
+					<!-- update 26/02/2025: 
+						 no changes as no new package available --> 
+						 
 					<configuration>
 						<lifecycleMappingMetadata>
 							<pluginExecutions>

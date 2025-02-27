@@ -130,13 +130,13 @@
 								org.eclipse.tycho:tycho-packaging-plugin:0.22.0:validate-version
 							</validate>
 							<process-resources>
-								org.apache.maven.plugins:maven-resources-plugin:2.4.3:resources
+								org.apache.maven.plugins:maven-resources-plugin:3.3.1:resources
 							</process-resources>
 							<compile>
 								org.eclipse.tycho:tycho-compiler-plugin:0.22.0:compile
 							</compile>
 							<process-test-resources>
-								org.apache.maven.plugins:maven-resources-plugin:2.4.3:testResources
+								org.apache.maven.plugins:maven-resources-plugin:3.3.1:testResources
 							</process-test-resources>
 							<test-compile><!-- tests are always in a separate plugin -->
 							</test-compile>
