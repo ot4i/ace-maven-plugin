@@ -5,7 +5,7 @@ import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
 
 import java.io.File;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 
 import org.junit.Test;
 

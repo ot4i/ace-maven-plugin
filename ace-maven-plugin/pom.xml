@@ -97,9 +97,10 @@
 		</dependency>
 		<!-- new dependencies; required for cxf-xjc-plugin -->
 		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.3.1</version>
+			<groupId>jakarta.xml.bind</groupId>
+			<artifactId>jakarta.xml.bind-api</artifactId>
+			<version>3.0.1</version>
+			<!-- to review --> 
 			<!-- update 26/02/2025:
 				 latest version 2.4.0-b180830.0359 by 21/11/2023; using 2.3.1 as latest stable
 				 TODO: moved to jakarta.xml.bind » jakarta.xml.bind-api --> 
@@ -107,20 +108,20 @@
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
-			<version>2.3.9</version>
+			<version>3.0.2</version>
 			<scope>runtime</scope>
+			<!-- to review --> 
 			<!-- update 26/02/2025:
 			     latest version 4.0.5 by Mar 07, 2024; using 2.3.9 because of compatibility issues 
 			-->
 		</dependency>
 		<dependency>
-			<groupId>com.sun.activation</groupId>
-			<artifactId>jakarta.activation</artifactId>
-			<version>2.0.1</version>
-			<scope>runtime</scope>
+			<groupId>org.codehaus.mojo</groupId>
+			<artifactId>jaxb2-maven-plugin</artifactId>
+			<version>3.2.0</version>
 			<!-- update 26/02/2025:
 				 latest version 2.0.1 by 21/11/2023; no changes -->
-		</dependency>
+		</dependency>		
 	</dependencies>
 	<reporting>
 		<plugins>
@@ -148,7 +149,7 @@
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-xjc-plugin</artifactId>
-				<version>3.3.4</version>
+				<version>4.1.0</version>
 				<!-- update 26/02/2025: 
 					 latest stable version: 4.1.0; released: Dec 06, 2024
 					 not used because of compatibility issues 
@@ -321,9 +322,12 @@
 										<artifactId>
 											maven-compiler-plugin
 										</artifactId>
+										<!--27.02.2024: 3.14.0 is latest  --> 
+										<!-- 
 										<versionRange>
 											[2.5.1,)
-										</versionRange>
+										</versionRange> --> 
+										<version>3.14.0</version>
 										<goals>
 											<goal>testCompile</goal>
 											<goal>compile</goal>

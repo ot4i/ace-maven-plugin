@@ -46,14 +46,17 @@ scopes for the listed plugins. Unfortunately this could not be changed at the mo
 
 
 (2) org.apache.maven.plugins:maven-resources-plugin:3.3.0 with following issues: 
--  Mojo resources:resources (org.apache.maven.plugins.resources.ResourcesMojo)
+- Mojo resources:resources (org.apache.maven.plugins.resources.ResourcesMojo)
 Implements `Contextualizable` interface from Plexus Container, which is EOL.
 - Mojo resources:testResources (org.apache.maven.plugins.resources.TestResourcesMojo)
 Implements `Contextualizable` interface from Plexus Container, which is EOL.
 
 Comments/Reason: the maven-resources-plugin needs to be updated; 
 
-(3) 
+(3) org.apache.cxf:cxf-xjc-plugin:4.1.0
+- Plugin depends on the deprecated Maven 2.x compatibility layer, which may not be supported in Maven 4.x
+
+Comments/Reason: no update for the plugin available at the moment 
 
 # Open points 
 Following topics requires an update/cleanup  
@@ -65,16 +68,6 @@ reported during build (mvn clean install)
 --> root cause: 
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/main/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojo.java:[323,49] getDependencyArtifacts() in org.apache.maven.project.MavenProject has been deprecated
 
-
-##  maven-plugin-plugin - wrong scope 
---> issue mit dem Plugin? 
-
-[INFO] --- maven-plugin-plugin:3.10.2:descriptor (default-descriptor) @ ace-maven-plugin ---
-[WARNING]
-
-Some dependencies of Maven Plugins are expected to be in provided scope.
-Please make sure that dependencies listed below declared in POM
-have set '<scope>provided</scope>' as well.
 
 ## ValidateConfigurablePropertiesMojoUnitTest  
 [WARNING] /c:/dev/ace-maven-plugin/jdk17/src/test/java/ibm/maven/plugins/ace/mojos/ValidateConfigurablePropertiesMojoUnitTest.java: c:\dev\ace-maven-plugin\jdk17\src\test\java\ibm\maven\plugins\ace\mojos\ValidateConfigurablePropertiesMojoUnitTest.java uses or overrides a deprecated API.
