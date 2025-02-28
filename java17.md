@@ -50,13 +50,15 @@ Following 'issues' are reported when building the plugin.
 
 ## WARNING: deprecated classes and methods 
 Following classes and methods are reported as deprecated: 
-org.apache.maven.plugins.annotations.Component in org.apache.maven.plugins.annotations
-getDependencyArtifacts() in org.apache.maven.project.MavenProject
+
+- org.apache.maven.plugins.annotations.Component in org.apache.maven.plugins.annotations
+- getDependencyArtifacts() in org.apache.maven.project.MavenProject
 
 ## WARNING: some dependencies of Maven Plugins are expected to be in provided scope
-The plugin:3.15.1:descriptor (default-descriptor) @ ace-maven-plugin reports that "some dependencies of Maven Plugins are expected to be in provided scope"
-The plugin seems to check 'auto generated' pom files. 
+The plugin:3.15.1:descriptor (default-descriptor) @ ace-maven-plugin reports that "some dependencies of Maven Plugins are expected to be in provided scope"- The plugin seems to check 'auto generated' pom files. 
+
 Thus there is nothing we can currently do about the warnings. 
+
 Only option would be to surpress the warnings; see the parameter <checkExpectedProvidedScope> of the descriptor mojo (https://maven.apache.org/plugin-tools/maven-plugin-plugin/descriptor-mojo.html). 
 
 ## org.apache.cxf:cxf-xjc-plugin:4.1.0
