@@ -43,6 +43,10 @@ To execute some specific tasks the ace-maven-plugin itself uses within the sourc
 - maven-source-plugin:3.3.1 
 - build-helper-maven-plugin:3.6.0 
 
+# Hints and Tips 
+
+You can use the following maven properties to show details on validation, warnings and deprecations: 
+ -Dmaven.plugin.validation=VERBOSE  -Dmaven.compiler.showWarnings=true -Dmaven.compiler.showDeprecation=true 
 
 # Open points 
 
