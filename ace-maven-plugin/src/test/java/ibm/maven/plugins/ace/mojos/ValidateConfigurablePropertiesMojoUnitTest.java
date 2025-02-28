@@ -9,6 +9,7 @@ import ibm.maven.plugins.ace.utils.ConfigurablePropertiesUtil;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -43,8 +44,8 @@ public class ValidateConfigurablePropertiesMojoUnitTest {
         List<String> outputLines = null;
         List<String> validProperties = null;
         try {
-            outputLines = IOUtils.readLines(outputStream);
-            validProperties = ConfigurablePropertiesUtil.getPropNames(IOUtils.readLines(propertiesStream));
+            outputLines = IOUtils.readLines(outputStream, "UTF-8");
+            validProperties = ConfigurablePropertiesUtil.getPropNames(IOUtils.readLines(propertiesStream, "UTF-8"));
         } catch (IOException e) {
             fail("Exception reading file: " + outputFile + " - " + e.getMessage());
         }

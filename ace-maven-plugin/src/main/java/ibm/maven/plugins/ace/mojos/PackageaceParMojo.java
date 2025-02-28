@@ -40,6 +40,9 @@ import org.codehaus.plexus.util.IOUtil;
  */
 @Mojo(name = "package-par")
 public class PackageaceParMojo extends AbstractMojo {
+	
+	//28.02.2025: updated to the latest version
+	private static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.7.1";
 
     /**
      * The path to write the assemblies/ace-bar-project.xml file to before invoking the maven-assembly-plugin.
@@ -94,7 +97,7 @@ public class PackageaceParMojo extends AbstractMojo {
         List<Dependency> dependencies = new ArrayList<Dependency>();
         dependencies.add(dependency("ch.sbb.wmb.utils", "par-archiver", "1.1.0"));
 
-        executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-assembly-plugin"), version("2.4"), dependencies), goal("single"),
+        executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-assembly-plugin"), version(MAVEN_ASSEMBLY_PLUGIN_VERSION), dependencies), goal("single"),
                 configuration(
                         element(name("descriptorRefs"), element("descriptorRef", "par")),
                         element(name("ignoreDirFormatExtensions"), "false"),

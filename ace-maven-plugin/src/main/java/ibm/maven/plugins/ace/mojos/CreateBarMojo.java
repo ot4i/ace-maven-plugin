@@ -95,7 +95,7 @@ public class CreateBarMojo extends AbstractMojo {
 
 	/**
 	 * Include artifacts pattern (or patterns, comma separated). By default, the
-	 * default value used for mqsipackagebar, except .esql & .subflow, which as not
+	 * default value used for mqsipackagebar, except .esql and .subflow, which as not
 	 * compilable
 	 * 
 	 * @see <a href=

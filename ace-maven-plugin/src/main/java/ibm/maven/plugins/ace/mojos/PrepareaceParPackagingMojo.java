@@ -36,7 +36,10 @@ import org.codehaus.plexus.util.FileUtils;
 @Mojo(name = "prepare-ace-par-packaging", requiresDependencyResolution = ResolutionScope.TEST)
 public class PrepareaceParPackagingMojo extends AbstractMojo {
 
-    /**
+	//28.02.2025: updated to the latest version
+	private static final String MAVEN_DEPENDENCY_PLUGIN_VERSION = "3.8.1";
+	
+	/**
      * The Maven Project Object
      */
     @Parameter(property = "project", required = true, readonly = true)
@@ -59,7 +62,7 @@ public class PrepareaceParPackagingMojo extends AbstractMojo {
         // org.apache.maven.plugins:maven-dependency-plugin:2.1:copy-dependencies
         // -DoutputDirectory=${project.build.directory}/ace/classloader
 
-        executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version("2.8")), goal("copy-dependencies"), configuration(element(name("outputDirectory"),
+        executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version(MAVEN_DEPENDENCY_PLUGIN_VERSION)), goal("copy-dependencies"), configuration(element(name("outputDirectory"),
                 project.getBuild().getDirectory() + "/dependency"), element(name("includeScope"), "runtime"), element(name("includeTypes"), "jar")),
                 executionEnvironment(project, session, buildPluginManager));
 

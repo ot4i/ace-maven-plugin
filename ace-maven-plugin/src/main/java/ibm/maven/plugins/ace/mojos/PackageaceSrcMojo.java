@@ -38,7 +38,9 @@ import org.codehaus.plexus.util.IOUtil;
 @Mojo(name = "package-src")
 public class PackageaceSrcMojo extends AbstractMojo {
 
-    /**
+	//28.02.2025: updated to the latest version
+	private static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.7.1";
+	/**
      * The Maven Project Object
      */
     @Parameter(property = "project", required = true, readonly = true)
@@ -81,7 +83,7 @@ public class PackageaceSrcMojo extends AbstractMojo {
 
         // mvn org.apache.maven.plugins:maven-assembly-plugin:2.4:single -Ddescriptor=target\assemblies\ace-src-project.xml -Dassembly.appendAssemblyId=false
 
-        executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-assembly-plugin"), version("2.4")), goal("single"), configuration(element(name("descriptor"),
+        executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-assembly-plugin"), version(MAVEN_ASSEMBLY_PLUGIN_VERSION)), goal("single"), configuration(element(name("descriptor"),
                 "${project.build.directory}/assemblies/ace-src-project.xml"), element(name("appendAssemblyId"), "false")), executionEnvironment(project, session, buildPluginManager));
 
         // delete the archive-tmp directory

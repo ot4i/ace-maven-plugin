@@ -37,6 +37,11 @@ import org.codehaus.plexus.util.IOUtil;
 @Mojo(name = "package-ace-bar")
 public class PackageaceBarMojo extends CreateBarMojo {
 
+	//updated to latest version on 28.02.2025 
+	private static final String MAVEN_SOURCE_PLUGIN_VERSION = "3.3.1";
+	private static final String BUILD_HELPER_MAVEN_PLUGIN_VERSION = "3.6.0";
+	private static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.7.1"; 
+	
 	/**
 	 * The path to write the assemblies/ace-bar-project.xml file to before invoking
 	 * the maven-assembly-plugin.
@@ -97,7 +102,7 @@ public class PackageaceBarMojo extends CreateBarMojo {
 			getLog().info("adding source code to assembly");
 
 			executeMojo(
-					plugin(groupId("org.apache.maven.plugins"), artifactId("maven-source-plugin"), version("3.2.1")),
+					plugin(groupId("org.apache.maven.plugins"), artifactId("maven-source-plugin"), version(MAVEN_SOURCE_PLUGIN_VERSION)),
 					goal("jar-no-fork"),
 					configuration(element(name("outputDirectory"), outputDirectorySourceCode),
 							element(name("excludes"), "target/**"),
@@ -117,7 +122,7 @@ public class PackageaceBarMojo extends CreateBarMojo {
 
 				getLog().info("found bar file: " + barName.getAbsolutePath());
 				executeMojo(
-						plugin(groupId("org.codehaus.mojo"), artifactId("build-helper-maven-plugin"), version("3.3.0")),
+						plugin(groupId("org.codehaus.mojo"), artifactId("build-helper-maven-plugin"), version(BUILD_HELPER_MAVEN_PLUGIN_VERSION)),
 						goal("attach-artifact"),
 						configuration(element("artifacts",
 								element("artifact", element("file", barName.getAbsolutePath()), element("type", "bar")
@@ -153,7 +158,7 @@ public class PackageaceBarMojo extends CreateBarMojo {
 		// -Ddescriptor=target\assemblies\ace-bar-project.xml
 		// -Dassembly.appendAssemblyId=false
 
-		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-assembly-plugin"), version("2.4")),
+		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-assembly-plugin"), version(MAVEN_ASSEMBLY_PLUGIN_VERSION)),
 				goal("single"),
 				configuration(element(name("descriptor"), "${project.build.directory}/assemblies/ace-bar-project.xml"),
 						element(name("appendAssemblyId"), "false")),

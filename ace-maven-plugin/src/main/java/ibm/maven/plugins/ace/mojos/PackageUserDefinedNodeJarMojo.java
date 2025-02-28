@@ -33,6 +33,9 @@ import org.codehaus.plexus.util.FileUtils;
 @Mojo(name = "package-udn-jar")
 public class PackageUserDefinedNodeJarMojo extends AbstractMojo {
 
+	//28.05.2025: updated to the latest version
+	private static final String MAVEN_JAR_PLUGIN_VERSION = "3.4.2";
+	
     /**
      * The Maven Project Object
      */
@@ -53,7 +56,7 @@ public class PackageUserDefinedNodeJarMojo extends AbstractMojo {
 
     public void execute() throws MojoFailureException, MojoExecutionException {
 
-        executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-jar-plugin"), version("2.6")), goal("jar"),
+        executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-jar-plugin"), version(MAVEN_JAR_PLUGIN_VERSION)), goal("jar"),
                 configuration(element(name("finalName"), project.getArtifactId()), element(name("classesDirectory"), "bin")),
                 executionEnvironment(project, session, buildPluginManager));
 

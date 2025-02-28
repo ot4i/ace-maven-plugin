@@ -44,6 +44,9 @@ import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
 @Mojo(name = "validate-configurable-properties", defaultPhase = LifecyclePhase.PACKAGE)
 public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 
+	//28.02.2025: updated to latest version 
+	private static final String MAVEN_RESOURCE_PLUGIN_VERSION = "3.3.1";
+	
 	/**
 	 * Whether the applybaroverride command should be executed or not
 	 */
@@ -189,7 +192,7 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 		getLog().debug("Project Build Resources: " + project.getBuild().getResources().toString());
 
 		// copy the main resources
-		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-resources-plugin"), version("2.6")),
+		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-resources-plugin"), version(MAVEN_RESOURCE_PLUGIN_VERSION)),
 				goal("copy-resources"),
 				configuration(element(name("outputDirectory"), "${project.build.directory}/ace"),
 						element(name("resources"), element(name("resource"),
@@ -199,7 +202,7 @@ public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 				executionEnvironment(project, session, buildPluginManager));
 
 		// copy the test resources
-		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-resources-plugin"), version("2.6")),
+		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-resources-plugin"), version(MAVEN_RESOURCE_PLUGIN_VERSION)),
 				goal("copy-resources"),
 				configuration(element(name("outputDirectory"), "${project.build.directory}/ace-test"),
 						element(name("resources"), element(name("resource"),

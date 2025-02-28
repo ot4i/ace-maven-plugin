@@ -52,6 +52,9 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 	 */
 	private static final String UNPACK_ace_DEPENDENCY_TYPES = "zip";
 	private static final String UNPACK_ace_DEPENDENCY_SCOPE = "compile";
+	
+	//28.02.2025: updated to the latest version
+	private static final String MAVEN_DEPENDENCY_PLUGIN_VERSION = "3.8.1";
 
 	/**
 	 * The Maven Project Object
@@ -123,7 +126,7 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 		// step 1:
 		// unpack all dependencies that match the given scope; target:
 		// unpackDependencyDirectory
-		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version("2.8")),
+		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version(MAVEN_DEPENDENCY_PLUGIN_VERSION)),
 				goal("unpack-dependencies"),
 				configuration(element(name("outputDirectory"), unpackDependenciesDirectory.getAbsolutePath()),
 						element(name("includeTypes"), UNPACK_ace_DEPENDENCY_TYPES),

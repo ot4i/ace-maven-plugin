@@ -52,8 +52,8 @@ public final class ZipUtils {
 	/**
 	 * Extracts a file to the directory path
 	 * 
-	 * @param File    to extract
-	 * @param destDir String, where files are extracted with directories 
+	 * @param _file    to extract
+	 * @param _destDir String, where files are extracted with directories 
 	 * 
 	 * @throws IOException
 	 */
