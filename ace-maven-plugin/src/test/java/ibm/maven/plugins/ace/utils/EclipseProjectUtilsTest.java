@@ -18,7 +18,7 @@ public class EclipseProjectUtilsTest {
     public void unmarshallEclipseProjectFileTest() {
         try {
             // somewhat lazy, but test with the local .project file
-            EclipseProjectUtils.unmarshallEclipseProjectFile(new File(".project"));
+            EclipseProjectUtils.unmarshallEclipseProjectFile(new File("src/test/resources/.project"));
         } catch (JAXBException e) {
             e.printStackTrace();
             assertTrue("An error occurred. See stack trace.", false);
