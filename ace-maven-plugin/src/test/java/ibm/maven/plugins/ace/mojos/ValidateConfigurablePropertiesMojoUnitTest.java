@@ -3,17 +3,17 @@ package ibm.maven.plugins.ace.mojos;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import ibm.maven.plugins.ace.mojos.ValidateConfigurablePropertiesMojo;
-import ibm.maven.plugins.ace.utils.ConfigurablePropertiesUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.io.UncheckedIOException;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+
+import ibm.maven.plugins.ace.utils.ConfigurablePropertiesUtil;
 
 public class ValidateConfigurablePropertiesMojoUnitTest {
 
@@ -46,9 +46,9 @@ public class ValidateConfigurablePropertiesMojoUnitTest {
         try {
             outputLines = IOUtils.readLines(outputStream, "UTF-8");
             validProperties = ConfigurablePropertiesUtil.getPropNames(IOUtils.readLines(propertiesStream, "UTF-8"));
-        } catch (IOException e) {
+        } catch (UncheckedIOException e) {
             fail("Exception reading file: " + outputFile + " - " + e.getMessage());
-        }
+        } 
         List<String> discoveredProperties = ConfigurablePropertiesUtil.getPropNames(mojo.getConfigurableProperties(outputLines));
 
         // check that all the discoveredProperties are valid properties
