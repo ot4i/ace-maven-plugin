@@ -203,8 +203,8 @@ public final class CommandExecutionUtil {
         } else if(osName.contains("linux") || osName.contains("mac os x")){	
             cmdFile = new File(fileTmpDir + File.separator  + "compileCommand-" + UUID.randomUUID() + ".sh");
             //note: requires a ';' to ensure that all succeeding commands will be called 
-            // Add "#!/bin/bash -i" for clean source mqsiprofile include.
-            initialCommand = "#!/bin/bash -i"+System.getProperty("line.separator")+"source " + aceRunDir + "/mqsiprofile"; 
+            // Add "#!/bin/bash" for clean source mqsiprofile include.
+            initialCommand = "#!/bin/bash"+System.getProperty("line.separator")+"source " + aceRunDir + "/mqsiprofile"; 
             //initialCommand = ". " + aceRunDir + "/mqsiprofile";
         } else {
             throw new MojoFailureException("Unexpected OS: " + osName);

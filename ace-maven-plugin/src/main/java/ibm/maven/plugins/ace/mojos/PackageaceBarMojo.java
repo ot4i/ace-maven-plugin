@@ -160,7 +160,7 @@ public class PackageaceBarMojo extends CreateBarMojo {
 
 		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-assembly-plugin"), version(MAVEN_ASSEMBLY_PLUGIN_VERSION)),
 				goal("single"),
-				configuration(element(name("descriptor"), "${project.build.directory}/assemblies/ace-bar-project.xml"),
+				configuration(element(name("descriptors"), "${project.build.directory}/assemblies/ace-bar-project.xml"),
 						element(name("appendAssemblyId"), "false")),
 				executionEnvironment(project, session, buildPluginManager));
 
