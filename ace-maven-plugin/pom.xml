@@ -328,6 +328,26 @@
 				added dependency - to ensure that the correct commons-io is used (might vary because of the used java) 
 				latest version: 2.18.0, Nov 19, 2024--> 
 		</dependency>
+		
+		<!-- set provided scope for maven plugins - used by the code generation -->
+		<dependency>
+    		<groupId>org.apache.maven</groupId>
+    		<artifactId>maven-model</artifactId>
+			<version>3.9.9</version>
+    		<scope>provided</scope>
+			<!-- update 25/05/2025:
+				added dependency 
+				latest stable version: 3.9.9, Aug 17, 2024--> 
+		</dependency>
+		<dependency>
+    		<groupId>org.apache.maven</groupId>
+    		<artifactId>maven-core</artifactId>
+    		<version>3.9.9</version>
+    		<scope>provided</scope>
+			<!-- update 25/05/2025:
+				added dependency 
+				latest stable version: 3.9.9, Aug 17, 2024--> 
+		</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>
