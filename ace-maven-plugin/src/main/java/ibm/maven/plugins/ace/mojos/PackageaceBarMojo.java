@@ -10,6 +10,8 @@ import static org.twdata.maven.mojoexecutor.MojoExecutor.groupId;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.name;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.plugin;
 import static org.twdata.maven.mojoexecutor.MojoExecutor.version;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.attribute;
+import static org.twdata.maven.mojoexecutor.MojoExecutor.attributes;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,7 +41,7 @@ public class PackageaceBarMojo extends CreateBarMojo {
 
 	//updated to latest version on 28.02.2025 
 	private static final String MAVEN_SOURCE_PLUGIN_VERSION = "3.3.1";
-	private static final String BUILD_HELPER_MAVEN_PLUGIN_VERSION = "3.6.0";
+	private static final String MAVEN_ANTRUN_PLUGIN_VERSION = "3.1.0";
 	private static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.7.1"; 
 	
 	/**
@@ -119,16 +121,26 @@ public class PackageaceBarMojo extends CreateBarMojo {
 			
 			getLog().info("try to attach bar file");
 			if (barName.exists()) {
-
-				getLog().info("found bar file: " + barName.getAbsolutePath());
+				
+				getLog().info("adding the bar file to the deployment");
 				executeMojo(
-						plugin(groupId("org.codehaus.mojo"), artifactId("build-helper-maven-plugin"), version(BUILD_HELPER_MAVEN_PLUGIN_VERSION)),
-						goal("attach-artifact"),
-						configuration(element("artifacts",
-								element("artifact", element("file", barName.getAbsolutePath()), element("type", "bar")
-										))),
-						executionEnvironment(project, session, buildPluginManager));
-
+						plugin(groupId("org.apache.maven.plugins"), artifactId("maven-antrun-plugin"), version(MAVEN_ANTRUN_PLUGIN_VERSION)),
+						goal("run"),
+						configuration(
+							element(
+								name("target"),
+								element (
+									name("attachartifact"), 
+									attributes(
+										attribute("file", barName.getAbsolutePath()),
+										attribute("type", "bar")
+									)
+								)
+							)
+						), 
+						executionEnvironment(project, session, buildPluginManager)
+					);
+                
 			}
 
 		} catch (Exception e) {
