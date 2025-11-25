@@ -663,7 +663,16 @@ public class CreateBarMojo extends AbstractMojo {
 			getLog().info("Bar created:" + tmpDir + sep + _barName.getName());
 			// copy and cleanup
 			Files.move(Paths.get(tmpDir + sep + _barName.getName()),Paths.get(_barName.getPath()),StandardCopyOption.REPLACE_EXISTING);
-			// Files.delete(Paths.get(tmpDir));
+			
+			//ensure to cleanup and delete tmpDir 
+			if (Files.deleteIfExists(Paths.get(tmpDir))) {
+				getLog().info("tmp dir deleted: "+tmpDir); 
+			} else { 
+				//unexpected should likely throw an error message 
+				getLog().error("could not delete tmp dir: "+tmpDir);
+			}
+
+			
 			getLog().info("Bar overwritten:" + _barName.getPath());
 		} catch (IOException ioe) {
 			throw new MojoFailureException("failure updating file:" + ioe.getMessage());
