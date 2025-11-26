@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
+import org.apache.commons.io.*;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
@@ -52,8 +54,8 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 	 */
 	private static final String UNPACK_ace_DEPENDENCY_TYPES = "zip";
 	private static final String UNPACK_ace_DEPENDENCY_SCOPE = "compile";
-	
-	//28.02.2025: updated to the latest version
+
+	// 28.02.2025: updated to the latest version
 	private static final String MAVEN_DEPENDENCY_PLUGIN_VERSION = "3.8.1";
 
 	/**
@@ -92,7 +94,18 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 	@Parameter(property = "ace.customMavenSettings", defaultValue = "")
 	protected String customMavenSettings;
 
+	/**
+	 * Wheter Maven target directory should be cleanedup
+	 */
+	@Parameter(property = "ace.cleanTargetDirectory", defaultValue = "true", required = false)
+	protected Boolean cleanTargetDirectory;
+
+	@Parameter(property = "ace.buildDir", defaultValue = "${project.build.directory}", required = false)
+	protected File buildDir;
+
 	public void execute() throws MojoExecutionException, MojoFailureException {
+
+		cleanTargetDirectory();
 
 		unpackaceDependencies();
 
@@ -105,7 +118,28 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 
 	}
 
-	
+	/**
+	 * goal of the method is to clean the Maven target directory
+	 * 
+	 * @throws MojoExecutionException If an exception occurs
+	 */
+	private void cleanTargetDirectory() throws MojoExecutionException {
+
+		if (cleanTargetDirectory) {
+
+			getLog().info("try tp clean buildDir: " + buildDir.getAbsolutePath());
+			try {
+				FileUtils.cleanDirectory(buildDir);
+				
+			} catch (Exception e) {
+				getLog().warn("exception while trying to clean buildDir: " + e.toString());
+			}
+
+		} else {
+			getLog().info("cleanTargetDirectory is set to false");
+		}
+
+	}
 
 	/**
 	 * goal of the method is to create sharedLibs projects defined by Maven
@@ -126,7 +160,9 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 		// step 1:
 		// unpack all dependencies that match the given scope; target:
 		// unpackDependencyDirectory
-		executeMojo(plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"), version(MAVEN_DEPENDENCY_PLUGIN_VERSION)),
+		executeMojo(
+				plugin(groupId("org.apache.maven.plugins"), artifactId("maven-dependency-plugin"),
+						version(MAVEN_DEPENDENCY_PLUGIN_VERSION)),
 				goal("unpack-dependencies"),
 				configuration(element(name("outputDirectory"), unpackDependenciesDirectory.getAbsolutePath()),
 						element(name("includeTypes"), UNPACK_ace_DEPENDENCY_TYPES),
@@ -154,7 +190,7 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 			} else {
 				getLog().info("unpack dependency directory does not exist");
 			}
-	
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -172,7 +208,7 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 	 */
 	private void handleCustomMavenSettings() throws MojoExecutionException, IOException {
 
-		if ((customMavenSettings!=null) && (!(customMavenSettings.equalsIgnoreCase("")))) {
+		if ((customMavenSettings != null) && (!(customMavenSettings.equalsIgnoreCase("")))) {
 
 			getLog().info("create org.eclipse.m2e.core.prefs for custom maven settings: " + customMavenSettings);
 			// customMavenSettings is set
@@ -180,36 +216,33 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 					+ "/.metadata/.plugins/org.eclipse.core.runtime/.settings";
 			String targetFileName = targetDirectory + "/org.eclipse.m2e.core.prefs";
 
-			//note this would work as well 
-			//however not working with templates/org.eclipse.m2e.core2.prefs
+			// note this would work as well
+			// however not working with templates/org.eclipse.m2e.core2.prefs
 			// ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-			//InputStream inStream4 = classloader.getResourceAsStream("templates/project.txt");
+			// InputStream inStream4 =
+			// classloader.getResourceAsStream("templates/project.txt");
 
-			
 			File fdir = new File(targetDirectory);
-			File fout = new File (targetFileName);
-			getLog().info("creating new prefs file directory structure:"+ fdir.mkdirs());
-			
-			
-		 
-			getLog().info("creating new prefs file:"+ fout.createNewFile());
+			File fout = new File(targetFileName);
+			getLog().info("creating new prefs file directory structure:" + fdir.mkdirs());
+
+			getLog().info("creating new prefs file:" + fout.createNewFile());
 			getLog().info("start writing to file ...");
-			
+
 			FileOutputStream fos = new FileOutputStream(fout);
 			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(fos));
-			
-			bw.write("eclipse.m2.defaultRuntime=EMBEDDED"); 
+
+			bw.write("eclipse.m2.defaultRuntime=EMBEDDED");
 			bw.newLine();
 			bw.write("eclipse.m2.runtimes=");
 			bw.newLine();
-			bw.write("eclipse.m2.userSettingsFile="+customMavenSettings); 
+			bw.write("eclipse.m2.userSettingsFile=" + customMavenSettings);
 			bw.newLine();
 			bw.write("eclipse.preferences.version=1");
 			bw.close();
-			
 
 		} else {
-			getLog().info("using standard maven settings"); 
+			getLog().info("using standard maven settings");
 		}
 
 	}
