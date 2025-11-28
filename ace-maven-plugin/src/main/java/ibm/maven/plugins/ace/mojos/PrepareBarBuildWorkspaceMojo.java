@@ -18,8 +18,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.List;
 
-import org.apache.commons.io.*;
-
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.BuildPluginManager;
@@ -123,7 +121,7 @@ public class PrepareBarBuildWorkspaceMojo extends AbstractMojo {
 	 * 
 	 * @throws MojoExecutionException If an exception occurs
 	 */
-	private void cleanTargetDirectory() throws MojoExecutionException {
+	private void cleanTargetDirectory()  {
 
 		if (cleanTargetDirectory) {
 
