@@ -24,22 +24,30 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.14.0</version>
+				<version>3.15.0</version>
+				<!-- update 26/05/2026:
+					 latest stable version: 3.15.0; released: Feb 1, 2026
+					 previous used version: 3.14.0
+				-->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>3.5.0</version>
+				<!-- update 26/05/2026:
+					 latest stable version: 3.5.0; released: March 5, 2026
+					 previous used version: 3.3.1
+				-->
 			</plugin>
 			
 			<!-- used to generate the classes based on given xsds -->
 			<plugin>
 				<groupId>org.apache.cxf</groupId>
 				<artifactId>cxf-xjc-plugin</artifactId>
-				<version>4.1.0</version>
-				<!-- update 26/02/2025: 
-					 latest stable version: 4.1.0; released: Dec 06, 2024
-					 previous used version: 3.3.2
+				<version>4.2.0</version>
+				<!-- update 26/05/2026:
+					 latest stable version: 4.2.0; released: May 07, 2026
+					 previous used version: 4.1.0
 				-->
 				<executions>
 					<execution>
@@ -80,7 +88,7 @@
 				<artifactId>maven-plugin-plugin</artifactId>
 				<version>3.15.1</version>
 				<!-- update 26/02/2025: 
-					 latest stable version: 3.15.1; released: Oct 25, 2024 
+					 latest stable version: 3.15.1; released: Oct 25, 2026
 					 previous used version: 3.10.2 
 				-->
 				<executions>
@@ -101,10 +109,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>3.3.1</version>
-				<!-- update 26/02/2025: 
-					 latest stable version: 3.3.1; Jul 01, 2024
-					 previous used version: 3.3.0 
+				<version>3.4.0</version>
+				<!-- update 26/05/2026:
+					 latest stable version: 3.4.0; Nov 29, 2025
+					 previous used version: 3.3.1
 				-->
 				<executions>
 					<execution>
@@ -119,9 +127,10 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.11.1</version>
-				<!-- update 26/02/2025: 
-					 latest stable version: 3.11.1; Dec 04, 2024
+				<version>3.12.0</version>
+				<!-- update 26/05/2026:
+					 latest stable version: 3.12.0; Sep 21, 2025
+					 previous used version: 3.11.1
 				-->
 				<executions>
 					<execution>
@@ -152,20 +161,20 @@
 				<!-- make sure that the latest maven-dependency-plugin is used --> 
 				<plugin>
 					<artifactId>maven-dependency-plugin</artifactId>
-					<version>3.8.1</version>
+					<version>3.10</version>
 				</plugin>
-				<!-- update 26/02/2025: 
-					latest version: 3.8.1
+				<!-- update 26/05/2026: 
+					latest version: 3.10
 				--> 
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-project-info-reports-plugin</artifactId>
-					<version>3.8.0</version>
-					<!-- update 26/02/2025: 
-					 latest stable version: 3.8.0; Oct 21, 2024
-					 previous used version: 2.8
+					<version>3.9.0</version>
+					<!-- update 26/05/2026:
+					 latest stable version: 3.9.0; Feb 26, 2025
+					 previous used version: 3.8.0
 				    -->
 				</plugin>
 				<plugin>
@@ -227,52 +236,52 @@
 		<dependency>
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-plugin-api</artifactId>
-			<version>3.9.9</version>
+			<version>3.9.16</version>
 			<scope>provided</scope>
-			<!-- update 23/01/2025: 
-			latest stable version: 3.9.9; released: Aug 17, 2024
-			previous used version: 3.9.5
-			tested with 4.0.0-rc-2 but not chosen as it's still a "release candidate" 
+			<!-- update 27/05/2026:
+			latest stable version: 3.9.16; released: May 18, 2026
+			previous used version: 3.9.9
 			-->
 		</dependency>
 		<dependency>
 			<!-- annotations are needed only to build the plugin -->
 			<groupId>org.apache.maven.plugin-tools</groupId>
 			<artifactId>maven-plugin-annotations</artifactId>
-			<version>3.15.1</version>
+			<version>3.15.2</version>
 			<!-- update 23/01/2025: 
-			latest stable version: 3.15.1; released: Oct 25, 2024; 
-			previous used version: 3.10.2
-			vulnerabitis: 0; source: https://mvnrepository.com
+			latest stable version: 3.15.2; released: Oct 24, 2025 
+			previous used version: 3.15.1
 			-->
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
-			<!-- TODO -->
 			<groupId>org.twdata.maven</groupId>
 			<artifactId>mojo-executor</artifactId>
-			<version>2.3.3</version>
-			<!-- latest version 2.4.1-m2 by 21/11/2023; using 2.3.3 because of implementation / compatibility reasons -->
+			<version>2.4.1</version>
+			<!-- update 26/05/2026:
+			latest stable version: 2.4.1; released: Jan 09, 2025;
+			previous used version: 2.3.3
+			-->
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<!-- used in plugins/ace/utils/ZipUtils.java only -->
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
-			<version>1.10.15</version>
-			<!-- update 23/01/2025: 
-			latest stable version: 1.10.15; released: Aug 29, 2024; 
-			previous used version: 1.10.14
+			<version>1.10.17</version>
+			<!-- update 26/05/2026:
+			latest stable version: 1.10.17; released: Apr 06, 2026
+			previous used version: 1.10.15
 			-->
 		</dependency>
 		<dependency>
 			<!-- used in ace/mojos/PrepareBarBuildWorkspaceMojo.java only -->
 			<groupId>net.lingala.zip4j</groupId>
 			<artifactId>zip4j</artifactId>
-			<version>2.11.5</version>
-			<!-- update 23/01/2025: 
-			latest stable version: 2.11.5; released: Feb 22, 2023; 
-			previous used version: 2.11.5 (same one) 
+			<version>2.11.6</version>
+			<!-- update 26/05/2026:
+			latest stable version: 2.11.6; released: Feb 11, 2026;
+			previous used version: 2.11.5
 			-->
 		</dependency>
 		<!-- for junit tests -->
@@ -291,62 +300,58 @@
 		<dependency>
 			<groupId>jakarta.xml.bind</groupId>
 			<artifactId>jakarta.xml.bind-api</artifactId>
-			<version>3.0.1</version>
-			<!-- TODO; to review -->
-			<!-- update 26/02/2025:
-				latest  version: 4.0.2; released: Mar 07, 2024; to verify if that works 
-				using 3.0.1 because of documentation, pointing out to use this specific version 
-				previous used version: 2.11.5 
+			<version>4.1.0-M1</version>
+			<!-- update 26/05/2026:
+				latest stable version: 4.1.0-M1; released: May, 2026
+				previous used version: 4.0.2
 			-->
 		</dependency>
 		<dependency>
 			<groupId>org.glassfish.jaxb</groupId>
 			<artifactId>jaxb-runtime</artifactId>
-			<version>3.0.2</version>
+			<version>4.0.8</version>
 			<scope>runtime</scope>
-			<!-- TODO; to review -->
-			<!-- update 26/02/2025:
-			     latest version: 4.0.5 by Mar 07, 2024; 
-				 using 3.0.2 because of documentation, pointing out to use this specific version  
-				 previous used version: 2.3.9
+			<!-- update 26/05/2026:
+			     latest stable version: 4.0.8; released: May 06, 2026
+				 previous used version: 3.0.2
 			-->
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.mojo</groupId>
 			<artifactId>jaxb2-maven-plugin</artifactId>
-			<version>3.2.0</version>
-			<!-- update 26/02/2025:
-				 latest version: 3.2.0, Apr 15, 2024
-				 previous used version: 2.0.1  -->
+			<version>4.1.0</version>
+			<!-- update 26/05/2026:
+				 latest stable version: 4.1.0; released: Jan 19, 2026
+				 previous used version: 3.2.0  -->
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
 		<dependency>
-    		<groupId>commons-io</groupId>
-    		<artifactId>commons-io</artifactId>
-    		<version>2.18.0</version>
-			<!-- update 07/04/2025:
-				added dependency - to ensure that the correct commons-io is used (might vary because of the used java) 
-				latest version: 2.18.0, Nov 19, 2024--> 
+		  		<groupId>commons-io</groupId>
+		  		<artifactId>commons-io</artifactId>
+		  		<version>2.22.0</version>
+			<!-- update 26/05/2026:
+				latest stable version: 2.22.0; released: Apr 19, 2026
+				previous used version: 2.18.0 -->
 		</dependency>
 		
 		<!-- set provided scope for maven plugins - used by the code generation -->
 		<dependency>
-    		<groupId>org.apache.maven</groupId>
-    		<artifactId>maven-model</artifactId>
-			<version>3.9.9</version>
-    		<scope>provided</scope>
-			<!-- update 25/05/2025:
-				added dependency 
-				latest stable version: 3.9.9, Aug 17, 2024--> 
+		  		<groupId>org.apache.maven</groupId>
+		  		<artifactId>maven-model</artifactId>
+			<version>3.9.16</version>
+		  		<scope>provided</scope>
+			<!-- update 27/05/2026:
+				latest stable version: 3.9.16, released: May 2026
+				previous used version: 3.9.9-->
 		</dependency>
 		<dependency>
-    		<groupId>org.apache.maven</groupId>
-    		<artifactId>maven-core</artifactId>
-    		<version>3.9.9</version>
-    		<scope>provided</scope>
-			<!-- update 25/05/2025:
-				added dependency 
-				latest stable version: 3.9.9, Aug 17, 2024--> 
+		  		<groupId>org.apache.maven</groupId>
+		  		<artifactId>maven-core</artifactId>
+			<version>3.9.16</version>
+		  		<scope>provided</scope>
+			<!-- update 27/05/2026:
+				latest stable version: 3.9.16, released: May 18, 2026
+				previous used version: 3.9.9-->
 		</dependency>
 	</dependencies>
 	<reporting>
@@ -355,10 +360,11 @@
 				<!-- required for plugin site generation -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-plugin-plugin</artifactId>
-				<version>3.15.1</version>
-				<!-- update 26/02/2025: 
-					 latest stable version: 3.15.1; released: Oct 25, 2024 
-					 previous used version: 3.10.2 
+				<version>3.15.2</version>
+				<!-- update 26/05/2026:
+					 latest stable version: 3.15.2; released: October 2026
+					 (no newer stable version available for Maven 3.6.3)
+					 previous used version: 3.15.1
 				-->
 			</plugin>
 		</plugins>

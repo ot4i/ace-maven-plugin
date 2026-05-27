@@ -36,8 +36,8 @@ import org.codehaus.plexus.util.FileUtils;
 @Mojo(name = "prepare-ace-par-packaging", requiresDependencyResolution = ResolutionScope.TEST)
 public class PrepareaceParPackagingMojo extends AbstractMojo {
 
-	//28.02.2025: updated to the latest version
-	private static final String MAVEN_DEPENDENCY_PLUGIN_VERSION = "3.8.1";
+	//26.05.2026: updated to the latest version
+	private static final String MAVEN_DEPENDENCY_PLUGIN_VERSION = "3.10.0";
 	
 	/**
      * The Maven Project Object

@@ -37,8 +37,8 @@ import org.codehaus.plexus.util.IOUtil;
 @Mojo(name = "package-classloader")
 public class PackageaceClassloaderMojo extends AbstractMojo {
 
-	//28.02.2025: updated to the latest version
-	private static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.7.1";
+	//26.05.2026: updated to the latest version
+	private static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.8.0";
 	
 	/**
      * The path to write the assemblies/ace-bar-project.xml file to before invoking the maven-assembly-plugin.

@@ -44,8 +44,8 @@ import ibm.maven.plugins.ace.utils.EclipseProjectUtils;
 @Mojo(name = "validate-configurable-properties", defaultPhase = LifecyclePhase.PACKAGE)
 public class ValidateConfigurablePropertiesMojo extends AbstractMojo {
 
-	//28.02.2025: updated to latest version 
-	private static final String MAVEN_RESOURCE_PLUGIN_VERSION = "3.3.1";
+	//26.05.2026: updated to latest version
+	private static final String MAVEN_RESOURCE_PLUGIN_VERSION = "3.5.0";
 	
 	/**
 	 * Whether the applybaroverride command should be executed or not

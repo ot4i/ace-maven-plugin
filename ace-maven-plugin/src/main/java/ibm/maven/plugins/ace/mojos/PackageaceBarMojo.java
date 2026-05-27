@@ -39,10 +39,10 @@ import org.codehaus.plexus.util.IOUtil;
 @Mojo(name = "package-ace-bar")
 public class PackageaceBarMojo extends CreateBarMojo {
 
-	//updated to latest version on 28.02.2025 
-	private static final String MAVEN_SOURCE_PLUGIN_VERSION = "3.3.1";
-	private static final String MAVEN_ANTRUN_PLUGIN_VERSION = "3.1.0";
-	private static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.7.1"; 
+	//updated to latest version on 26.05.2026
+	private static final String MAVEN_SOURCE_PLUGIN_VERSION = "3.4.0";
+	private static final String MAVEN_ANTRUN_PLUGIN_VERSION = "3.2.0";
+	private static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.8.0";
 	
 	/**
 	 * The path to write the assemblies/ace-bar-project.xml file to before invoking

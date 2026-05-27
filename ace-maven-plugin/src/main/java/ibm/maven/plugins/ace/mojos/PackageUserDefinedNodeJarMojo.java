@@ -33,8 +33,8 @@ import org.codehaus.plexus.util.FileUtils;
 @Mojo(name = "package-udn-jar")
 public class PackageUserDefinedNodeJarMojo extends AbstractMojo {
 
-	//28.05.2025: updated to the latest version
-	private static final String MAVEN_JAR_PLUGIN_VERSION = "3.4.2";
+	//27.05.2026: updated to the latest version
+	private static final String MAVEN_JAR_PLUGIN_VERSION = "3.5.0";
 	
     /**
      * The Maven Project Object
